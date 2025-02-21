@@ -1,0 +1,104 @@
+[node]
+
+port = {{{nodePort}}}
+maxIncomingConnectionsPerIdentity = {{{maxIncomingConnectionsPerIdentity}}}
+
+enableAddressReuse = {{{enableAddressReuse}}}
+enableSingleThreadPool = {{{enableSingleThreadPool}}}
+enableCacheDatabaseStorage = {{{enableCacheDatabaseStorage}}}
+enableAutoSyncCleanup = {{{enableAutoSyncCleanup}}}
+
+fileDatabaseBatchSize = {{{fileDatabaseBatchSize}}}
+
+enableTransactionSpamThrottling = {{{enableTransactionSpamThrottling}}}
+transactionSpamThrottlingMaxBoostFee = {{{toAmount transactionSpamThrottlingMaxBoostFee}}}
+
+maxHashesPerSyncAttempt = {{{maxHashesPerSyncAttempt}}}
+maxBlocksPerSyncAttempt = {{{maxBlocksPerSyncAttempt}}}
+maxChainBytesPerSyncAttempt = {{{maxChainBytesPerSyncAttempt}}}
+
+shortLivedCacheTransactionDuration = {{{shortLivedCacheTransactionDuration}}}
+shortLivedCacheBlockDuration = {{{shortLivedCacheBlockDuration}}}
+shortLivedCachePruneInterval = {{{shortLivedCachePruneInterval}}}
+shortLivedCacheMaxSize = {{{toAmount shortLivedCacheMaxSize}}}
+
+minFeeMultiplier = {{{toAmount minFeeMultiplier}}}
+maxTimeBehindPullTransactionsStart = {{{maxTimeBehindPullTransactionsStart}}}
+transactionSelectionStrategy = {{{transactionSelectionStrategy}}}
+unconfirmedTransactionsCacheMaxResponseSize = {{{unconfirmedTransactionsCacheMaxResponseSize}}}
+unconfirmedTransactionsCacheMaxSize = {{{unconfirmedTransactionsCacheMaxSize}}}
+
+connectTimeout = {{{connectTimeout}}}
+syncTimeout = {{{syncTimeout}}}
+
+socketWorkingBufferSize = {{{socketWorkingBufferSize}}}
+socketWorkingBufferSensitivity = {{{socketWorkingBufferSensitivity}}}
+maxPacketDataSize = {{{maxPacketDataSize}}}
+
+blockDisruptorSlotCount = {{{blockDisruptorSlotCount}}}
+blockElementTraceInterval = {{{blockElementTraceInterval}}}
+blockDisruptorMaxMemorySize = {{{blockDisruptorMaxMemorySize}}}
+
+transactionDisruptorSlotCount = {{{transactionDisruptorSlotCount}}}
+transactionElementTraceInterval = {{{transactionElementTraceInterval}}}
+transactionDisruptorMaxMemorySize = {{{transactionDisruptorMaxMemorySize}}}
+
+enableDispatcherAbortWhenFull = {{{enableDispatcherAbortWhenFull}}}
+enableDispatcherInputAuditing = {{{enableDispatcherInputAuditing}}}
+
+maxTrackedNodes = {{{toAmount maxTrackedNodes}}}
+
+minPartnerNodeVersion = {{{minPartnerNodeVersion}}}
+maxPartnerNodeVersion = {{{maxPartnerNodeVersion}}}
+
+# all hosts are trusted when list is empty
+trustedHosts = {{{trustedHosts}}}
+localNetworks = {{{localNetworks}}}
+listenInterface = {{{nodeListenInterface}}}
+
+[cache_database]
+enableStatistics = {{{enableStatistics}}}
+maxOpenFiles = {{{maxOpenFiles}}}
+maxBackgroundThreads = {{{maxBackgroundThreads}}}
+maxSubcompactionThreads = {{{maxSubcompactionThreads}}}
+blockCacheSize = {{{blockCacheSize}}}
+memtableMemoryBudget = {{{memtableMemoryBudget}}}
+maxWriteBatchSize = {{{maxWriteBatchSize}}}
+maxLogFiles = {{{maxLogFiles}}}
+maxLogFileSize = {{{maxLogFileSize}}}
+
+[localnode]
+
+host = {{{host}}}
+friendlyName = {{{friendlyName}}}
+version = {{serverVersion}}
+roles = {{roles}}
+
+[outgoing_connections]
+
+maxConnections = {{outgoing_connections_maxConnections}}
+maxConnectionAge = {{{outgoing_connections_maxConnectionAge}}}
+maxConnectionBanAge = {{{outgoing_connections_maxConnectionBanAge}}}
+numConsecutiveFailuresBeforeBanning = {{{outgoing_connections_numConsecutiveFailuresBeforeBanning}}}
+
+[incoming_connections]
+
+maxConnections = {{{incoming_connections_maxConnections}}}
+maxConnectionAge = {{{incoming_connections_maxConnectionAge}}}
+maxConnectionBanAge = {{{incoming_connections_maxConnectionBanAge}}}
+numConsecutiveFailuresBeforeBanning = {{{incoming_connections_numConsecutiveFailuresBeforeBanning}}}
+backlogSize = {{{incoming_connections_backlogSize}}}
+
+[banning]
+
+defaultBanDuration = {{{defaultBanDuration}}}
+maxBanDuration = {{{defaultBanDuration}}}
+keepAliveDuration = {{{keepAliveDuration}}}
+maxBannedNodes = {{{toAmount maxBannedNodes}}}
+
+numReadRateMonitoringBuckets = {{{numReadRateMonitoringBuckets}}}
+readRateMonitoringBucketDuration = {{{readRateMonitoringBucketDuration}}}
+maxReadRateMonitoringTotalSize = {{{maxReadRateMonitoringTotalSize}}}
+
+minTransactionFailuresCountForBan = {{{minTransactionFailuresCountForBan}}}
+minTransactionFailuresPercentForBan = {{{minTransactionFailuresPercentForBan}}}

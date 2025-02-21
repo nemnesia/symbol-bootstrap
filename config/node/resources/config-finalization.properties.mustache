@@ -1,0 +1,24 @@
+[finalization]
+
+enableVoting = {{voting}}
+enableRevoteOnBoot = {{enableRevoteOnBoot}}
+
+size = {{{toAmount finalizationSize}}}
+threshold = {{{toAmount finalizationThreshold}}}
+stepDuration = {{{stepDuration}}}
+
+shortLivedCacheMessageDuration = {{{shortLivedCacheMessageDuration}}}
+messageSynchronizationMaxResponseSize = {{{messageSynchronizationMaxResponseSize}}}
+
+maxHashesPerPoint = {{{toAmount maxHashesPerPoint}}}
+prevoteBlocksMultiple = {{{toAmount prevoteBlocksMultiple}}}
+
+unfinalizedBlocksDuration = {{{unfinalizedBlocksDuration}}}
+
+treasuryReissuanceEpoch = {{{treasuryReissuanceEpoch}}}
+
+[treasury_reissuance_epoch_ineligible_voter_addresses]
+
+{{#each treasuryReissuanceEpochIneligibleVoterAddresses}}
+{{this}} = true
+{{/each}}

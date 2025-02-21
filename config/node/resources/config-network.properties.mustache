@@ -1,0 +1,146 @@
+[network]
+
+identifier = {{{networkIdentifier}}}
+nemesisSignerPublicKey = {{{nemesisSignerPublicKey}}}
+nodeEqualityStrategy = {{{nodeEqualityStrategy}}}
+generationHashSeed = {{{nemesisGenerationHashSeed}}}
+epochAdjustment = {{{epochAdjustment}}}
+
+[chain]
+
+enableVerifiableState = {{{enableVerifiableState}}}
+enableVerifiableReceipts = {{{enableVerifiableReceipts}}}
+
+currencyMosaicId = {{{toHex currencyMosaicId}}}
+harvestingMosaicId = {{{toHex harvestingMosaicId}}}
+
+blockGenerationTargetTime = {{{blockGenerationTargetTime}}}
+blockTimeSmoothingFactor = {{{blockTimeSmoothingFactor}}}
+
+importanceGrouping = {{{importanceGrouping}}}
+importanceActivityPercentage = {{{importanceActivityPercentage}}}
+maxRollbackBlocks = {{{maxRollbackBlocks}}}
+maxDifficultyBlocks = {{{maxDifficultyBlocks}}}
+defaultDynamicFeeMultiplier = {{{toAmount defaultDynamicFeeMultiplier}}}
+
+maxTransactionLifetime = {{{maxTransactionLifetime}}}
+maxBlockFutureTime = {{{maxBlockFutureTime}}}
+
+initialCurrencyAtomicUnits = {{{toAmount initialCurrencyAtomicUnits}}}
+maxMosaicAtomicUnits = {{{toAmount maxMosaicAtomicUnits}}}
+
+totalChainImportance = {{{toAmount totalChainImportance}}}
+minHarvesterBalance = {{{toAmount minHarvesterBalance}}}
+maxHarvesterBalance = {{{toAmount maxHarvesterBalance}}}
+minVoterBalance = {{{toAmount minVoterBalance}}}
+
+# assuming finalization ~20 minutes
+votingSetGrouping = {{{votingSetGrouping}}}
+maxVotingKeysPerAccount = {{{maxVotingKeysPerAccount}}}
+minVotingKeyLifetime = {{{minVotingKeyLifetime}}}
+maxVotingKeyLifetime = {{{maxVotingKeyLifetime}}}
+
+harvestBeneficiaryPercentage = {{{harvestBeneficiaryPercentage}}}
+harvestNetworkPercentage = {{{harvestNetworkPercentage}}}
+harvestNetworkFeeSinkAddressV1 = {{{harvestNetworkFeeSinkAddressV1}}}
+harvestNetworkFeeSinkAddress = {{{harvestNetworkFeeSinkAddress}}}
+
+maxTransactionsPerBlock = {{{toAmount maxTransactionsPerBlock}}}
+
+[plugin:catapult.plugins.accountlink]
+
+dummy = to trigger plugin load
+
+[plugin:catapult.plugins.aggregate]
+
+maxTransactionsPerAggregate = {{{toAmount maxTransactionsPerAggregate}}}
+maxCosignaturesPerAggregate = {{{toAmount maxCosignaturesPerAggregate}}}
+
+# multisig plugin is expected to do more advanced cosignature checks
+enableStrictCosignatureCheck = {{{enableStrictCosignatureCheck}}}
+enableBondedAggregateSupport = {{{enableBondedAggregateSupport}}}
+
+maxBondedTransactionLifetime = {{{maxBondedTransactionLifetime}}}
+
+[plugin:catapult.plugins.lockhash]
+
+lockedFundsPerAggregate = {{{toAmount lockedFundsPerAggregate}}}
+maxHashLockDuration = {{{maxHashLockDuration}}}
+
+[plugin:catapult.plugins.locksecret]
+
+maxSecretLockDuration = {{{maxSecretLockDuration}}}
+minProofSize = {{{minProofSize}}}
+maxProofSize = {{{maxProofSize}}}
+
+[plugin:catapult.plugins.metadata]
+
+maxValueSize = {{{maxValueSize}}}
+
+[plugin:catapult.plugins.mosaic]
+
+maxMosaicsPerAccount = {{{toAmount maxMosaicsPerAccount}}}
+maxMosaicDuration = {{{maxMosaicDuration}}}
+maxMosaicDivisibility = {{{maxMosaicDivisibility}}}
+
+mosaicRentalFeeSinkAddressV1 = {{{mosaicRentalFeeSinkAddressV1}}}
+mosaicRentalFeeSinkAddress = {{{mosaicRentalFeeSinkAddress}}}
+mosaicRentalFee = {{{mosaicRentalFee}}}
+
+[plugin:catapult.plugins.multisig]
+
+maxMultisigDepth = {{{maxMultisigDepth}}}
+maxCosignatoriesPerAccount = {{{maxCosignatoriesPerAccount}}}
+maxCosignedAccountsPerAccount = {{{maxCosignedAccountsPerAccount}}}
+
+[plugin:catapult.plugins.namespace]
+
+maxNameSize = {{{maxNameSize}}}
+maxChildNamespaces = {{{maxChildNamespaces}}}
+maxNamespaceDepth = {{{maxNamespaceDepth}}}
+
+# *approximate* days based on blockGenerationTargetTime
+minNamespaceDuration = {{{minNamespaceDuration}}}
+maxNamespaceDuration = {{{maxNamespaceDuration}}}
+namespaceGracePeriodDuration = {{{namespaceGracePeriodDuration}}}
+reservedRootNamespaceNames = {{{reservedRootNamespaceNames}}}
+
+namespaceRentalFeeSinkAddressV1 = {{{namespaceRentalFeeSinkAddressV1}}}
+namespaceRentalFeeSinkAddress = {{{namespaceRentalFeeSinkAddress}}}
+rootNamespaceRentalFeePerBlock = {{{rootNamespaceRentalFeePerBlock}}}
+childNamespaceRentalFee = {{{childNamespaceRentalFee}}}
+
+[plugin:catapult.plugins.restrictionaccount]
+
+maxAccountRestrictionValues = {{{maxAccountRestrictionValues}}}
+
+[plugin:catapult.plugins.restrictionmosaic]
+
+maxMosaicRestrictionValues = {{{maxMosaicRestrictionValues}}}
+
+[plugin:catapult.plugins.transfer]
+
+maxMessageSize = {{{maxMessageSize}}}
+
+[fork_heights]
+
+totalVotingBalanceCalculationFix = {{{toAmount totalVotingBalanceCalculationFix}}}
+treasuryReissuance = {{{toAmount treasuryReissuance}}}
+strictAggregateTransactionHash = {{{toAmount strictAggregateTransactionHash}}}
+skipSecretLockUniquenessChecks = {{{skipSecretLockUniquenessChecks}}}
+skipSecretLockExpirations = {{{skipSecretLockExpirations}}}
+forceSecretLockExpirations = {{{forceSecretLockExpirations}}}
+
+{{#treasuryReissuanceTransactionSignatures_has_items}}
+[treasury_reissuance_transaction_signatures]
+{{/treasuryReissuanceTransactionSignatures_has_items}}
+{{#each treasuryReissuanceTransactionSignatures}}
+{{this}} = true
+{{/each}}
+
+{{#corruptAggregateTransactionHashes_has_items}}
+[corrupt_aggregate_transaction_hashes]
+{{/corruptAggregateTransactionHashes_has_items}}
+{{#each corruptAggregateTransactionHashes}}
+{{this.key}} = {{this.value}}
+{{/each}}
