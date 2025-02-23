@@ -15,18 +15,18 @@
  */
 
 import { existsSync } from 'fs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { join } from 'path';
-import { Logger } from '../logger';
-import { Addresses, ConfigPreset, DockerCompose, DockerComposeService, DockerServicePreset } from '../model';
-import { ConfigLoader } from './ConfigLoader';
-import { Constants } from './Constants';
-import { FileSystemService } from './FileSystemService';
-import { HandlebarsUtils } from './HandlebarsUtils';
-import { RemoteNodeService } from './RemoteNodeService';
-import { RuntimeService } from './RuntimeService';
-import { Utils } from './Utils';
-import { Password, YamlUtils } from './YamlUtils';
+import { Logger } from '../logger/index.js';
+import { Addresses, ConfigPreset, DockerCompose, DockerComposeService, DockerServicePreset } from '../model/index.js';
+import { ConfigLoader } from './ConfigLoader.js';
+import { Constants } from './Constants.js';
+import { FileSystemService } from './FileSystemService.js';
+import { HandlebarsUtils } from './HandlebarsUtils.js';
+import { RemoteNodeService } from './RemoteNodeService.js';
+import { RuntimeService } from './RuntimeService.js';
+import { Utils } from './Utils.js';
+import { Password, YamlUtils } from './YamlUtils.js';
 
 export type ComposeParams = { target: string; user?: string; upgrade?: boolean; password?: Password; workingDir: string; offline: boolean };
 

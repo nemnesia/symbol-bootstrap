@@ -17,7 +17,7 @@ import * as noble from '@noble/ed25519';
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Convert, Crypto } from 'symbol-sdk';
-import * as nacl from 'tweetnacl';
+import nacl from 'tweetnacl';
 
 export interface KeyPair {
   privateKey: Uint8Array;

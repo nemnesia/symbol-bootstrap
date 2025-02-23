@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { flags } from '@oclif/command';
-import { IOptionFlag } from '@oclif/command/lib/flags';
-import { textSync } from 'figlet';
-import { prompt } from 'inquirer';
+import { password } from '@inquirer/prompts';
+import { Flags } from '@oclif/core';
+import figlet from 'figlet';
 import { Convert, PublicAccount } from 'symbol-sdk';
-import { Logger, LoggerFactory, LogType } from '../logger';
-import { Constants } from './Constants';
-import { Password } from './YamlUtils';
+import { Logger, LoggerFactory, LogType } from '../logger/index.js';
+import { Constants } from './Constants.js';
+import { Password } from './YamlUtils.js';
 
 export class CommandUtils {
   public static passwordPromptDefaultMessage = `Enter the password used to encrypt and decrypt custom presets, addresses.yml, and preset.yml files. When providing a password, private keys will be encrypted. Keep this password in a secure place!`;
-  public static helpFlag = flags.help({ char: 'h', description: 'It shows the help of this command.' });
+  public static helpFlag = Flags.help({ char: 'h', description: 'It shows the help of this command.' });
 
-  public static targetFlag = flags.string({
+  public static targetFlag = Flags.string({
     char: 't',
     description: 'The target folder where the symbol-bootstrap network is generated',
     default: Constants.defaultTargetFolder,
@@ -36,24 +35,24 @@ export class CommandUtils {
     `A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).`,
   );
 
-  public static noPasswordFlag = flags.boolean({
+  public static noPasswordFlag = Flags.boolean({
     description: 'When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.',
     default: false,
   });
 
-  public static offlineFlag = flags.boolean({
+  public static offlineFlag = Flags.boolean({
     description: 'If --offline is used, Bootstrap resolves the configuration without querying the running network.',
     default: false,
   });
 
   public static showBanner(): void {
-    console.log(textSync('symbol-bootstrap', { horizontalLayout: 'fitted' }));
+    console.log(figlet.textSync('symbol-bootstrap', { horizontalLayout: 'controlled smushing' }));
   }
 
-  public static getPasswordFlag(description: string): IOptionFlag<string | undefined> {
-    return flags.string({
+  public static getPasswordFlag(description: string) {
+    return Flags.string({
       description: description,
-      parse(input: string): string {
+      parse: async (input: string): Promise<string> => {
         const result = !input || CommandUtils.isValidPassword(input);
         if (result === true) return input;
         throw new Error(`--password is invalid, ${result}`);
@@ -85,21 +84,17 @@ export class CommandUtils {
         if (log) logger.warn(`Password has not been provided (--noPassword)! It's recommended to use one for security!`);
         return undefined;
       }
-      const responses = await prompt([
-        {
-          name: 'password',
-          mask: '*',
-          message: message,
-          type: 'password',
-          validate: CommandUtils.isValidPassword,
-        },
-      ]);
-      if (responses.password === '' || !responses.password) {
+      const responses = await password({
+        message: message,
+        mask: '*',
+        validate: CommandUtils.isValidPassword,
+      });
+      if (responses === '' || !responses) {
         if (log) logger.warn(`Password has not been provided (empty text)! It's recommended to use one for security!`);
         return undefined;
       }
       if (log) logger.info(`Password has been provided`);
-      return responses.password;
+      return responses;
     }
     if (log) logger.info(`Password has been provided`);
     return providedPassword;
@@ -117,9 +112,9 @@ export class CommandUtils {
    * It returns the flag that can be used to tune the class of logger.
    * @param defaultLogTypes the default logger to be used if not provided.
    */
-  public static getLoggerFlag(...defaultLogTypes: LogType[]): IOptionFlag<string> {
+  public static getLoggerFlag(...defaultLogTypes: LogType[]) {
     const options = Object.keys(LogType).map((v) => v as LogType);
-    return flags.string({
+    return Flags.string({
       description: `The loggers the command will use. Options are: ${options.join(LoggerFactory.separator)}. Use '${
         LoggerFactory.separator
       }' to select multiple loggers.`,

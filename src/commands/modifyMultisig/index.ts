@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Command, flags } from '@oclif/command';
-import { LoggerFactory, LogType } from '../logger';
-import { AnnounceService, BootstrapService, CommandUtils } from '../service';
+import { Command, Flags } from '@oclif/core';
+import { LoggerFactory, LogType } from '../../logger/index.js';
+import { AnnounceService, BootstrapService, CommandUtils } from '../../service/index.js';
 
 export default class ModifyMultisig extends Command {
   static description = `Create or modify a multisig account`;
@@ -29,23 +29,23 @@ export default class ModifyMultisig extends Command {
   static flags = {
     help: CommandUtils.helpFlag,
     target: CommandUtils.targetFlag,
-    minRemovalDelta: flags.integer({
+    minRemovalDelta: Flags.integer({
       description:
         'Delta of signatures needed to remove a cosignatory. ' +
         '0 means no change, a positive(+) number means increment and a negative(-) number means decrement to the actual value.',
       char: 'r',
     }),
-    minApprovalDelta: flags.integer({
+    minApprovalDelta: Flags.integer({
       description:
         'Delta of signatures needed to approve a transaction. ' +
         '0 means no change, a positive(+) number means increment and a negative(-) number means decrement to the actual value.',
       char: 'a',
     }),
-    addressAdditions: flags.string({
+    addressAdditions: Flags.string({
       description: 'Cosignatory accounts addresses to be added (separated by a comma).',
       char: 'A',
     }),
-    addressDeletions: flags.string({
+    addressDeletions: Flags.string({
       description: 'Cosignatory accounts addresses to be removed (separated by a comma).',
       char: 'D',
     }),
@@ -54,7 +54,7 @@ export default class ModifyMultisig extends Command {
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(ModifyMultisig);
+    const { flags } = await this.parse(ModifyMultisig);
     const logger = LoggerFactory.getLogger(flags.logger);
     CommandUtils.showBanner();
     flags.password = await CommandUtils.resolvePassword(

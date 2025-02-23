@@ -1,9 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import { existsSync } from 'fs';
-import { join, resolve } from 'path';
+import { existsSync, readFileSync } from 'fs';
+import { dirname, join, resolve } from 'path';
+import { fileURLToPath } from 'url';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const version = require('../../package.json').version;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageJsonPath = resolve(__dirname, '../../package.json');
+const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+
+const version = packageJson.version;
 
 /**
  * Bootstrap constants.

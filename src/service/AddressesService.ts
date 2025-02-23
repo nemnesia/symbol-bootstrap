@@ -1,13 +1,13 @@
 import { Account, Address, Convert, Crypto, MosaicId, MosaicNonce, NetworkType, PublicAccount } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { Addresses, ConfigAccount, ConfigPreset, MosaicAccounts, NodeAccount, NodePreset, PrivateKeySecurityMode } from '../model';
-import { AccountResolver } from './AccountResolver';
-import { KeyName } from './ConfigService';
-import { ConfigurationUtils } from './ConfigurationUtils';
-import { CryptoUtils } from './CryptoUtils';
-import { MigrationService } from './MigrationService';
-import { Utils } from './Utils';
-import { YamlUtils } from './YamlUtils';
+import { Logger } from '../logger/index.js';
+import { Addresses, ConfigAccount, ConfigPreset, MosaicAccounts, NodeAccount, NodePreset, PrivateKeySecurityMode } from '../model/index.js';
+import { AccountResolver } from './AccountResolver.js';
+import { KeyName } from './ConfigService.js';
+import { ConfigurationUtils } from './ConfigurationUtils.js';
+import { CryptoUtils } from './CryptoUtils.js';
+import { MigrationService } from './MigrationService.js';
+import { Utils } from './Utils.js';
+import { YamlUtils } from './YamlUtils.js';
 
 /**
  * Object in charge of resolving the address.yml and its accounts.

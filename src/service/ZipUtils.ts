@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as archiver from 'archiver';
+import archiver from 'archiver';
 import { createWriteStream } from 'fs';
-import * as StreamZip from 'node-stream-zip';
-import { Logger } from '../logger';
-import { AsyncUtils } from './AsyncUtils';
-import { Utils } from './Utils';
+import StreamZip from 'node-stream-zip';
+import { Logger } from '../logger/index.js';
+import { AsyncUtils } from './AsyncUtils.js';
+import { Utils } from './Utils.js';
 
 export interface ZipItem {
   from: string;

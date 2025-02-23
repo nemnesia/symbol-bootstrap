@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Command, flags } from '@oclif/command';
+import { Command, Flags } from '@oclif/core';
 import { existsSync } from 'fs';
 import { dirname } from 'path';
-import { LoggerFactory, LogType } from '../logger';
-import { CommandUtils, CryptoUtils, FileSystemService, KnownError, YamlUtils } from '../service';
+import { LoggerFactory, LogType } from '../../logger/index.js';
+import { CommandUtils, CryptoUtils, FileSystemService, KnownError, YamlUtils } from '../../service/index.js';
 
 export default class Encrypt extends Command {
   static description = `It encrypts a yml file using the provided password. The source files would be a custom preset file, a preset.yml file or an addresses.yml.
@@ -43,11 +43,11 @@ $ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --cust
 
   static flags = {
     help: CommandUtils.helpFlag,
-    source: flags.string({
+    source: Flags.string({
       description: `The source plain yml file to be encrypted. If this file is encrypted, the command will raise an error.`,
       required: true,
     }),
-    destination: flags.string({
+    destination: Flags.string({
       description: `The destination encrypted file to create. The destination file must not exist.`,
       required: true,
     }),
@@ -58,7 +58,7 @@ $ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --cust
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(Encrypt);
+    const { flags } = await this.parse(Encrypt);
 
     if (!existsSync(flags.source)) {
       throw new KnownError(`Source file ${flags.source} does not exist!`);

@@ -16,7 +16,7 @@
 
 import * as fs from 'fs';
 import { copyFileSync, existsSync } from 'fs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { join } from 'path';
 import {
   AccountKeyLinkTransaction,
@@ -30,24 +30,24 @@ import {
   VotingKeyLinkTransaction,
   VrfKeyLinkTransaction,
 } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { Addresses, ConfigPreset, CustomPreset, GatewayConfigPreset, NodeAccount, PeerInfo } from '../model';
-import { AccountResolver, DefaultAccountResolver } from './AccountResolver';
-import { AddressesService } from './AddressesService';
-import { CertificateService, RenewMode } from './CertificateService';
-import { ConfigLoader } from './ConfigLoader';
-import { ConfigurationUtils } from './ConfigurationUtils';
-import { Constants } from './Constants';
-import { CryptoUtils } from './CryptoUtils';
-import { FileSystemService } from './FileSystemService';
-import { HandlebarsUtils } from './HandlebarsUtils';
-import { KnownError } from './KnownError';
-import { NemgenService } from './NemgenService';
-import { RemoteNodeService } from './RemoteNodeService';
-import { ReportParams, ReportService } from './ReportService';
-import { Utils } from './Utils';
-import { VotingParams, VotingService } from './VotingService';
-import { Password, YamlUtils } from './YamlUtils';
+import { Logger } from '../logger/index.js';
+import { Addresses, ConfigPreset, CustomPreset, GatewayConfigPreset, NodeAccount, PeerInfo } from '../model/index.js';
+import { AccountResolver, DefaultAccountResolver } from './AccountResolver.js';
+import { AddressesService } from './AddressesService.js';
+import { CertificateService, RenewMode } from './CertificateService.js';
+import { ConfigLoader } from './ConfigLoader.js';
+import { ConfigurationUtils } from './ConfigurationUtils.js';
+import { Constants } from './Constants.js';
+import { CryptoUtils } from './CryptoUtils.js';
+import { FileSystemService } from './FileSystemService.js';
+import { HandlebarsUtils } from './HandlebarsUtils.js';
+import { KnownError } from './KnownError.js';
+import { NemgenService } from './NemgenService.js';
+import { RemoteNodeService } from './RemoteNodeService.js';
+import { ReportParams, ReportService } from './ReportService.js';
+import { Utils } from './Utils.js';
+import { VotingParams, VotingService } from './VotingService.js';
+import { Password, YamlUtils } from './YamlUtils.js';
 
 /**
  * Defined presets.

@@ -11,16 +11,19 @@ It tests the installed software in the current computer reporting if there is an
 
 ```
 USAGE
-  $ symbol-bootstrap verify
+  $ symbol-bootstrap verify [-h] [--logger <value>]
 
-OPTIONS
-  -h, --help       It shows the help of this command.
+FLAGS
+  -h, --help            It shows the help of this command.
+      --logger=<value>  [default: Console,File] The loggers the command will use. Options are: Console,File,Silent. Use
+                        ',' to select multiple loggers.
 
-  --logger=logger  [default: Console,File] The loggers the command will use. Options are: Console,File,Silent. Use ','
-                   to select multiple loggers.
+DESCRIPTION
+  It tests the installed software in the current computer reporting if there is any missing dependency, invalid version,
+  or software related issue.
 
-EXAMPLE
+EXAMPLES
   $ symbol-bootstrap verify
 ```
 
-_See code: [src/commands/verify.ts](https://github.com/nemneshia/symbol-bootstrap/blob/v2.0.0/src/commands/verify.ts)_
+_See code: [src/commands/verify/index.ts](https://github.com/nemneshia/symbol-bootstrap/blob/v2.0.0/src/commands/verify/index.ts)_

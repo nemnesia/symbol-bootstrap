@@ -15,14 +15,14 @@
  */
 
 import { promises as fsPromises, readFileSync } from 'fs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { join } from 'path';
-import { Logger } from '../logger';
-import { ConfigPreset } from '../model';
-import { ConfigLoader } from './ConfigLoader';
-import { Constants } from './Constants';
-import { FileSystemService } from './FileSystemService';
-import { YamlUtils } from './YamlUtils';
+import { Logger } from '../logger/index.js';
+import { ConfigPreset } from '../model/index.js';
+import { ConfigLoader } from './ConfigLoader.js';
+import { Constants } from './Constants.js';
+import { FileSystemService } from './FileSystemService.js';
+import { YamlUtils } from './YamlUtils.js';
 
 export type ReportParams = { target: string; workingDir: string; version?: string };
 

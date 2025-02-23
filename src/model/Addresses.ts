@@ -15,7 +15,7 @@
  */
 
 import { NetworkType } from 'symbol-sdk';
-import { VotingKeyFile } from '../service';
+import { VotingKeyFile } from '../service/index.js';
 
 export interface CertificatePair {
   privateKey?: string;

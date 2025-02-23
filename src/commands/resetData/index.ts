@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-import { Command } from '@oclif/command';
-import { LoggerFactory, System } from '../logger';
-import { CommandUtils, VerifyService } from '../service';
+import { Command } from '@oclif/core';
+import { LoggerFactory, System } from '../../logger/index.js';
+import { BootstrapService, CommandUtils } from '../../service/index.js';
 
-export default class Verify extends Command {
-  static description =
-    'It tests the installed software in the current computer reporting if there is any missing dependency, invalid version, or software related issue.';
-  static examples = [`$ symbol-bootstrap verify`];
+export default class ResetData extends Command {
+  static description = 'It removes the data keeping the generated configuration, certificates, keys and block 1.';
+
+  static examples = [`$ symbol-bootstrap resetData`];
 
   static flags = {
     help: CommandUtils.helpFlag,
+    target: CommandUtils.targetFlag,
     logger: CommandUtils.getLoggerFlag(...System),
   };
 
   public async run(): Promise<void> {
+    const { flags } = await this.parse(ResetData);
     CommandUtils.showBanner();
-    const { flags } = this.parse(Verify);
     const logger = LoggerFactory.getLogger(flags.logger);
-    const service = new VerifyService(logger);
-    const report = await service.createReport();
-    service.logReport(report);
-    service.validateReport(report);
+    await new BootstrapService(logger).resetData(flags);
   }
 }

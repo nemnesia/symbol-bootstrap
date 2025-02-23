@@ -1,7 +1,7 @@
 import { Account, NetworkType } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { Addresses } from '../model';
-import { ConfigurationUtils } from './ConfigurationUtils';
+import { Logger } from '../logger/index.js';
+import { Addresses } from '../model/index.js';
+import { ConfigurationUtils } from './ConfigurationUtils.js';
 /**
  * The operation to migrate the data.
  */

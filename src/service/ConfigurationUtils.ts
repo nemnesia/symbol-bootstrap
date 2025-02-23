@@ -1,9 +1,9 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { Account, NetworkType, PublicAccount } from 'symbol-sdk';
-import { ConfigAccount, ConfigPreset, NodePreset } from '../model';
-import { Constants } from './Constants';
-import { YamlUtils } from './YamlUtils';
+import { ConfigAccount, ConfigPreset, NodePreset } from '../model/index.js';
+import { Constants } from './Constants.js';
+import { YamlUtils } from './YamlUtils.js';
 
 /**
  * Utility class for bootstrap configuration related methods.

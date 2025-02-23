@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-import { Command, flags } from '@oclif/command';
-import { LoggerFactory, System } from '../logger';
-import { Assembly, BootstrapAccountResolver, BootstrapService, CommandUtils, ConfigService, Constants, Preset } from '../service';
+import { Command, Flags } from '@oclif/core';
+import { LoggerFactory, System } from '../../logger/index.js';
+import {
+  Assembly,
+  BootstrapAccountResolver,
+  BootstrapService,
+  CommandUtils,
+  ConfigService,
+  Constants,
+  Preset,
+} from '../../service/index.js';
 
 export default class Config extends Command {
   static description = 'Command used to set up the configuration files and the nemesis block for the current network';
@@ -35,39 +43,39 @@ export default class Config extends Command {
     target: CommandUtils.targetFlag,
     password: CommandUtils.passwordFlag,
     noPassword: CommandUtils.noPasswordFlag,
-    preset: flags.string({
+    preset: Flags.string({
       char: 'p',
       description: `The network preset. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: ${Object.keys(
         Preset,
       ).join(', ')}, my-custom-network.yml (advanced, only for custom networks).`,
     }),
-    assembly: flags.string({
+    assembly: Flags.string({
       char: 'a',
       description: `The assembly that defines the node(s) layout. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: ${Object.keys(
         Assembly,
       ).join(', ')}, my-custom-assembly.yml (advanced).`,
     }),
-    customPreset: flags.string({
+    customPreset: Flags.string({
       char: 'c',
       description: `External preset file. Values in this file will override the provided presets.`,
     }),
-    reset: flags.boolean({
+    reset: Flags.boolean({
       char: 'r',
       description: 'It resets the configuration generating a new one.',
       default: ConfigService.defaultParams.reset,
     }),
 
-    upgrade: flags.boolean({
+    upgrade: Flags.boolean({
       description: `It regenerates the configuration reusing the previous keys. Use this flag when upgrading the version of bootstrap to keep your node up to date without dropping the local data. Backup the target folder before upgrading.`,
       default: ConfigService.defaultParams.reset,
     }),
     offline: CommandUtils.offlineFlag,
-    report: flags.boolean({
+    report: Flags.boolean({
       description: 'It generates reStructuredText (.rst) reports describing the configuration of each node.',
       default: ConfigService.defaultParams.report,
     }),
 
-    user: flags.string({
+    user: Flags.string({
       char: 'u',
       description: `User used to run docker images when creating configuration files like certificates or nemesis block. "${Constants.CURRENT_USER}" means the current user.`,
       default: Constants.CURRENT_USER,
@@ -76,7 +84,7 @@ export default class Config extends Command {
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(Config);
+    const { flags } = await this.parse(Config);
     const logger = LoggerFactory.getLogger(flags.logger);
     CommandUtils.showBanner();
     flags.password = await CommandUtils.resolvePassword(

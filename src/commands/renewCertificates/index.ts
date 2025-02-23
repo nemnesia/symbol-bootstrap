@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Command, flags } from '@oclif/command';
+import { Command, Flags } from '@oclif/core';
 import { Account } from 'symbol-sdk';
-import { LoggerFactory, System } from '../logger';
-import { CertificatePair, ConfigAccount } from '../model';
-import { BootstrapAccountResolver, CertificateService, CommandUtils, ConfigLoader, Constants, RenewMode } from '../service';
+import { LoggerFactory, System } from '../../logger/index.js';
+import { CertificatePair, ConfigAccount } from '../../model/index.js';
+import { BootstrapAccountResolver, CertificateService, CommandUtils, ConfigLoader, Constants, RenewMode } from '../../service/index.js';
 
 export default class RenewCertificates extends Command {
   static description = `It renews the SSL certificates of the node regenerating the node.csr.pem files but reusing the current private keys.
@@ -36,18 +36,18 @@ It's recommended to backup the target folder before running this operation!
     target: CommandUtils.targetFlag,
     password: CommandUtils.passwordFlag,
     noPassword: CommandUtils.noPasswordFlag,
-    customPreset: flags.string({
+    customPreset: Flags.string({
       char: 'c',
       description: `This command uses the encrypted addresses.yml to resolve the main and transport private key. If the main and transport privates are only stored in the custom preset, you can provide them using this param. Otherwise, the command may ask for them when required.`,
       required: false,
     }),
-    user: flags.string({
+    user: Flags.string({
       char: 'u',
       description: `User used to run docker images when generating the certificates. "${Constants.CURRENT_USER}" means the current user.`,
       default: Constants.CURRENT_USER,
     }),
 
-    force: flags.boolean({
+    force: Flags.boolean({
       description: `Renew the certificates even though they are not close to expire.`,
       default: false,
     }),
@@ -55,7 +55,7 @@ It's recommended to backup the target folder before running this operation!
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(RenewCertificates);
+    const { flags } = await this.parse(RenewCertificates);
     CommandUtils.showBanner();
     const logger = LoggerFactory.getLogger(flags.logger);
     const password = await CommandUtils.resolvePassword(

@@ -15,14 +15,14 @@
  */
 import fetch from 'cross-fetch';
 import { lookup } from 'dns';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { firstValueFrom } from 'rxjs';
 import { ChainInfo, RepositoryFactory, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
 import { Configuration, NodeApi, NodeListFilter, RequestContext } from 'symbol-statistics-service-typescript-fetch-client';
-import { Logger } from '../logger';
-import { ConfigPreset, PeerInfo } from '../model';
-import { KnownError } from './KnownError';
-import { Utils } from './Utils';
+import { Logger } from '../logger/index.js';
+import { ConfigPreset, PeerInfo } from '../model/index.js';
+import { KnownError } from './KnownError.js';
+import { Utils } from './Utils.js';
 
 export interface RepositoryInfo {
   repositoryFactory: RepositoryFactory;

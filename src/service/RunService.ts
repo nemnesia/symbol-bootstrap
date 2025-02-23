@@ -15,24 +15,24 @@
  */
 
 import { chmodSync, existsSync } from 'fs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { join } from 'path';
 import { firstValueFrom } from 'rxjs';
 import { NodeStatusEnum } from 'symbol-openapi-typescript-fetch-client';
 import { RepositoryFactoryHttp } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { DockerCompose, DockerComposeService } from '../model';
-import { DefaultAccountResolver } from './AccountResolver';
-import { AsyncUtils } from './AsyncUtils';
-import { CertificateService } from './CertificateService';
-import { ConfigLoader } from './ConfigLoader';
-import { Constants } from './Constants';
-import { FileSystemService } from './FileSystemService';
-import { OSUtils } from './OSUtils';
-import { PortService } from './PortService';
-import { RuntimeService } from './RuntimeService';
-import { Utils } from './Utils';
-import { YamlUtils } from './YamlUtils';
+import { Logger } from '../logger/index.js';
+import { DockerCompose, DockerComposeService } from '../model/index.js';
+import { DefaultAccountResolver } from './AccountResolver.js';
+import { AsyncUtils } from './AsyncUtils.js';
+import { CertificateService } from './CertificateService.js';
+import { ConfigLoader } from './ConfigLoader.js';
+import { Constants } from './Constants.js';
+import { FileSystemService } from './FileSystemService.js';
+import { OSUtils } from './OSUtils.js';
+import { PortService } from './PortService.js';
+import { RuntimeService } from './RuntimeService.js';
+import { Utils } from './Utils.js';
+import { YamlUtils } from './YamlUtils.js';
 /**
  * params necessary to run the docker-compose network.
  */

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Command, flags } from '@oclif/command';
-import { LoggerFactory, LogType } from '../logger';
-import { AnnounceService, BootstrapService, CommandUtils, LinkService } from '../service';
+import { Command, Flags } from '@oclif/core';
+import { LoggerFactory, LogType } from '../../logger/index.js';
+import { AnnounceService, BootstrapService, CommandUtils, LinkService } from '../../service/index.js';
 
 export default class Link extends Command {
   static description = `It announces VRF and Voting Link transactions to the network for each node with 'Peer' or 'Voting' roles. This command finalizes the node registration to an existing network.`;
@@ -26,7 +26,7 @@ export default class Link extends Command {
   static flags = {
     help: CommandUtils.helpFlag,
     target: CommandUtils.targetFlag,
-    unlink: flags.boolean({
+    unlink: Flags.boolean({
       description: 'Perform "Unlink" transactions unlinking the voting and VRF keys from the node signer account',
       default: LinkService.defaultParams.unlink,
     }),
@@ -35,7 +35,7 @@ export default class Link extends Command {
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(Link);
+    const { flags } = await this.parse(Link);
     const logger = LoggerFactory.getLogger(flags.logger);
     CommandUtils.showBanner();
     flags.password = await CommandUtils.resolvePassword(

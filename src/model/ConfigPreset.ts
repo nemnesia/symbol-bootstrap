@@ -15,7 +15,7 @@
  */
 
 import { NetworkType } from 'symbol-sdk';
-import { DockerCompose, DockerComposeService } from './DockerCompose';
+import { DockerCompose, DockerComposeService } from './DockerCompose.js';
 
 export enum PrivateKeySecurityMode {
   ENCRYPT = 'ENCRYPT',

@@ -1,10 +1,10 @@
 import { createWriteStream, existsSync, lstatSync, promises as fsPromises, readdirSync, rmdirSync, statSync, unlinkSync } from 'fs';
-import { get } from 'https';
+import { default as https } from 'https';
 import { basename, dirname, join } from 'path';
-import { Logger } from '../logger';
-import { Constants } from './Constants';
-import { KnownError } from './KnownError';
-import { Utils } from './Utils';
+import { Logger } from '../logger/index.js';
+import { Constants } from './Constants.js';
+import { KnownError } from './KnownError.js';
+import { Utils } from './Utils.js';
 
 /**
  * Service handling files and how to store and load them on the file system.
@@ -171,12 +171,12 @@ export class FileSystemService {
           const message = percentage + '% | ' + received + ' bytes downloaded out of ' + total + ' bytes.';
           Utils.logSameLineMessage(message);
         }
-        const request = get(url, (response) => {
+        const request = https.get(url, (response) => {
           const total = parseInt(response.headers['content-length'] || '0', 10);
           let received = 0;
           if (total === destinationSize) {
             this.logger.info(`File ${dest} is up to date with url ${url}. No need to download!`);
-            request.abort();
+            request.destroy();
             resolve({
               downloaded: false,
               fileLocation: dest,

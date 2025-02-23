@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-import { Command } from '@oclif/command';
-import { LoggerFactory, System } from '../logger';
-import { CommandUtils, FileSystemService } from '../service';
+import { Command } from '@oclif/core';
+import { LoggerFactory, System } from '../../logger/index.js';
+import { CommandUtils, VerifyService } from '../../service/index.js';
 
-export default class Clean extends Command {
-  static description = 'It removes the target folder deleting the generated configuration and data';
-
-  static examples = [`$ symbol-bootstrap clean`];
+export default class Verify extends Command {
+  static description =
+    'It tests the installed software in the current computer reporting if there is any missing dependency, invalid version, or software related issue.';
+  static examples = [`$ symbol-bootstrap verify`];
 
   static flags = {
     help: CommandUtils.helpFlag,
-    target: CommandUtils.targetFlag,
     logger: CommandUtils.getLoggerFlag(...System),
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(Clean);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(Verify);
     const logger = LoggerFactory.getLogger(flags.logger);
-    new FileSystemService(logger).deleteFolder(flags.target);
+    const service = new VerifyService(logger);
+    const report = await service.createReport();
+    service.logReport(report);
+    service.validateReport(report);
   }
 }

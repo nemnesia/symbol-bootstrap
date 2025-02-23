@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { prompt } from 'inquirer';
+import { confirm } from '@inquirer/prompts';
 import {
   AccountInfo,
   AccountKeyLinkTransaction,
@@ -25,13 +25,13 @@ import {
   VotingKeyLinkTransaction,
   VrfKeyLinkTransaction,
 } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { Addresses, ConfigPreset, NodeAccount } from '../model';
-import { AccountResolver, BootstrapAccountResolver, Password } from '../service';
-import { AnnounceService, TransactionFactory } from './AnnounceService';
-import { ConfigLoader } from './ConfigLoader';
-import { Constants } from './Constants';
-import { VotingKeyAccount } from './VotingUtils';
+import { Logger } from '../logger/index.js';
+import { Addresses, ConfigPreset, NodeAccount } from '../model/index.js';
+import { AccountResolver, BootstrapAccountResolver, Password } from '../service/index.js';
+import { AnnounceService, TransactionFactory } from './AnnounceService.js';
+import { ConfigLoader } from './ConfigLoader.js';
+import { Constants } from './Constants.js';
+import { VotingKeyAccount } from './VotingUtils.js';
 
 /**
  * params necessary to announce link transactions network.
@@ -380,16 +380,10 @@ export class LinkTransactionGenericFactory {
     if (this.params.removeOldLinked === undefined) {
       return (
         this.params.ready ||
-        (
-          await prompt([
-            {
-              name: 'value',
-              message: `Do you want to unlink the old ${accountName} ${print(alreadyLinkedAccount)}?`,
-              type: 'confirm',
-              default: false,
-            },
-          ])
-        ).value
+        (await confirm({
+          message: `Do you want to unlink the old ${accountName} ${print(alreadyLinkedAccount)}?`,
+          default: false,
+        }))
       );
     }
     return this.params.removeOldLinked;

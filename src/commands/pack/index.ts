@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Command, flags } from '@oclif/command';
+import { confirm } from '@inquirer/prompts';
+import { Command, Flags } from '@oclif/core';
 import { existsSync } from 'fs';
-import { prompt } from 'inquirer';
 import { dirname, join } from 'path';
-import { LoggerFactory, LogType } from '../logger';
+import { LoggerFactory, LogType } from '../../logger/index.js';
 import {
   BootstrapAccountResolver,
   BootstrapService,
@@ -29,10 +29,10 @@ import {
   YamlUtils,
   ZipItem,
   ZipUtils,
-} from '../service';
-import Clean from './clean';
-import Compose from './compose';
-import Config from './config';
+} from '../../service/index.js';
+import Clean from '../clean/index.js';
+import Compose from '../compose/index.js';
+import Config from '../config/index.js';
 
 export default class Pack extends Command {
   static description = 'It configures and packages your node into a zip file that can be uploaded to the final node machine.';
@@ -49,14 +49,14 @@ export default class Pack extends Command {
     ...Compose.flags,
     ...Clean.flags,
     ...Config.flags,
-    ready: flags.boolean({
+    ready: Flags.boolean({
       description: 'If --ready is provided, the command will not ask offline confirmation.',
     }),
     logger: CommandUtils.getLoggerFlag(LogType.Console),
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(Pack);
+    const { flags } = await this.parse(Pack);
     CommandUtils.showBanner();
     const logger = LoggerFactory.getLogger(flags.logger);
     const targetZip = join(dirname(flags.target), `symbol-node.zip`);
@@ -68,16 +68,10 @@ export default class Pack extends Command {
     logger.info('');
     if (
       (!flags.ready || flags.offline) &&
-      !(
-        await prompt([
-          {
-            name: 'offlineNow',
-            message: `Symbol Bootstrap is about to start working with sensitive information (certificates and voting file generation) so it is highly recommended that you disconnect from the network before continuing. Say YES if you are offline or if you don't care.`,
-            type: 'confirm',
-            default: true,
-          },
-        ])
-      ).offlineNow
+      !(await confirm({
+        message: `Symbol Bootstrap is about to start working with sensitive information (certificates and voting file generation) so it is highly recommended that you disconnect from the network before continuing. Say YES if you are offline or if you don't care.`,
+        default: true,
+      }))
     ) {
       logger.info('Come back when you are offline...');
       return;

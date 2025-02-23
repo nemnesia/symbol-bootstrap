@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { isAbsolute, join } from 'path';
 import { NetworkType } from 'symbol-sdk';
-import { KnownError } from './KnownError';
-import { OSUtils } from './OSUtils';
+import { KnownError } from './KnownError.js';
+import { OSUtils } from './OSUtils.js';
 
 /**
  * Random utility methods that don't fit other place.
@@ -63,7 +63,6 @@ export class Utils {
       case NetworkType.TEST_NET:
         return 'testnet';
     }
-    throw new Error(`Invalid Network Type ${networkType}`);
   }
 
   public static resolveWorkingDirPath(workingDir: string, path: string): string {

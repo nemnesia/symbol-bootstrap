@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { Command, flags } from '@oclif/command';
-import { LoggerFactory, System } from '../logger';
-import { BootstrapService, CommandUtils, RunService } from '../service';
-import HealthCheck from './healthCheck';
+import { Command, Flags } from '@oclif/core';
+import { LoggerFactory, System } from '../../logger/index.js';
+import { BootstrapService, CommandUtils, RunService } from '../../service/index.js';
+import HealthCheck from '../healthCheck/index.js';
 
 export default class Run extends Command {
   static description =
@@ -28,44 +28,44 @@ export default class Run extends Command {
   static flags = {
     help: CommandUtils.helpFlag,
     target: CommandUtils.targetFlag,
-    detached: flags.boolean({
+    detached: Flags.boolean({
       char: 'd',
       description:
         'If provided, docker-compose will run with -d (--detached) and this command will wait unit server is running before returning',
     }),
 
-    healthCheck: flags.boolean({
+    healthCheck: Flags.boolean({
       description: HealthCheck.description,
     }),
 
-    resetData: flags.boolean({
+    resetData: Flags.boolean({
       description: 'It reset the database and node data but keeps the generated configuration, keys, voting tree files and block 1',
     }),
 
-    pullImages: flags.boolean({
+    pullImages: Flags.boolean({
       description: 'It pulls the images from DockerHub when running the configuration. It only affects alpha/dev docker images.',
       default: RunService.defaultParams.pullImages,
     }),
 
-    args: flags.string({
+    args: Flags.string({
       multiple: true,
       description: 'Add extra arguments to the docker-compose up command. Check out https://docs.docker.com/compose/reference/up.',
     }),
 
-    build: flags.boolean({
+    build: Flags.boolean({
       char: 'b',
       description: 'If provided, docker-compose will run with -b (--build)',
     }),
 
-    timeout: flags.integer({
+    timeout: Flags.integer({
       description: 'If running in detached mode, how long before timing out (in milliseconds)',
       default: RunService.defaultParams.timeout,
     }),
     logger: CommandUtils.getLoggerFlag(...System),
   };
 
-  public run(): Promise<void> {
-    const { flags } = this.parse(Run);
+  public async run(): Promise<void> {
+    const { flags } = await this.parse(Run);
     CommandUtils.showBanner();
     const logger = LoggerFactory.getLogger(flags.logger);
     return new BootstrapService(logger).run(flags);

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { Logger } from '../logger';
-import { Addresses, ConfigPreset, DockerCompose } from '../model';
-import { ComposeParams, ComposeService } from './ComposeService';
-import { ConfigParams, ConfigResult, ConfigService } from './ConfigService';
-import { LinkParams, LinkService } from './LinkService';
-import { ModifyMultisigParams, ModifyMultisigService } from './ModifyMultisigService';
-import { ReportParams, ReportService } from './ReportService';
-import { RunParams, RunService } from './RunService';
+import { Logger } from '../logger/index.js';
+import { Addresses, ConfigPreset, DockerCompose } from '../model/index.js';
+import { ComposeParams, ComposeService } from './ComposeService.js';
+import { ConfigParams, ConfigResult, ConfigService } from './ConfigService.js';
+import { LinkParams, LinkService } from './LinkService.js';
+import { ModifyMultisigParams, ModifyMultisigService } from './ModifyMultisigService.js';
+import { ReportParams, ReportService } from './ReportService.js';
+import { RunParams, RunService } from './RunService.js';
 
 export type StartParams = ConfigParams & ComposeParams & RunParams;
 

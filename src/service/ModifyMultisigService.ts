@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { prompt } from 'inquirer';
+import { input, number } from '@inquirer/prompts';
 import {
   Address,
   MultisigAccountInfo,
@@ -23,15 +23,15 @@ import {
   Transaction,
   UnresolvedAddress,
 } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { Addresses, ConfigPreset } from '../model';
-import { AccountResolver } from './AccountResolver';
-import { AnnounceService, TransactionFactory, TransactionFactoryParams } from './AnnounceService';
-import { BootstrapAccountResolver } from './BootstrapAccountResolver';
-import { ConfigLoader } from './ConfigLoader';
-import { Constants } from './Constants';
-import { TransactionUtils } from './TransactionUtils';
-import { Password } from './YamlUtils';
+import { Logger } from '../logger/index.js';
+import { Addresses, ConfigPreset } from '../model/index.js';
+import { AccountResolver } from './AccountResolver.js';
+import { AnnounceService, TransactionFactory, TransactionFactoryParams } from './AnnounceService.js';
+import { BootstrapAccountResolver } from './BootstrapAccountResolver.js';
+import { ConfigLoader } from './ConfigLoader.js';
+import { Constants } from './Constants.js';
+import { TransactionUtils } from './TransactionUtils.js';
+import { Password } from './YamlUtils.js';
 
 /**
  * params necessary to announce multisig account modification transaction to network.
@@ -134,16 +134,10 @@ export class ModifyMultisigService implements TransactionFactory {
   public async resolveDelta(name: string, message: string, delta?: number): Promise<number> {
     return delta !== undefined
       ? delta
-      : (
-          await prompt([
-            {
-              name,
-              message,
-              type: 'number',
-              default: 0,
-            },
-          ])
-        )[name];
+      : (await number({
+          message,
+          default: 0,
+        }))!;
   }
 
   public async resolveAddressAdditions(networkType: NetworkType, cosigners?: string): Promise<UnresolvedAddress[]> {
@@ -165,17 +159,7 @@ export class ModifyMultisigService implements TransactionFactory {
   }
 
   public async resolveCosigners(networkType: NetworkType, name: string, message: string, cosigners?: string): Promise<UnresolvedAddress[]> {
-    const resolution =
-      cosigners !== undefined
-        ? cosigners
-        : (
-            await prompt([
-              {
-                name,
-                message,
-              },
-            ])
-          )[name];
+    const resolution = cosigners !== undefined ? cosigners : await input({ message });
     if (!resolution) {
       return [];
     }

@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-import { Command, flags } from '@oclif/command';
-import { LoggerFactory, System } from '../logger';
-import { ConfigPreset } from '../model';
-import { CommandUtils, ConfigLoader, Constants, CryptoUtils, RemoteNodeService, Utils, VotingService, YamlUtils } from '../service';
+import { Command, Flags } from '@oclif/core';
+import { LoggerFactory, System } from '../../logger/index.js';
+import { ConfigPreset } from '../../model/index.js';
+import {
+  CommandUtils,
+  ConfigLoader,
+  Constants,
+  CryptoUtils,
+  RemoteNodeService,
+  Utils,
+  VotingService,
+  YamlUtils,
+} from '../../service/index.js';
 
 export default class UpdateVotingKeys extends Command {
   static description = `It updates the voting files containing the voting keys when required.
@@ -35,19 +44,19 @@ When a new voting file is created, Bootstrap will advise running the \`link\` co
   static flags = {
     help: CommandUtils.helpFlag,
     target: CommandUtils.targetFlag,
-    user: flags.string({
+    user: Flags.string({
       char: 'u',
       description: `User used to run docker images when creating the the voting key files. "${Constants.CURRENT_USER}" means the current user.`,
       default: Constants.CURRENT_USER,
     }),
-    finalizationEpoch: flags.integer({
+    finalizationEpoch: Flags.integer({
       description: `The network's finalization epoch. It can be retrieved from the /chain/info rest endpoint. If not provided, the bootstrap known epoch is used.`,
     }),
     logger: CommandUtils.getLoggerFlag(...System),
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(UpdateVotingKeys);
+    const { flags } = await this.parse(UpdateVotingKeys);
     CommandUtils.showBanner();
     const password = false;
     const target = flags.target;

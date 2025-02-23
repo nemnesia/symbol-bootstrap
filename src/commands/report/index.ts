@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-import { Command } from '@oclif/command';
-import { LoggerFactory, System } from '../logger';
-import { BootstrapService, CommandUtils } from '../service';
+import { Command } from '@oclif/core';
+import { LoggerFactory, System } from '../../logger/index.js';
+import { BootstrapService, CommandUtils, Constants } from '../../service/index.js';
 
-export default class HealthCheck extends Command {
-  static description = `It checks if the services created with docker compose are up and running.
+export default class Report extends Command {
+  static description = 'it generates reStructuredText (.rst) reports describing the configuration of each node.';
 
-This command checks:
-- Whether the docker containers are running.
-- Whether the services' exposed ports are listening.
-- Whether the rest gateways' /node/health are OK.
-
-The health check process handles 'repeat' and custom 'openPort' services.
-    `;
-
-  static examples = [`$ symbol-bootstrap healthCheck`];
+  static examples = [`$ symbol-bootstrap report`];
 
   static flags = {
     help: CommandUtils.helpFlag,
@@ -38,9 +30,10 @@ The health check process handles 'repeat' and custom 'openPort' services.
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(HealthCheck);
+    const { flags } = await this.parse(Report);
     CommandUtils.showBanner();
     const logger = LoggerFactory.getLogger(flags.logger);
-    await new BootstrapService(logger).healthCheck(flags);
+    const workingDir = Constants.defaultWorkingDir;
+    await new BootstrapService(logger).report({ ...flags, workingDir });
   }
 }

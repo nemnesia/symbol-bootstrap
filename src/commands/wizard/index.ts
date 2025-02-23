@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { Command, flags } from '@oclif/command';
-import { IOptionFlag } from '@oclif/command/lib/flags';
+import { confirm, input, password, select } from '@inquirer/prompts';
+import { Command, Flags } from '@oclif/core';
+import { OptionFlag } from '@oclif/core/interfaces';
 import { existsSync, readFileSync } from 'fs';
-import { prompt } from 'inquirer';
 import { join } from 'path';
 import { Account, NetworkType, PublicAccount } from 'symbol-sdk';
-import { Logger, LoggerFactory, LogType } from '../logger';
-import { CustomPreset, PrivateKeySecurityMode } from '../model';
+import { Logger, LoggerFactory, LogType } from '../../logger/index.js';
+import { CustomPreset, PrivateKeySecurityMode } from '../../model/index.js';
 import {
   Assembly,
   BootstrapService,
@@ -34,7 +34,7 @@ import {
   Preset,
   RuntimeService,
   YamlUtils,
-} from '../service';
+} from '../../service/index.js';
 
 export const assembliesDescriptions: Record<Assembly, string> = {
   [Assembly.dual]: 'Dual Node',
@@ -83,25 +83,25 @@ export default class WizardCommand extends Command {
     noPassword: CommandUtils.noPasswordFlag,
     network: WizardCommand.getNetworkIdFlag(),
     customPreset: WizardCommand.getCustomPresetFile(),
-    ready: flags.boolean({
+    ready: Flags.boolean({
       description: 'If --ready is provided, the command will not ask offline confirmation.',
     }),
     logger: CommandUtils.getLoggerFlag(LogType.Console),
   };
 
-  public static getNetworkIdFlag(): IOptionFlag<Network | undefined> {
-    return flags.string({
+  public static getNetworkIdFlag(): OptionFlag<Preset> {
+    return Flags.string({
       description: 'The node or network you want to create.',
       options: [...Object.values(Preset), ...Object.values(CustomNetwork)],
-    }) as IOptionFlag<Network | undefined>;
+    }) as OptionFlag<Preset>;
   }
 
-  public static getCustomPresetFile(): IOptionFlag<string> {
-    return flags.string({ char: 'c', description: 'The custom preset to be created.', default: 'custom-preset.yml' });
+  public static getCustomPresetFile() {
+    return Flags.string({ char: 'c', description: 'The custom preset to be created.', default: 'custom-preset.yml' });
   }
 
   public async run(): Promise<void> {
-    const flags = this.parse(WizardCommand).flags;
+    const { flags } = await this.parse(WizardCommand);
     const logger = LoggerFactory.getLogger(flags.logger);
     return new Wizard(logger).execute({ ...flags, workingDir: Constants.defaultWorkingDir });
   }
@@ -165,16 +165,10 @@ export class Wizard {
     this.logger.info('');
     if (
       !flags.ready &&
-      !(
-        await prompt([
-          {
-            name: 'offlineNow',
-            message: `Symbol Bootstrap is about to start working with sensitive information (private keys) so it is highly recommended that you disconnect from the network before continuing. Say YES if you are offline or if you don't care.`,
-            type: 'confirm',
-            default: true,
-          },
-        ])
-      ).offlineNow
+      !(await confirm({
+        message: `Symbol Bootstrap is about to start working with sensitive information (private keys) so it is highly recommended that you disconnect from the network before continuing. Say YES if you are offline or if you don't care.`,
+        default: true,
+      }))
     ) {
       this.logger.info('Come back when you are offline...');
       return;
@@ -346,15 +340,11 @@ export class Wizard {
       const keyCreationChoices = [];
       keyCreationChoices.push({ name: 'Generating a new account', value: 'generate' });
       keyCreationChoices.push({ name: 'Entering a private key', value: 'manual' });
-      const { keyCreationMode } = await prompt([
-        {
-          name: 'keyCreationMode',
-          message: `How do you want to create the ${keyName} account:`,
-          type: 'list',
-          default: keyCreationChoices[0].name,
-          choices: keyCreationChoices,
-        },
-      ]);
+      const keyCreationMode = await select({
+        message: `How do you want to create the ${keyName} account:`,
+        default: keyCreationChoices[0].name,
+        choices: keyCreationChoices,
+      });
       const log = (account: Account, message: string): Account => {
         this.logger.info('');
         this.logger.info(`Using account ${account.address.plain()} for ${keyName} key. ${message}`);
@@ -378,32 +368,24 @@ export class Wizard {
 
   public async resolveAccount(networkType: NetworkType, keyName: KeyName): Promise<Account | undefined> {
     while (true) {
-      const { privateKey } = await prompt([
-        {
-          name: 'privateKey',
-          message: `Enter the 64 HEX private key of the ${keyName} account (or press enter to select the option again).`,
-          type: 'password',
-          mask: '*',
-          validate: (value) => {
-            if (!value) {
-              return true;
-            }
-            return CommandUtils.isValidPrivateKey(value);
-          },
+      const privateKey = await password({
+        message: `Enter the 64 HEX private key of the ${keyName} account (or press enter to select the option again).`,
+        mask: '*',
+        validate: (value) => {
+          if (!value) {
+            return true;
+          }
+          return CommandUtils.isValidPrivateKey(value);
         },
-      ]);
+      });
       if (!privateKey) {
         return undefined;
       } else {
         const enteredAccount = Account.createFromPrivateKey(privateKey, networkType);
-        const { ok } = await prompt([
-          {
-            name: 'ok',
-            message: `Is this the expected address ${enteredAccount.address.plain()} to used as ${keyName} account? `,
-            type: 'confirm',
-            default: false,
-          },
-        ]);
+        const ok = await confirm({
+          message: `Is this the expected address ${enteredAccount.address.plain()} to used as ${keyName} account? `,
+          default: false,
+        });
         if (ok) {
           return enteredAccount;
         }
@@ -414,24 +396,20 @@ export class Wizard {
   public async resolveNetwork(providedNetwork: Network | undefined): Promise<Network> {
     if (!providedNetwork) {
       this.logger.info('Select type node or network you want to run:\n');
-      const responses = await prompt([
-        {
-          name: 'network',
-          message: 'Select a network:',
-          type: 'list',
-          default: Preset.mainnet,
-          choices: [
-            { name: 'Mainnet Node', value: Preset.mainnet },
-            { name: 'Testnet Node', value: Preset.testnet },
-            { name: 'Bootstrap Local Network', value: Preset.bootstrap },
-            {
-              name: `Custom Network Node ('custom-network-preset.yml' file and 'nemesis-seed' folder are required)`,
-              value: CustomNetwork.custom,
-            },
-          ],
-        },
-      ]);
-      return responses.network;
+      const responses = await select({
+        message: 'Select a network:',
+        default: Preset.mainnet,
+        choices: [
+          { name: 'Mainnet Node', value: Preset.mainnet as Network },
+          { name: 'Testnet Node', value: Preset.testnet as Network },
+          { name: 'Bootstrap Local Network', value: Preset.bootstrap as Network },
+          {
+            name: `Custom Network Node ('custom-network-preset.yml' file and 'nemesis-seed' folder are required)`,
+            value: CustomNetwork.custom as Network,
+          },
+        ],
+      });
+      return responses;
     }
     return providedNetwork;
   }
@@ -441,67 +419,55 @@ export class Wizard {
       this.logger.info(
         `Enter the network preset you want to join. If you don't know have the network preset, ask the network admin for the file and nemesis seed.\n`,
       );
-      const responses = await prompt([
-        {
-          name: 'networkPresetFile',
-          message: 'Enter the network a network:',
-          type: 'input',
-          validate(input: string): string | boolean {
-            const fileLocation = join(workingDir, input);
-            if (!YamlUtils.isYmlFile(fileLocation)) {
-              return `${fileLocation} is not a yaml file`;
-            }
-            if (!existsSync(fileLocation)) {
-              return `${fileLocation} doesn't exist`;
-            }
-            return true;
-          },
-          default: 'custom-network-preset.yml',
+      const responses = await input({
+        message: 'Enter the network a network:',
+        validate(input: string): string | boolean {
+          const fileLocation = join(workingDir, input);
+          if (!YamlUtils.isYmlFile(fileLocation)) {
+            return `${fileLocation} is not a yaml file`;
+          }
+          if (!existsSync(fileLocation)) {
+            return `${fileLocation} doesn't exist`;
+          }
+          return true;
         },
-      ]);
-      return responses.networkPresetFile;
+        default: 'custom-network-preset.yml',
+      });
+      return responses;
     }
     return network;
   }
 
   public async resolvePrivateKeySecurityMode(): Promise<PrivateKeySecurityMode> {
-    const { mode } = await prompt([
-      {
-        name: 'mode',
-        message: 'Select the type of security you want to use:',
-        type: 'list',
-        default: PrivateKeySecurityMode.PROMPT_MAIN_TRANSPORT,
-        choices: [
-          {
-            name: 'PROMPT_MAIN: Bootstrap may ask for the Main private key when doing certificates upgrades. Other keys are encrypted.',
-            value: PrivateKeySecurityMode.PROMPT_MAIN,
-          },
-          {
-            name: 'PROMPT_MAIN_TRANSPORT: Bootstrap may ask for the Main and Transport private keys when regenerating certificates. Other keys are encrypted. Recommended for most nodes',
-            value: PrivateKeySecurityMode.PROMPT_MAIN_TRANSPORT,
-          },
-          { name: 'ENCRYPT: All keys are encrypted, only password would be asked', value: PrivateKeySecurityMode.ENCRYPT },
-        ],
-      },
-    ]);
+    const mode = await select({
+      message: 'Select the type of security you want to use:',
+      default: PrivateKeySecurityMode.PROMPT_MAIN_TRANSPORT,
+      choices: [
+        {
+          name: 'PROMPT_MAIN: Bootstrap may ask for the Main private key when doing certificates upgrades. Other keys are encrypted.',
+          value: PrivateKeySecurityMode.PROMPT_MAIN,
+        },
+        {
+          name: 'PROMPT_MAIN_TRANSPORT: Bootstrap may ask for the Main and Transport private keys when regenerating certificates. Other keys are encrypted. Recommended for most nodes',
+          value: PrivateKeySecurityMode.PROMPT_MAIN_TRANSPORT,
+        },
+        { name: 'ENCRYPT: All keys are encrypted, only password would be asked', value: PrivateKeySecurityMode.ENCRYPT },
+      ],
+    });
     return mode;
   }
 
   public async resolveAssembly(network: Network): Promise<string> {
     this.logger.info('Select the assembly to be created:\n');
-    const responses = await prompt([
-      {
-        name: 'assembly',
-        message: 'Select an assembly:',
-        type: 'list',
-        default: assemblies[network][0],
-        choices: assemblies[network].map((value) => ({
-          value: value,
-          name: assembliesDescriptions[value],
-        })),
-      },
-    ]);
-    return responses.assembly;
+    const responses = await select({
+      message: 'Select an assembly:',
+      default: assemblies[network][0],
+      choices: assemblies[network].map((value) => ({
+        value: value,
+        name: assembliesDescriptions[value],
+      })),
+    });
+    return responses;
   }
 
   private async isVoting(): Promise<boolean> {
@@ -509,32 +475,24 @@ export class Wizard {
       'Select whether your Symbol node should be a Voting node. Note: A Voting node requires the main account to hold at least 3 million XYMs. ',
     );
     this.logger.info('If your node does not have enough XYMs its Voting key may not be included. ');
-    const { voting } = await prompt([
-      {
-        name: 'voting',
-        message: 'Are you creating a Voting node?',
-        type: 'confirm',
-        default: false,
-      },
-    ]);
+    const voting = await confirm({
+      message: 'Are you creating a Voting node?',
+      default: false,
+    });
     return voting;
   }
 
   public async resolveHost(message: string, required: boolean): Promise<string> {
-    const { host } = await prompt([
-      {
-        name: 'host',
-        message: message,
-        type: 'input',
-        validate: (value) => {
-          if (!required && !value) {
-            return true;
-          }
-          return this.isValidHost(value);
-        },
+    const host = await input({
+      message: message,
+      validate: (value) => {
+        if (!required && !value) {
+          return true;
+        }
+        return this.isValidHost(value);
       },
-    ]);
-    return host || undefined;
+    });
+    return host;
   }
 
   public async resolveRestSSLKeyAsBase64(): Promise<string> {
@@ -546,19 +504,15 @@ export class Wizard {
   }
 
   public async resolveFileContent(encoding: 'base64', message: string, notFoundMessage: string): Promise<string> {
-    const { value } = await prompt([
-      {
-        name: 'value',
-        message: message,
-        type: 'input',
-        validate: (value) => {
-          if (!existsSync(value)) {
-            return notFoundMessage;
-          }
-          return true;
-        },
+    const value = await input({
+      message: message,
+      validate: (value) => {
+        if (!existsSync(value)) {
+          return notFoundMessage;
+        }
+        return true;
       },
-    ]);
+    });
 
     return readFileSync(value, encoding);
   }
@@ -588,15 +542,11 @@ export class Wizard {
     return true;
   }
   public async resolveFriendlyName(defaultFriendlyName: string): Promise<string> {
-    const { friendlyName } = await prompt([
-      {
-        name: 'friendlyName',
-        message: `Enter the friendly name of your node.`,
-        type: 'input',
-        default: defaultFriendlyName,
-        validate: this.isValidFriendlyName,
-      },
-    ]);
+    const friendlyName = await input({
+      message: `Enter the friendly name of your node.`,
+      default: defaultFriendlyName,
+      validate: this.isValidFriendlyName,
+    });
     return friendlyName;
   }
 
@@ -605,22 +555,18 @@ export class Wizard {
     this.logger.info(
       'Your REST Gateway should be running on HTTPS (which is a secure protocol) so that it can be recognized by the Symbol Explorer.',
     );
-    const { value } = await prompt([
-      {
-        name: 'value',
-        message: 'Select your HTTPS setup method:',
-        type: 'list',
-        default: HttpsOption.Native,
-        choices: [
-          { name: 'Native support, I have the SSL certificate and key.', value: HttpsOption.Native },
-          {
-            name: `Automatic, all of your keys and certs will be generated/renewed automatically, using letsencyrpt.`,
-            value: HttpsOption.Automatic,
-          },
-          { name: 'None', value: HttpsOption.None },
-        ],
-      },
-    ]);
+    const value = await select({
+      message: 'Select your HTTPS setup method:',
+      default: HttpsOption.Native,
+      choices: [
+        { name: 'Native support, I have the SSL certificate and key.', value: HttpsOption.Native },
+        {
+          name: `Automatic, all of your keys and certs will be generated/renewed automatically, using letsencyrpt.`,
+          value: HttpsOption.Automatic,
+        },
+        { name: 'None', value: HttpsOption.None },
+      ],
+    });
     return value;
   }
 }

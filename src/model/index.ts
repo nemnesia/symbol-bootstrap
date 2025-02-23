@@ -1,5 +1,5 @@
 // created from 'create-ts-index'
 
-export * from './Addresses';
-export * from './ConfigPreset';
-export * from './DockerCompose';
+export * from './Addresses.js';
+export * from './ConfigPreset.js';
+export * from './DockerCompose.js';

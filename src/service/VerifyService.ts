@@ -15,10 +15,10 @@
  */
 import * as os from 'os';
 import * as semver from 'semver';
-import { Logger } from '../logger';
-import { OSUtils } from './OSUtils';
-import { RuntimeService } from './RuntimeService';
-import { Utils } from './Utils';
+import { Logger } from '../logger/index.js';
+import { OSUtils } from './OSUtils.js';
+import { RuntimeService } from './RuntimeService.js';
+import { Utils } from './Utils.js';
 export interface VerifyReport {
   platform: string;
   lines: ReportLine[];

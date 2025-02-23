@@ -11,17 +11,19 @@ it generates reStructuredText (.rst) reports describing the configuration of eac
 
 ```
 USAGE
-  $ symbol-bootstrap report
+  $ symbol-bootstrap report [-h] [-t <value>] [--logger <value>]
 
-OPTIONS
-  -h, --help           It shows the help of this command.
-  -t, --target=target  [default: target] The target folder where the symbol-bootstrap network is generated
+FLAGS
+  -h, --help            It shows the help of this command.
+  -t, --target=<value>  [default: target] The target folder where the symbol-bootstrap network is generated
+      --logger=<value>  [default: Console,File] The loggers the command will use. Options are: Console,File,Silent. Use
+                        ',' to select multiple loggers.
 
-  --logger=logger      [default: Console,File] The loggers the command will use. Options are: Console,File,Silent. Use
-                       ',' to select multiple loggers.
+DESCRIPTION
+  it generates reStructuredText (.rst) reports describing the configuration of each node.
 
-EXAMPLE
+EXAMPLES
   $ symbol-bootstrap report
 ```
 
-_See code: [src/commands/report.ts](https://github.com/nemneshia/symbol-bootstrap/blob/v2.0.0/src/commands/report.ts)_
+_See code: [src/commands/report/index.ts](https://github.com/nemneshia/symbol-bootstrap/blob/v2.0.0/src/commands/report/index.ts)_

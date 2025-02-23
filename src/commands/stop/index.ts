@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { Command } from '@oclif/command';
-import { LoggerFactory, System } from '../logger';
-import { BootstrapService, CommandUtils } from '../service';
+import { Command } from '@oclif/core';
+import { LoggerFactory, System } from '../../logger/index.js';
+import { BootstrapService, CommandUtils } from '../../service/index.js';
 
-export default class ResetData extends Command {
-  static description = 'It removes the data keeping the generated configuration, certificates, keys and block 1.';
-
-  static examples = [`$ symbol-bootstrap resetData`];
+export default class Stop extends Command {
+  static description =
+    'It stops the docker-compose network if running (symbol-bootstrap started with --detached). This is just a wrapper for the `docker-compose down` bash call.';
+  static examples = [`$ symbol-bootstrap stop`];
 
   static flags = {
     help: CommandUtils.helpFlag,
@@ -30,9 +30,9 @@ export default class ResetData extends Command {
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(ResetData);
-    CommandUtils.showBanner();
+    const { flags } = await this.parse(Stop);
     const logger = LoggerFactory.getLogger(flags.logger);
-    await new BootstrapService(logger).resetData(flags);
+    CommandUtils.showBanner();
+    return new BootstrapService(logger).stop(flags);
   }
 }

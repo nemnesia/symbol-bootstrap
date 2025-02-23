@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Command, flags } from '@oclif/command';
-import { LoggerFactory, System } from '../logger';
-import { BootstrapService, CommandUtils, ComposeService, Constants } from '../service';
+import { Command, Flags } from '@oclif/core';
+import { LoggerFactory, System } from '../../logger/index.js';
+import { BootstrapService, CommandUtils, ComposeService, Constants } from '../../service/index.js';
 
 export default class Compose extends Command {
   static description = 'It generates the `docker-compose.yml` file from the configured network.';
@@ -28,12 +28,12 @@ export default class Compose extends Command {
     target: CommandUtils.targetFlag,
     password: CommandUtils.passwordFlag,
     noPassword: CommandUtils.noPasswordFlag,
-    upgrade: flags.boolean({
+    upgrade: Flags.boolean({
       description: 'It regenerates the docker compose and utility files from the <target>/docker folder',
       default: ComposeService.defaultParams.upgrade,
     }),
     offline: CommandUtils.offlineFlag,
-    user: flags.string({
+    user: Flags.string({
       char: 'u',
       description: `User used to run the services in the docker-compose.yml file. "${Constants.CURRENT_USER}" means the current user.`,
       default: 'current',
@@ -42,7 +42,7 @@ export default class Compose extends Command {
   };
 
   public async run(): Promise<void> {
-    const { flags } = this.parse(Compose);
+    const { flags } = await this.parse(Compose);
     CommandUtils.showBanner();
 
     const logger = LoggerFactory.getLogger(flags.logger);
