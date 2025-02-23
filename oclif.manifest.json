@@ -322,55 +322,6 @@
         "index.js"
       ]
     },
-    "healthCheck": {
-      "aliases": [],
-      "args": {},
-      "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
-      "examples": [
-        "$ symbol-bootstrap healthCheck"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "healthCheck",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "healthCheck",
-        "index.js"
-      ]
-    },
     "encrypt": {
       "aliases": [],
       "args": {},
@@ -433,6 +384,55 @@
         "lib",
         "commands",
         "encrypt",
+        "index.js"
+      ]
+    },
+    "healthCheck": {
+      "aliases": [],
+      "args": {},
+      "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
+      "examples": [
+        "$ symbol-bootstrap healthCheck"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "healthCheck",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "healthCheck",
         "index.js"
       ]
     },

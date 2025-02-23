@@ -97,7 +97,7 @@
   "scripts": {
     "doc": "typedoc --out \"ts-docs\" src && touch ./ts-docs/.nojekyll",
     "lint": "eslint --cache src/ test/ --ext .ts",
-    "clean": "npx shx rm -rf ./lib",
+    "clean": "npx shx rm -rf ./lib tsconfig.tsbuildinfo",
     "lint:fix": "eslint src/ test/ --ext .ts --fix",
     "prettier": "prettier --write ./src ./test",
     "style:fix": "npm run create-index-files && npm run prettier && npm run lint:fix && npm run oclif-doc",

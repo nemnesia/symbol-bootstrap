@@ -46,7 +46,7 @@ export class CommandUtils {
   });
 
   public static showBanner(): void {
-    console.log(figlet.textSync('symbol-bootstrap', { horizontalLayout: 'controlled smushing' }));
+    console.log(figlet.textSync('symbol-bootstrap', { horizontalLayout: 'controlled smushing', font: 'Slant' }));
   }
 
   public static getPasswordFlag(description: string) {
