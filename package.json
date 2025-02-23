@@ -5,8 +5,8 @@
   "author": "Nemneshia <@nemneshia>",
   "type": "module",
   "bin": {
-    "sb": "bin/run",
-    "symbol-bootstrap": "bin/run"
+    "sb": "./bin/run.js",
+    "symbol-bootstrap": "./bin/run.js"
   },
   "bugs": "https://github.com/nemneshia/symbol-bootstrap/issues",
   "dependencies": {
@@ -86,8 +86,8 @@
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "oclif": {
-    "commands": "./lib/commands",
     "bin": "symbol-bootstrap",
+    "commands": "./lib/commands",
     "plugins": [
       "@oclif/plugin-autocomplete",
       "@oclif/plugin-help"
