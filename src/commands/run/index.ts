@@ -21,7 +21,7 @@ import HealthCheck from '../healthCheck/index.js';
 
 export default class Run extends Command {
   static description =
-    'It boots the network via docker using the generated `docker-compose.yml` file and configuration. The config and compose methods/commands need to be called before this method. This is just a wrapper for the `docker-compose up` bash call.';
+    'It boots the network via docker using the generated `compose.yml` file and configuration. The config and compose methods/commands need to be called before this method. This is just a wrapper for the `docker compose up` bash call.';
 
   static examples = [`$ symbol-bootstrap run`];
 
@@ -31,7 +31,7 @@ export default class Run extends Command {
     detached: Flags.boolean({
       char: 'd',
       description:
-        'If provided, docker-compose will run with -d (--detached) and this command will wait unit server is running before returning',
+        'If provided, docker compose will run with -d (--detached) and this command will wait unit server is running before returning',
     }),
 
     healthCheck: Flags.boolean({
@@ -49,12 +49,12 @@ export default class Run extends Command {
 
     args: Flags.string({
       multiple: true,
-      description: 'Add extra arguments to the docker-compose up command. Check out https://docs.docker.com/compose/reference/up.',
+      description: 'Add extra arguments to the docker compose up command. Check out https://docs.docker.com/compose/reference/up.',
     }),
 
     build: Flags.boolean({
       char: 'b',
-      description: 'If provided, docker-compose will run with -b (--build)',
+      description: 'If provided, docker compose will run with -b (--build)',
     }),
 
     timeout: Flags.integer({

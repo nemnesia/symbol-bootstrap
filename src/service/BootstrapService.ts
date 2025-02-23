@@ -50,7 +50,7 @@ export class BootstrapService {
   }
 
   /**
-   * It generates the docker-compose.yaml file from the previously generated configuration.
+   * It generates the docker compose.yaml file from the previously generated configuration.
    *
    * The config method/command needs to be called before this method
    *
@@ -106,11 +106,11 @@ export class BootstrapService {
   }
 
   /**
-   * It boots the network via docker using the generated docker-compose.yml file and configuration
+   * It boots the network via docker using the generated compose.yml file and configuration
    *
    * The config and compose methods/commands need to be called before this method.
    *
-   * This is just a wrapper for docker-compose up bash call.
+   * This is just a wrapper for docker compose up bash call.
    *
    * @param config the params of the run command.
    */
@@ -149,9 +149,9 @@ export class BootstrapService {
   }
 
   /**
-   * It stops the docker-compose network if running.
+   * It stops the docker compose network if running.
    *
-   * This is just a wrapper for docker-compose down bash call.
+   * This is just a wrapper for docker compose down bash call.
    *
    * @param config the params necessary to detect and stop the network.
    */

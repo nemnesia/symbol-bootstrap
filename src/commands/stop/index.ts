@@ -20,7 +20,7 @@ import { BootstrapService, CommandUtils } from '../../service/index.js';
 
 export default class Stop extends Command {
   static description =
-    'It stops the docker-compose network if running (symbol-bootstrap started with --detached). This is just a wrapper for the `docker-compose down` bash call.';
+    'It stops the docker compose network if running (symbol-bootstrap started with --detached). This is just a wrapper for the `docker compose down` bash call.';
   static examples = [`$ symbol-bootstrap stop`];
 
   static flags = {

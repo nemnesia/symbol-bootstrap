@@ -1,13 +1,13 @@
 `symbol-bootstrap compose`
 ==========================
 
-It generates the `docker-compose.yml` file from the configured network.
+It generates the `compose.yml` file from the configured network.
 
 * [`symbol-bootstrap compose`](#symbol-bootstrap-compose)
 
 ## `symbol-bootstrap compose`
 
-It generates the `docker-compose.yml` file from the configured network.
+It generates the `compose.yml` file from the configured network.
 
 ```
 USAGE
@@ -17,8 +17,8 @@ USAGE
 FLAGS
   -h, --help              It shows the help of this command.
   -t, --target=<value>    [default: target] The target folder where the symbol-bootstrap network is generated
-  -u, --user=<value>      [default: current] User used to run the services in the docker-compose.yml file. "current"
-                          means the current user.
+  -u, --user=<value>      [default: current] User used to run the services in the compose.yml file. "current" means the
+                          current user.
       --logger=<value>    [default: Console,File] The loggers the command will use. Options are: Console,File,Silent.
                           Use ',' to select multiple loggers.
       --noPassword        When provided, Bootstrap will not use a password, so private keys will be stored in plain
@@ -31,7 +31,7 @@ FLAGS
       --upgrade           It regenerates the docker compose and utility files from the <target>/docker folder
 
 DESCRIPTION
-  It generates the `docker-compose.yml` file from the configured network.
+  It generates the `compose.yml` file from the configured network.
 
 EXAMPLES
   $ symbol-bootstrap compose

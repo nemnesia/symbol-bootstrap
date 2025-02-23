@@ -22,13 +22,13 @@ FLAGS
       services, my-custom-assembly.yml (advanced).
 
   -b, --build
-      If provided, docker-compose will run with -b (--build)
+      If provided, docker compose will run with -b (--build)
 
   -c, --customPreset=<value>
       External preset file. Values in this file will override the provided presets.
 
   -d, --detached
-      If provided, docker-compose will run with -d (--detached) and this command will wait unit server is running before
+      If provided, docker compose will run with -d (--detached) and this command will wait unit server is running before
       returning
 
   -h, --help
@@ -50,7 +50,7 @@ FLAGS
       block. "current" means the current user.
 
   --args=<value>...
-      Add extra arguments to the docker-compose up command. Check out https://docs.docker.com/compose/reference/up.
+      Add extra arguments to the docker compose up command. Check out https://docs.docker.com/compose/reference/up.
 
   --healthCheck
       It checks if the services created with docker compose are up and running.

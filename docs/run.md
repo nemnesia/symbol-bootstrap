@@ -1,13 +1,13 @@
 `symbol-bootstrap run`
 ======================
 
-It boots the network via docker using the generated `docker-compose.yml` file and configuration. The config and compose methods/commands need to be called before this method. This is just a wrapper for the `docker-compose up` bash call.
+It boots the network via docker using the generated `compose.yml` file and configuration. The config and compose methods/commands need to be called before this method. This is just a wrapper for the `docker compose up` bash call.
 
 * [`symbol-bootstrap run`](#symbol-bootstrap-run)
 
 ## `symbol-bootstrap run`
 
-It boots the network via docker using the generated `docker-compose.yml` file and configuration. The config and compose methods/commands need to be called before this method. This is just a wrapper for the `docker-compose up` bash call.
+It boots the network via docker using the generated `compose.yml` file and configuration. The config and compose methods/commands need to be called before this method. This is just a wrapper for the `docker compose up` bash call.
 
 ```
 USAGE
@@ -16,10 +16,10 @@ USAGE
 
 FLAGS
   -b, --build
-      If provided, docker-compose will run with -b (--build)
+      If provided, docker compose will run with -b (--build)
 
   -d, --detached
-      If provided, docker-compose will run with -d (--detached) and this command will wait unit server is running before
+      If provided, docker compose will run with -d (--detached) and this command will wait unit server is running before
       returning
 
   -h, --help
@@ -29,7 +29,7 @@ FLAGS
       [default: target] The target folder where the symbol-bootstrap network is generated
 
   --args=<value>...
-      Add extra arguments to the docker-compose up command. Check out https://docs.docker.com/compose/reference/up.
+      Add extra arguments to the docker compose up command. Check out https://docs.docker.com/compose/reference/up.
 
   --healthCheck
       It checks if the services created with docker compose are up and running.
@@ -55,9 +55,8 @@ FLAGS
       [default: 60000] If running in detached mode, how long before timing out (in milliseconds)
 
 DESCRIPTION
-  It boots the network via docker using the generated `docker-compose.yml` file and configuration. The config and
-  compose methods/commands need to be called before this method. This is just a wrapper for the `docker-compose up` bash
-  call.
+  It boots the network via docker using the generated `compose.yml` file and configuration. The config and compose
+  methods/commands need to be called before this method. This is just a wrapper for the `docker compose up` bash call.
 
 EXAMPLES
   $ symbol-bootstrap run

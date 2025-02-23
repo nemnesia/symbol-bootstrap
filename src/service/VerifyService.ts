@@ -37,9 +37,9 @@ export interface ExpectedVersions {
 }
 
 const defaultExpectedVersions: ExpectedVersions = {
-  node: '12.0.0',
-  docker: '18.3.0',
-  dockerCompose: '1.25.0',
+  node: '18.0.0',
+  docker: '20.10.13',
+  dockerCompose: '2.0.0',
 };
 
 export interface VerifyAction {
@@ -214,7 +214,7 @@ export class VerifyService {
     this.actions.push(
       new AppVersionVerifyAction(appVersionService, {
         header: 'Docker Compose Version',
-        command: 'docker-compose --version',
+        command: 'docker compose version',
         recommendationUrl: `https://docs.docker.com/compose/install/`,
         expectedVersion: this.expectedVersions.dockerCompose,
       }),

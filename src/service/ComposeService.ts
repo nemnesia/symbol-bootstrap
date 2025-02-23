@@ -82,7 +82,7 @@ export class ComposeService {
     if (this.params.upgrade) {
       this.fileSystemService.deleteFolder(targetDocker);
     }
-    const dockerFile = join(targetDocker, 'docker-compose.yml');
+    const dockerFile = join(targetDocker, 'compose.yml');
     if (existsSync(dockerFile)) {
       this.logger.info(dockerFile + ' already exist. Reusing. (run --upgrade to drop and upgrade)');
       return YamlUtils.loadYaml(dockerFile, false);
@@ -99,7 +99,7 @@ export class ComposeService {
       return `${hostFolder}:${imageFolder}:${readOnly ? 'ro' : 'rw'}`;
     };
 
-    this.logger.info(`Creating docker-compose.yml from last used profile.`);
+    this.logger.info(`Creating compose.yml from last used profile.`);
 
     const services: (DockerComposeService | undefined)[] = [];
 
@@ -391,7 +391,6 @@ export class ComposeService {
     const validServices: DockerComposeService[] = services.filter((s) => s).map((s) => s as DockerComposeService);
     const servicesMap: Record<string, DockerComposeService> = _.keyBy(validServices, 'container_name');
     let dockerCompose: DockerCompose = {
-      version: presetData.dockerComposeVersion,
       services: servicesMap,
     };
 
@@ -410,7 +409,7 @@ export class ComposeService {
 
     dockerCompose = Utils.pruneEmpty(_.merge({}, dockerCompose, presetData.compose));
     await YamlUtils.writeYaml(dockerFile, dockerCompose, undefined);
-    this.logger.info(`The docker-compose.yml file created ${dockerFile}`);
+    this.logger.info(`The compose.yml file created ${dockerFile}`);
     return dockerCompose;
   }
 

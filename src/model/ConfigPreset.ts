@@ -396,7 +396,6 @@ export interface CommonConfigPreset extends NodeConfigPreset, GatewayConfigPrese
   symbolFaucetImage: string;
   httpsPortalImage: string;
 
-  dockerComposeVersion: number | string;
   dockerComposeServiceRestart: string;
   dockerComposeDebugMode: boolean;
   mongoComposeRunParam: string;

@@ -19,7 +19,7 @@ import { LoggerFactory, System } from '../../logger/index.js';
 import { BootstrapService, CommandUtils, ComposeService, Constants } from '../../service/index.js';
 
 export default class Compose extends Command {
-  static description = 'It generates the `docker-compose.yml` file from the configured network.';
+  static description = 'It generates the `compose.yml` file from the configured network.';
 
   static examples = [`$ symbol-bootstrap compose`];
 
@@ -35,7 +35,7 @@ export default class Compose extends Command {
     offline: CommandUtils.offlineFlag,
     user: Flags.string({
       char: 'u',
-      description: `User used to run the services in the docker-compose.yml file. "${Constants.CURRENT_USER}" means the current user.`,
+      description: `User used to run the services in the compose.yml file. "${Constants.CURRENT_USER}" means the current user.`,
       default: 'current',
     }),
     logger: CommandUtils.getLoggerFlag(...System),

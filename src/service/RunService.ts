@@ -34,7 +34,7 @@ import { RuntimeService } from './RuntimeService.js';
 import { Utils } from './Utils.js';
 import { YamlUtils } from './YamlUtils.js';
 /**
- * params necessary to run the docker-compose network.
+ * params necessary to run the docker compose network.
  */
 export type RunParams = {
   detached?: boolean;
@@ -93,7 +93,7 @@ export class RunService {
   }
 
   public async healthCheck(pollIntervalMs = 10000): Promise<void> {
-    const dockerFile = join(this.params.target, `docker`, `docker-compose.yml`);
+    const dockerFile = join(this.params.target, `docker`, `compose.yml`);
     if (!existsSync(dockerFile)) {
       this.logger.info(`Docker compose ${dockerFile} does not exist. Cannot check the status of the service.`);
       return;
@@ -220,15 +220,15 @@ export class RunService {
   }
 
   private async beforeRun(extraArgs: string[], ignoreIfNotFound: boolean): Promise<boolean> {
-    const dockerFile = join(this.params.target, `docker`, `docker-compose.yml`);
+    const dockerFile = join(this.params.target, `docker`, `compose.yml`);
     const dockerComposeArgs = ['-f', dockerFile];
     const args = [...dockerComposeArgs, ...extraArgs];
     if (!existsSync(dockerFile)) {
       if (ignoreIfNotFound) {
-        this.logger.info(`Docker compose ${dockerFile} does not exist, ignoring: docker-compose ${args.join(' ')}`);
+        this.logger.info(`Docker compose ${dockerFile} does not exist, ignoring: docker compose ${args.join(' ')}`);
         return false;
       } else {
-        throw new Error(`Docker compose ${dockerFile} does not exist. Cannot run: docker-compose ${args.join(' ')}`);
+        throw new Error(`Docker compose ${dockerFile} does not exist. Cannot run: docker compose ${args.join(' ')}`);
       }
     }
 
@@ -252,10 +252,10 @@ export class RunService {
   }
 
   private async basicRun(extraArgs: string[]): Promise<string> {
-    const dockerFile = join(this.params.target, `docker`, `docker-compose.yml`);
-    const dockerComposeArgs = ['-f', dockerFile];
+    const dockerFile = join(this.params.target, `docker`, `compose.yml`);
+    const dockerComposeArgs = ['compose', '-f', dockerFile];
     const args = [...dockerComposeArgs, ...extraArgs];
-    return this.runtimeService.spawn({ command: 'docker-compose', args: args, useLogger: false });
+    return this.runtimeService.spawn({ command: 'docker', args: args, useLogger: false });
   }
 
   private async pullImages(dockerCompose: DockerCompose) {
