@@ -5,8 +5,8 @@
   "author": "Nemneshia <@nemneshia>",
   "type": "module",
   "bin": {
-    "sb": "./bin/run.js",
-    "symbol-bootstrap": "./bin/run.js"
+    "sb": "bin/run.js",
+    "symbol-bootstrap": "bin/run.js"
   },
   "bugs": "https://github.com/nemneshia/symbol-bootstrap/issues",
   "dependencies": {
@@ -93,7 +93,10 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "nemneshia/symbol-bootstrap",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nemneshia/symbol-bootstrap.git"
+  },
   "scripts": {
     "doc": "typedoc --out \"ts-docs\" src && touch ./ts-docs/.nojekyll",
     "lint": "eslint --cache src/ test/ --ext .ts",
@@ -102,7 +105,7 @@
     "prettier": "prettier --write ./src ./test",
     "style:fix": "npm run create-index-files && npm run prettier && npm run lint:fix && npm run oclif-doc",
     "create-index-files": "cti create ./src -b -n -e commands",
-    "postpack": "npx shx rm -f oclif.manifest.json",
+    "postpack": "npx shx rm -f oclif.manifest.json tsconfig.tsbuildinfo",
     "posttest": "eslint src/ test/ --ext .ts",
     "oclif-doc": "oclif manifest && oclif readme --multi",
     "oclif-debug": "env DEBUG=* oclif manifest",
@@ -117,7 +120,9 @@
     "version": "echo $npm_package_version",
     "install-cli": "npm pack && npm i -g",
     "clean-network": "symbol-bootstrap clean -t target/bootstrap-test",
-    "start-network": "symbol-bootstrap start -t target/bootstrap-test -u 'current'"
+    "start-network": "symbol-bootstrap start -t target/bootstrap-test -u 'current'",
+    "publish:prd": "npm publish --access public",
+    "publish:dry": "npm publish --access public --dry-run"
   },
   "types": "lib/index.d.ts"
 }
