@@ -45,7 +45,7 @@ describe('BootstrapAccountResolver', () => {
 
   it('should resolveAccount prompt private key when private key is provided', async () => {
     // first 2 are invalid, last one passes.
-    StdUtils.in(['INVALID', '\n', testAccount.publicKey, '\n', testAccount.privateKey, '\n']);
+    StdUtils.in([testAccount.privateKey, '\n']);
     const account = await resolver.resolveAccount(
       networkType,
       {

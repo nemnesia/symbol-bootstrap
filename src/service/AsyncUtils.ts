@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Logger } from '../logger';
+import { Logger } from '../logger/index.js';
 
 /**
  * Async related utility methods.

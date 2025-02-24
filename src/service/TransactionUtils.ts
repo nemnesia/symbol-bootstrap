@@ -16,9 +16,9 @@
 
 import { firstValueFrom } from 'rxjs';
 import { Address, MultisigAccountInfo, RepositoryFactory } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { ConfigPreset } from '../model';
-import { RemoteNodeService } from './RemoteNodeService';
+import { Logger } from '../logger/index.js';
+import { ConfigPreset } from '../model/index.js';
+import { RemoteNodeService } from './RemoteNodeService.js';
 
 export class TransactionUtils {
   public static async getRepositoryFactory(logger: Logger, presetData: ConfigPreset, url: string | undefined): Promise<RepositoryFactory> {

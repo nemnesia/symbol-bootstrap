@@ -94,7 +94,7 @@ describe('', () => {
     });
   });
 
-  it('should resolveAccount when old and new are same, new no private eky', async () => {
+  it('should resolveAccount when old and new are same, new no private key', async () => {
     const networkType = NetworkType.TEST_NET;
     const securityMode = PrivateKeySecurityMode.ENCRYPT;
     const oldAccount = Account.generateNewAccount(networkType);

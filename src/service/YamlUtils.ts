@@ -17,9 +17,9 @@
 import { promises as fsPromises, readFileSync } from 'fs';
 import * as yaml from 'js-yaml';
 import { dirname } from 'path';
-import { CryptoUtils } from './CryptoUtils';
-import { KnownError } from './KnownError';
-import { Utils } from './Utils';
+import { CryptoUtils } from './CryptoUtils.js';
+import { KnownError } from './KnownError.js';
+import { Utils } from './Utils.js';
 
 export type Password = string | false | undefined;
 

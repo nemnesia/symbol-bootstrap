@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { Crypto } from 'symbol-sdk';
-import { PrivateKeySecurityMode } from '../model';
-import { KnownError } from './KnownError';
+import { PrivateKeySecurityMode } from '../model/index.js';
+import { KnownError } from './KnownError.js';
 
 export class CryptoUtils {
   private static readonly ENCRYPT_PREFIX = 'ENCRYPTED:';

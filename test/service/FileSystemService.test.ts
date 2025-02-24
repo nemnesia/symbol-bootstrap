@@ -18,10 +18,11 @@ import { expect } from 'chai';
 import { statSync } from 'fs';
 import 'mocha';
 import { it } from 'mocha';
+import nock from 'nock';
 import { FileSystemService, LoggerFactory, LogType, Utils, YamlUtils } from '../../src';
-import nock = require('nock');
 const logger = LoggerFactory.getLogger(LogType.Silent);
 const fileSystemService = new FileSystemService(logger);
+
 describe('FileSystemService', () => {
   it('FileSystemService.download', async () => {
     const url = 'https://myserver.get';
@@ -52,7 +53,7 @@ describe('FileSystemService', () => {
       await fileSystemService.download(url + '/boat.png', 'boat.png');
       expect(false).eq(true);
     } catch (e) {
-      expect(Utils.getMessage(e)).eq('Server responded with 404');
+      expect(Utils.getMessage(e)).eq('Server responded with 404 Not Found');
     }
   });
 });

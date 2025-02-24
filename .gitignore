@@ -20,3 +20,5 @@ coverage
 /backup-sync/
 /lib
 custom-preset.yml
+tsconfig.tsbuildinfo
+/.yarn

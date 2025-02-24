@@ -34,7 +34,7 @@ describe('ComposeService', () => {
         service.mem_limit = 123;
       }
     });
-    const targetDocker = join(params.target, `docker`, 'docker-compose.yml');
+    const targetDocker = join(params.target, `docker`, 'compose.yml');
     expect(existsSync(targetDocker)).to.be.true;
     const expectedFileLocation = `./test/composes/${expectedComposeFile}`;
     if (!existsSync(expectedFileLocation)) {
@@ -204,7 +204,7 @@ ${YamlUtils.toYaml(dockerCompose)}
       reset: false,
       preset: Preset.bootstrap,
     };
-    await assertDockerCompose(params, 'expected-docker-compose-bootstrap.yml');
+    await assertDockerCompose(params, 'expected-compose-bootstrap.yml');
   });
 
   it('Compose bootstrap custom compose', async () => {
@@ -227,7 +227,7 @@ ${YamlUtils.toYaml(dockerCompose)}
       preset: Preset.bootstrap,
       assembly: Assembly.multinode,
     };
-    await assertDockerCompose(params, 'expected-docker-compose-bootstrap-custom-compose.yml');
+    await assertDockerCompose(params, 'expected-compose-bootstrap-custom-compose.yml');
   });
 
   it('Compose bootstrap custom preset', async () => {
@@ -249,7 +249,7 @@ ${YamlUtils.toYaml(dockerCompose)}
       preset: Preset.bootstrap,
       assembly: Assembly.multinode,
     };
-    await assertDockerCompose(params, 'expected-docker-compose-bootstrap-custom.yml');
+    await assertDockerCompose(params, 'expected-compose-bootstrap-custom.yml');
   });
 
   it('Compose mainnet custom services, logging and grace period', async () => {
@@ -285,7 +285,7 @@ ${YamlUtils.toYaml(dockerCompose)}
       assembly: Assembly.demo,
       preset: Preset.bootstrap,
     };
-    await assertDockerCompose(params, 'expected-docker-compose-bootstrap-demo.yml');
+    await assertDockerCompose(params, 'expected-compose-bootstrap-demo.yml');
   });
   it('Compose bootstrap dual', async () => {
     const params = {
@@ -298,7 +298,7 @@ ${YamlUtils.toYaml(dockerCompose)}
       assembly: Assembly.dual,
       preset: Preset.bootstrap,
     };
-    await assertDockerCompose(params, 'expected-docker-compose-bootstrap-dual.yml');
+    await assertDockerCompose(params, 'expected-compose-bootstrap-dual.yml');
   });
 
   it('Compose mainnet services', async () => {
@@ -316,7 +316,7 @@ ${YamlUtils.toYaml(dockerCompose)}
       assembly: Assembly.services,
       preset: Preset.mainnet,
     };
-    await assertDockerCompose(params, 'expected-docker-compose-mainnet-services.yml');
+    await assertDockerCompose(params, 'expected-compose-mainnet-services.yml');
   });
 
   it('Compose bootstrap repeat', async () => {
@@ -339,7 +339,7 @@ ${YamlUtils.toYaml(dockerCompose)}
       assembly: Assembly.multinode,
       customPreset: './test/repeat_preset.yml',
     };
-    await assertDockerCompose(params, 'expected-docker-compose-bootstrap-repeat.yml');
+    await assertDockerCompose(params, 'expected-compose-bootstrap-repeat.yml');
   });
 
   it('resolveDebugOptions', async () => {

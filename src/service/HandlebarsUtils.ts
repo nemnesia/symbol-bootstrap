@@ -15,13 +15,13 @@
  */
 
 import { promises as fsPromises } from 'fs';
-import * as Handlebars from 'handlebars';
-import * as _ from 'lodash';
+import Handlebars from 'handlebars';
+import _ from 'lodash';
 import { totalmem } from 'os';
 import { basename, join } from 'path';
 import { DtoMapping } from 'symbol-sdk';
-import { Utils } from './Utils';
-import { YamlUtils } from './YamlUtils';
+import { Utils } from './Utils.js';
+import { YamlUtils } from './YamlUtils.js';
 
 export class HandlebarsUtils {
   public static async generateConfiguration(
@@ -70,7 +70,6 @@ export class HandlebarsUtils {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static runTemplate(template: string, templateContext: any): string {
     try {
       const compiledTemplate = Handlebars.compile(template);

@@ -11,17 +11,19 @@ It removes the data keeping the generated configuration, certificates, keys and 
 
 ```
 USAGE
-  $ symbol-bootstrap resetData
+  $ symbol-bootstrap resetData [-h] [-t <value>] [--logger <value>]
 
-OPTIONS
-  -h, --help           It shows the help of this command.
-  -t, --target=target  [default: target] The target folder where the symbol-bootstrap network is generated
+FLAGS
+  -h, --help            It shows the help of this command.
+  -t, --target=<value>  [default: target] The target folder where the symbol-bootstrap network is generated
+      --logger=<value>  [default: Console,File] The loggers the command will use. Options are: Console,File,Silent. Use
+                        ',' to select multiple loggers.
 
-  --logger=logger      [default: Console,File] The loggers the command will use. Options are: Console,File,Silent. Use
-                       ',' to select multiple loggers.
+DESCRIPTION
+  It removes the data keeping the generated configuration, certificates, keys and block 1.
 
-EXAMPLE
+EXAMPLES
   $ symbol-bootstrap resetData
 ```
 
-_See code: [src/commands/resetData.ts](https://github.com/nemneshia/symbol-bootstrap/blob/v2.0.0/src/commands/resetData.ts)_
+_See code: [src/commands/resetData/index.ts](https://github.com/nemneshia/symbol-bootstrap/blob/v2.0.0/src/commands/resetData/index.ts)_

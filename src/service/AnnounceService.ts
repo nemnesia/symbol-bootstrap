@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { flags } from '@oclif/command';
-import { prompt } from 'inquirer';
+import { confirm, password } from '@inquirer/prompts';
+import { Flags } from '@oclif/core';
 import { firstValueFrom } from 'rxjs';
 import {
   Account,
@@ -40,13 +40,13 @@ import {
   TransferTransaction,
   UInt64,
 } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { Addresses, ConfigPreset, NodeAccount, NodePreset } from '../model';
-import { AccountResolver } from './AccountResolver';
-import { CommandUtils } from './CommandUtils';
-import { KeyName } from './ConfigService';
-import { TransactionUtils } from './TransactionUtils';
-import { Utils } from './Utils';
+import { Logger } from '../logger/index.js';
+import { Addresses, ConfigPreset, NodeAccount, NodePreset } from '../model/index.js';
+import { AccountResolver } from './AccountResolver.js';
+import { CommandUtils } from './CommandUtils.js';
+import { KeyName } from './ConfigService.js';
+import { TransactionUtils } from './TransactionUtils.js';
+import { Utils } from './Utils.js';
 
 export interface TransactionFactoryParams {
   presetData: ConfigPreset;
@@ -75,27 +75,27 @@ export class AnnounceService {
   public static flags = {
     password: CommandUtils.passwordFlag,
     noPassword: CommandUtils.noPasswordFlag,
-    url: flags.string({
+    url: Flags.string({
       char: 'u',
       description: 'the network url',
       default: 'http://localhost:3000',
     }),
-    useKnownRestGateways: flags.boolean({
+    useKnownRestGateways: Flags.boolean({
       description:
         'Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.',
     }),
-    ready: flags.boolean({
+    ready: Flags.boolean({
       description: 'If --ready is provided, the command will not ask for confirmation when announcing transactions.',
     }),
-    maxFee: flags.integer({
+    maxFee: Flags.integer({
       description: 'the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.',
     }),
-    customPreset: flags.string({
+    customPreset: Flags.string({
       char: 'c',
       description: `This command uses the encrypted addresses.yml to resolve the main private key. If the main private is only stored in the custom preset, you can provide it using this param. Otherwise, the command may ask for it when required.`,
       required: false,
     }),
-    serviceProviderPublicKey: flags.string({
+    serviceProviderPublicKey: Flags.string({
       description:
         'Public key of the service provider account, used when the transaction announcer(service provider account) is different than the main account private key holder',
     }),
@@ -411,15 +411,12 @@ export class AnnounceService {
     while (true) {
       this.logger.info('');
       const expectedDescription = allowedAddresses.map((address) => address.plain()).join(', ');
-      const responses = await prompt([
-        {
-          name: 'privateKey',
-          message: `Enter the 64 HEX private key of one of the addresses ${expectedDescription}. Already entered ${providedAccounts.length} out of ${minApproval} required cosigners.`,
-          type: 'password',
-          validate: CommandUtils.isValidPrivateKey,
-        },
-      ]);
-      const privateKey = responses.privateKey;
+      const responses = await password({
+        message: `Enter the 64 HEX private key of one of the addresses ${expectedDescription}. Already entered ${providedAccounts.length} out of ${minApproval} required cosigners.`,
+        mask: '*',
+        validate: CommandUtils.isValidPrivateKey,
+      });
+      const privateKey = responses;
       if (!privateKey) {
         this.logger.info('Please provide the private key....');
       } else {
@@ -442,15 +439,11 @@ export class AnnounceService {
             this.logger.info(`Min Approval of ${minApproval} has been reached. Aggregate Complete transaction can be created.`);
             return providedAccounts;
           }
-          const responses = await prompt([
-            {
-              name: 'more',
-              message: `Do you want to enter more cosigners?`,
-              type: 'confirm',
-              default: providedAccounts.length < minApproval,
-            },
-          ]);
-          if (!responses.more) {
+          const responses = await confirm({
+            message: `Do you want to enter more cosigners?`,
+            default: providedAccounts.length < minApproval,
+          });
+          if (!responses) {
             return providedAccounts;
           } else {
             this.logger.info('Please provide an additional private key....');
@@ -664,16 +657,10 @@ export class AnnounceService {
   ): Promise<boolean> {
     const response: boolean =
       ready ||
-      (
-        await prompt([
-          {
-            name: 'value',
-            message: `Do you want to announce ${this.getTransactionDescription(transaction, signedTransaction, currency)}?`,
-            type: 'confirm',
-            default: true,
-          },
-        ])
-      ).value;
+      (await confirm({
+        message: `Do you want to announce ${this.getTransactionDescription(transaction, signedTransaction, currency)}?`,
+        default: true,
+      }));
     if (!response) {
       this.logger.info(`Ignoring transaction for node[${nodeName}]`);
     }

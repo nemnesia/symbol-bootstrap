@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-import { test } from '@oclif/test';
+import { runCommand } from '@oclif/test';
 
 describe('config', () => {
-  test
-    .stdout()
-    .command(['config', '-p', 'bootstrap', '-r', '--password', '1111'])
-    .it('runs config', (ctx) => {
-      console.log(ctx.stdout);
-    });
+  it('runs config', async () => {
+    const { stdout } = await runCommand(['config', '-p', 'bootstrap', '-r', '--password', '1111']);
+    console.log(stdout);
+  });
 });
 
 describe('config with opt in', () => {
-  test
-    .stdout()
-    .command(['config', '-p', 'bootstrap', '-r', '-c', './test/optin_preset.yml', '--noPassword'])
-    .it('runs config', (ctx) => {
-      console.log(ctx.stdout);
-    });
+  it('runs config', async () => {
+    const { stdout } = await runCommand(['config', '-p', 'bootstrap', '-r', '-c', './test/optin_preset.yml', '--noPassword']);
+    console.log(stdout);
+  });
 });

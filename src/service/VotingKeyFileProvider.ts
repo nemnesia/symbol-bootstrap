@@ -16,10 +16,10 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { Account } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { ConfigPreset, NodeAccount, NodePreset } from '../model';
-import { RuntimeService } from './RuntimeService';
-import { VotingUtils } from './VotingUtils';
+import { Logger } from '../logger/index.js';
+import { ConfigPreset, NodeAccount, NodePreset } from '../model/index.js';
+import { RuntimeService } from './RuntimeService.js';
+import { VotingUtils } from './VotingUtils.js';
 
 export interface VotingKeyParams {
   presetData: ConfigPreset;

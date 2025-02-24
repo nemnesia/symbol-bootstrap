@@ -262,8 +262,8 @@ describe('Announce Service', () => {
         minApproval: 2,
       }),
     );
-    stub(announceService, <any>'getMultisigBestCosigner').callsFake((multisigAccountInfo, cosigners: Account[]) => {
-      cosigners.push(...cosigns);
+    stub(announceService, <any>'getMultisigBestCosigner').callsFake((multisigAccountInfo, cosigners) => {
+      (cosigners as Account[]).push(...cosigns);
       return bestCosigner;
     });
     const tsAnnounce = stub(TransactionService.prototype, 'announce').returns(of({} as Transaction));
@@ -336,8 +336,8 @@ describe('Announce Service', () => {
         minApproval: 2,
       }),
     );
-    stub(announceService, <any>'getMultisigBestCosigner').callsFake((multisigAccountInfo, cosigners: Account[]) => {
-      cosigners.push(...cosigns);
+    stub(announceService, <any>'getMultisigBestCosigner').callsFake((multisigAccountInfo, cosigners) => {
+      (cosigners as Account[]).push(...cosigns);
       return bestCosigner;
     });
     stub(accountResolver, 'resolveAccount').returns(Promise.resolve(bestCosigner));

@@ -172,7 +172,6 @@ enableAutoHarvesting: true
 fileDatabaseBatchSize: 1
 maxUnlockedAccounts: 10
 delegatePrioritizationPolicy: Importance
-dockerComposeVersion: '2.4'
 dockerComposeServiceRestart: 'on-failure:2'
 dockerComposeDebugMode: false
 minPartnerNodeVersion: 1.0.2.0

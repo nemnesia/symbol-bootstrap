@@ -14,53 +14,54 @@
  * limitations under the License.
  */
 
-import { expect, test } from '@oclif/test';
+import { runCommand } from '@oclif/test';
+import { expect } from 'chai';
 import { existsSync } from 'fs';
 import { CryptoUtils, FileSystemService, LoggerFactory, LogType, YamlUtils } from '../../src';
 const logger = LoggerFactory.getLogger(LogType.Silent);
 const fileSystemService = new FileSystemService(logger);
 describe('encrypt', () => {
-  test
-    .add('remove target', () => fileSystemService.deleteFolder('target/tests.encrypt'))
-    .stdout()
-    .command('encrypt --source test/encrypt/plain.yml --destination target/tests.encrypt/encrypted.yml --password 1111'.split(' '))
-    .it('runs encrypt and creates file', async (ctx) => {
-      expect(ctx.stdout).to.contain('Encrypted file target/tests.encrypt/encrypted.yml has been created!');
-      expect(existsSync('target/tests.encrypt/encrypted.yml')).eq(true);
-      expect(await YamlUtils.loadYaml('target/tests.encrypt/encrypted.yml', '1111')).deep.eq(
-        await YamlUtils.loadYaml('test/encrypt/encrypted.yml', '1111'),
-      );
-      expect(CryptoUtils.encryptedCount(await YamlUtils.loadYaml('target/tests.encrypt/encrypted.yml', false))).eq(
-        CryptoUtils.encryptedCount(await YamlUtils.loadYaml('test/encrypt/encrypted.yml', false)),
-      );
-    });
+  it('runs encrypt and creates file', async () => {
+    fileSystemService.deleteFolder('target/tests.encrypt');
+    const { stdout } = await runCommand(
+      'encrypt --source test/encrypt/plain.yml --destination target/tests.encrypt/encrypted.yml --password 1111'.split(' '),
+    );
+    expect(stdout).to.contain('Encrypted file target/tests.encrypt/encrypted.yml has been created!');
+    expect(existsSync('target/tests.encrypt/encrypted.yml')).eq(true);
+    expect(await YamlUtils.loadYaml('target/tests.encrypt/encrypted.yml', '1111')).deep.eq(
+      await YamlUtils.loadYaml('test/encrypt/encrypted.yml', '1111'),
+    );
+    expect(CryptoUtils.encryptedCount(await YamlUtils.loadYaml('target/tests.encrypt/encrypted.yml', false))).eq(
+      CryptoUtils.encryptedCount(await YamlUtils.loadYaml('test/encrypt/encrypted.yml', false)),
+    );
+  });
 
-  test
-    .add('remove target', () => fileSystemService.deleteFolder('target/tests.encrypt'))
-    .stdout()
-    .command('encrypt --source test/encrypt/plain.yml --destination target/tests.encrypt/encrypted.yml --password 1'.split(' '))
-    .catch((ctx) => {
+  it('password too short', async () => {
+    fileSystemService.deleteFolder('target/tests.encrypt');
+    await runCommand(
+      'encrypt --source test/encrypt/plain.yml --destination target/tests.encrypt/encrypted.yml --password 1'.split(' '),
+    ).catch((ctx) => {
       expect(ctx.message).to.contain('--password is invalid, Password must have at least 4 characters but got 1');
-    })
-    .it('password too short');
+    });
+  });
 
-  test
-    .add('remove target', () => fileSystemService.deleteFolder('target/tests.encrypt'))
-    .stdout()
-    .command('encrypt --source test/encrypt/encrypted.yml --destination target/tests.encrypt/encrypted.yml --password 1111'.split(' '))
-    .catch((ctx) => {
+  it('already encrypted', async () => {
+    fileSystemService.deleteFolder('target/tests.encrypt');
+    await runCommand(
+      'encrypt --source test/encrypt/encrypted.yml --destination target/tests.encrypt/encrypted.yml --password 1111'.split(' '),
+    ).catch((ctx) => {
       expect(ctx.message).to.contain(
         'Source file test/encrypt/encrypted.yml is already encrypted. If you want to decrypt it use the decrypt command.',
       );
-    })
-    .it('already encrypted');
+    });
+  });
 
-  test
-    .add('remove target', () => fileSystemService.deleteFolder('target/tests.encrypt'))
-    .stdout()
-    .command('encrypt --source test/encrypt/plain.yml --destination test/encrypt/plain.yml --password 1111'.split(' '))
-    .catch((ctx) => {
-      expect(ctx.message).to.contain('Destination file test/encrypt/plain.yml already exists!');
-    })
-    .it('same destination');
+  it('same destination', async () => {
+    fileSystemService.deleteFolder('target/tests.encrypt');
+    await runCommand('encrypt --source test/encrypt/plain.yml --destination test/encrypt/plain.yml --password 1111'.split(' ')).catch(
+      (ctx) => {
+        expect(ctx.message).to.contain('Destination file test/encrypt/plain.yml already exists!');
+      },
+    );
+  });
 });

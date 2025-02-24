@@ -17,16 +17,16 @@
 import { existsSync, writeFileSync } from 'fs';
 import { join, resolve } from 'path';
 import { Convert, Crypto, NetworkType } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { CertificatePair } from '../model';
-import { AccountResolver } from './AccountResolver';
-import { KeyName } from './ConfigService';
-import { Constants } from './Constants';
-import { FileSystemService } from './FileSystemService';
-import { HandlebarsUtils } from './HandlebarsUtils';
-import { RuntimeService } from './RuntimeService';
-import { Utils } from './Utils';
-import { YamlUtils } from './YamlUtils';
+import { Logger } from '../logger/index.js';
+import { CertificatePair } from '../model/index.js';
+import { AccountResolver } from './AccountResolver.js';
+import { KeyName } from './ConfigService.js';
+import { Constants } from './Constants.js';
+import { FileSystemService } from './FileSystemService.js';
+import { HandlebarsUtils } from './HandlebarsUtils.js';
+import { RuntimeService } from './RuntimeService.js';
+import { Utils } from './Utils.js';
+import { YamlUtils } from './YamlUtils.js';
 
 export interface CertificateParams {
   readonly target: string;

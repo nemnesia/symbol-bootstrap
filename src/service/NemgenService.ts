@@ -16,12 +16,12 @@
 
 import { promises } from 'fs';
 import { join } from 'path';
-import { Logger } from '../logger';
-import { ConfigPreset } from '../model';
-import { ConfigParams } from './ConfigService';
-import { Constants } from './Constants';
-import { FileSystemService } from './FileSystemService';
-import { RuntimeService } from './RuntimeService';
+import { Logger } from '../logger/index.js';
+import { ConfigPreset } from '../model/index.js';
+import { ConfigParams } from './ConfigService.js';
+import { Constants } from './Constants.js';
+import { FileSystemService } from './FileSystemService.js';
+import { RuntimeService } from './RuntimeService.js';
 
 type NemgenParams = ConfigParams;
 

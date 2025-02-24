@@ -15,11 +15,11 @@
  */
 
 import { join } from 'path';
-import { Logger } from '../logger';
-import { ConfigPreset, NodeAccount, NodePreset } from '../model';
-import { FileSystemService } from './FileSystemService';
-import { CatapultVotingKeyFileProvider, NativeVotingKeyFileProvider, VotingKeyFileProvider } from './VotingKeyFileProvider';
-import { VotingUtils } from './VotingUtils';
+import { Logger } from '../logger/index.js';
+import { ConfigPreset, NodeAccount, NodePreset } from '../model/index.js';
+import { FileSystemService } from './FileSystemService.js';
+import { CatapultVotingKeyFileProvider, NativeVotingKeyFileProvider, VotingKeyFileProvider } from './VotingKeyFileProvider.js';
+import { VotingUtils } from './VotingUtils.js';
 
 export interface VotingParams {
   target: string;

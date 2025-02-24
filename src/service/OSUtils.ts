@@ -19,7 +19,7 @@
  */
 export class OSUtils {
   public static isRoot(): boolean {
-    return !OSUtils.isWindows() && process?.getuid() === 0;
+    return !OSUtils.isWindows() && typeof process.getuid === 'function' && process.getuid() === 0;
   }
 
   public static isWindows(): boolean {

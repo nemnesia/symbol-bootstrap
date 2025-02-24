@@ -57,7 +57,6 @@ export interface DockerComposeServiceLogging {
 }
 
 export interface DockerCompose {
-  version: string | number;
   networks?: {
     default?: {
       ipam?: {

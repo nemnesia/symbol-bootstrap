@@ -35,7 +35,7 @@ describe('VerifyService', () => {
   async function getCurrentVersions() {
     const appVersionService = new AppVersionService(logger, runtimeService);
     const currentDockerVersion = await appVersionService.loadVersionFromCommand('docker --version');
-    const currentDockerComposeVersion = await appVersionService.loadVersionFromCommand('docker-compose --version');
+    const currentDockerComposeVersion = await appVersionService.loadVersionFromCommand('docker compose version');
     expect(semver.valid(VerifyService.currentNodeJsVersion, AppVersionService.semverOptions));
     expect(semver.valid(currentDockerVersion, AppVersionService.semverOptions));
     expect(semver.valid(currentDockerComposeVersion, AppVersionService.semverOptions));
@@ -83,7 +83,7 @@ describe('VerifyService', () => {
   it('VerifyService verify current installation when too old', async () => {
     const expectedVersions = {
       node: '21.0.0',
-      docker: '27.4.0',
+      docker: '28.4.0',
       dockerCompose: '3.29.5',
     };
     const service = new VerifyService(logger, expectedVersions);

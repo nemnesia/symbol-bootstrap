@@ -150,6 +150,8 @@ describe('ReportService', () => {
   it('ReportService testnet peer voting non harvesting report', async () => {
     const target = 'target/tests/ReportService.testnet.peer.non.harvesting.voting.report';
     const customPresetObject: CustomPreset = {
+      restDeploymentToolLastUpdatedDate: '2021-05-23',
+      restDeploymentToolVersion: 'abc',
       nodes: [
         {
           mainPrivateKey: 'CA82E7ADAF7AB729A5462A1BD5AA78632390634904A64EB1BB22295E2E1A1BDD',
@@ -201,6 +203,8 @@ describe('ReportService', () => {
   it('ReportService mainnet peer', async () => {
     const target = 'target/tests/ReportService.mainnet.peer.report';
     const customPresetObject: CustomPreset = {
+      restDeploymentToolLastUpdatedDate: '2021-05-23',
+      restDeploymentToolVersion: 'abc',
       nodes: [
         {
           mainPrivateKey: 'CA82E7ADAF7AB729A5462A1BD5AA78632390634904A64EB1BB22295E2E1A1BDD',

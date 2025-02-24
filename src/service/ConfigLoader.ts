@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 import { existsSync } from 'fs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { join } from 'path';
 import { Account, PublicAccount } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { Addresses, ConfigAccount, ConfigPreset, CustomPreset, NodePreset } from '../model';
-import { Assembly, defaultAssembly } from './ConfigService';
-import { Constants } from './Constants';
-import { HandlebarsUtils } from './HandlebarsUtils';
-import { KnownError } from './KnownError';
-import { MigrationService } from './MigrationService';
-import { Utils } from './Utils';
-import { Password, YamlUtils } from './YamlUtils';
+import { Logger } from '../logger/index.js';
+import { Addresses, ConfigAccount, ConfigPreset, CustomPreset, NodePreset } from '../model/index.js';
+import { Assembly, defaultAssembly } from './ConfigService.js';
+import { Constants } from './Constants.js';
+import { HandlebarsUtils } from './HandlebarsUtils.js';
+import { KnownError } from './KnownError.js';
+import { MigrationService } from './MigrationService.js';
+import { Utils } from './Utils.js';
+import { Password, YamlUtils } from './YamlUtils.js';
 
 /**
  * Helper object that knows how to load addresses and preset files.

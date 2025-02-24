@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { prompt } from 'inquirer';
+import { password } from '@inquirer/prompts';
 import { Account, NetworkType, PublicAccount } from 'symbol-sdk';
-import { Logger } from '../logger';
-import { CertificatePair } from '../model';
-import { AccountResolver, CommandUtils, KeyName, KnownError } from './';
+import { Logger } from '../logger/index.js';
+import { CertificatePair } from '../model/index.js';
+import { AccountResolver, CommandUtils, KeyName, KnownError } from './index.js';
 
 /**
  * Prompt ready implementation of the account resolver.
@@ -50,16 +50,12 @@ export class BootstrapAccountResolver implements AccountResolver {
       this.logger.info(`${keyName} private key is required when ${operationDescription}.`);
       const address = PublicAccount.createFromPublicKey(account.publicKey, networkType).address.plain();
       const nodeDescription = nodeName === '' ? `of` : `of the Node's '${nodeName}'`;
-      const responses = await prompt([
-        {
-          name: 'value',
-          message: `Enter the 64 HEX private key ${nodeDescription} ${keyName} account with Address: ${address} and Public Key: ${account.publicKey}:`,
-          type: 'password',
-          mask: '*',
-          validate: CommandUtils.isValidPrivateKey,
-        },
-      ]);
-      const privateKey = responses.value === '' ? undefined : responses.value.toUpperCase();
+      const responses = await password({
+        message: `Enter the 64 HEX private key ${nodeDescription} ${keyName} account with Address: ${address} and Public Key: ${account.publicKey}:`,
+        mask: '*',
+        validate: CommandUtils.isValidPrivateKey,
+      });
+      const privateKey = responses === '' ? undefined : responses.toUpperCase();
       if (!privateKey) {
         this.logger.info('Please provide the private key.');
       } else {

@@ -49,7 +49,7 @@
   },
   "deployment": {
     "deploymentTool": "@nemneshia/symbol-bootstrap",
-    "deploymentToolVersion": "2.0.0",
-    "lastUpdatedDate": "2025-02-21"
+    "deploymentToolVersion": "abc",
+    "lastUpdatedDate": "2021-05-23"
   }
 }

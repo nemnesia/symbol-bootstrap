@@ -15,7 +15,7 @@
  */
 
 import { NetworkType } from 'symbol-sdk';
-import { DockerCompose, DockerComposeService } from './DockerCompose';
+import { DockerCompose, DockerComposeService } from './DockerCompose.js';
 
 export enum PrivateKeySecurityMode {
   ENCRYPT = 'ENCRYPT',
@@ -396,7 +396,6 @@ export interface CommonConfigPreset extends NodeConfigPreset, GatewayConfigPrese
   symbolFaucetImage: string;
   httpsPortalImage: string;
 
-  dockerComposeVersion: number | string;
   dockerComposeServiceRestart: string;
   dockerComposeDebugMode: boolean;
   mongoComposeRunParam: string;

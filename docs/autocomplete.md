@@ -1,29 +1,37 @@
 `symbol-bootstrap autocomplete`
 ===============================
 
-display autocomplete installation instructions
+Display autocomplete installation instructions.
 
 * [`symbol-bootstrap autocomplete [SHELL]`](#symbol-bootstrap-autocomplete-shell)
 
 ## `symbol-bootstrap autocomplete [SHELL]`
 
-display autocomplete installation instructions
+Display autocomplete installation instructions.
 
 ```
 USAGE
-  $ symbol-bootstrap autocomplete [SHELL]
+  $ symbol-bootstrap autocomplete [SHELL] [-r]
 
 ARGUMENTS
-  SHELL  shell type
+  SHELL  (zsh|bash|powershell) Shell type
 
-OPTIONS
+FLAGS
   -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+DESCRIPTION
+  Display autocomplete installation instructions.
 
 EXAMPLES
   $ symbol-bootstrap autocomplete
+
   $ symbol-bootstrap autocomplete bash
+
   $ symbol-bootstrap autocomplete zsh
+
+  $ symbol-bootstrap autocomplete powershell
+
   $ symbol-bootstrap autocomplete --refresh-cache
 ```
 
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.2.0/src/commands/autocomplete/index.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v3.2.23/src/commands/autocomplete/index.ts)_

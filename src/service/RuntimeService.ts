@@ -16,9 +16,9 @@
 
 import { exec as callbackExec, spawn } from 'child_process';
 import * as util from 'util';
-import { Logger } from '../logger';
-import { OSUtils } from './OSUtils';
-import { Utils } from './Utils';
+import { Logger } from '../logger/index.js';
+import { OSUtils } from './OSUtils.js';
+import { Utils } from './Utils.js';
 const exec = util.promisify(callbackExec);
 
 export interface SpawnParams {
@@ -149,8 +149,8 @@ export class RuntimeService {
       return RuntimeService.dockerUserId;
     }
     try {
-      const userId = process?.getuid();
-      const groupId = process?.getgid();
+      const userId = process && typeof process.getuid === 'function' ? process.getuid() : undefined;
+      const groupId = process && typeof process.getgid === 'function' ? process.getgid() : undefined;
       const user = `${userId}:${groupId}`;
       this.logger.info(`User for docker resolved: ${user}`);
       if (userId === 0) {
