@@ -18,12 +18,14 @@ services:
     environment:
       npm_config_cache: /symbol-workdir
     image: symbolplatform/symbol-rest:2.5.0
-    command: npm start-light --prefix /app /symbol-workdir/rest.light.json
+    command: npm run start-light --prefix /app /symbol-workdir/rest.light.json
     stop_signal: SIGINT
     working_dir: /symbol-workdir
     ports:
       - '3000:3000'
     restart: on-failure:2
+    volumes:
+      - ../gateways/rest-gateway:/symbol-workdir:rw
     networks:
       default:
         ipv4_address: 172.20.0.25
