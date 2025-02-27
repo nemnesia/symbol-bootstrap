@@ -64,11 +64,11 @@ maxNameSize: 64
 maxChildNamespaces: 256
 maxNamespaceDepth: 3
 batchVerificationRandomSource:
-symbolServerImage: symbolplatform/symbol-server:gcc-1.0.3.7
-symbolRestImage: symbolplatform/symbol-rest:2.4.4
+symbolServerImage: symbolplatform/symbol-server:gcc-1.0.3.8
+symbolRestImage: symbolplatform/symbol-rest:2.5.0
 symbolExplorerImage: symbolplatform/symbol-explorer:1.2.3-amd64
 symbolFaucetImage: symbolplatform/symbol-faucet:1.1.0
-mongoImage: mongo:6.0.14
+mongoImage: mongo:7.0.17
 httpsPortalImage: steveltn/https-portal:1.23.1
 mongoComposeRunParam: --wiredTigerCacheSizeGB 2
 logLevel: 'Info'

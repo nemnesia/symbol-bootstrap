@@ -254,8 +254,8 @@ export class ComposeService {
       (presetData.gateways || [])
         .filter((d) => !d.excludeDockerService)
         .map(async (n) => {
+          const volumes = [vol(`../${targetGatewaysFolder}/${n.name}`, nodeWorkingDirectory, false)];
           if (n.databaseHost) {
-            const volumes = [vol(`../${targetGatewaysFolder}/${n.name}`, nodeWorkingDirectory, false)];
             services.push(
               await resolveService(n, {
                 container_name: n.name,
@@ -279,11 +279,12 @@ export class ComposeService {
                 user,
                 environment: { npm_config_cache: nodeWorkingDirectory },
                 image: presetData.symbolRestImage,
-                command: 'npm start-light --prefix /app /symbol-workdir/rest.light.json',
+                command: 'npm run start-light --prefix /app /symbol-workdir/rest.light.json',
                 stop_signal: 'SIGINT',
                 working_dir: nodeWorkingDirectory,
                 ports: resolvePorts([{ internalPort: restInternalPort, openPort: n.openPort }]),
                 restart: restart,
+                volumes: volumes,
                 ...this.resolveDebugOptions(presetData.dockerComposeDebugMode, n.dockerComposeDebugMode),
               }),
             );
