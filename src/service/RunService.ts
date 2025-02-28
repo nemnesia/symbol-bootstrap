@@ -166,23 +166,38 @@ export class RunService {
               const url = 'http://localhost:' + externalPort;
               const repositoryFactory = new RepositoryFactoryHttp(url);
               const nodeRepository = repositoryFactory.createNodeRepository();
-              const testUrl = `${url}/node/health`;
-              this.logger.info(`Testing ${testUrl}`);
-              try {
-                const healthStatus = await firstValueFrom(nodeRepository.getNodeHealth());
-                if (healthStatus.apiNode === NodeStatusEnum.Down) {
-                  this.logger.warn(`Rest ${testUrl} is NOT up and running YET: Api Node is still Down!`);
+              if (service.command !== undefined && service.command.indexOf('start-light') > -1) {
+                // light rest
+                const testUrl = `${url}/node/info`;
+                this.logger.info(`Testing ${testUrl}`);
+                try {
+                  // 取得出来ればOK
+                  await firstValueFrom(nodeRepository.getNodeInfo());
+                  this.logger.info(`Rest ${testUrl} is up and running...`);
+                  return true;
+                } catch (e) {
+                  this.logger.warn(`Rest ${testUrl} is NOT up and running YET: ${Utils.getMessage(e)}`);
                   return false;
                 }
-                if (healthStatus.db === NodeStatusEnum.Down) {
-                  this.logger.warn(`Rest ${testUrl} is NOT up and running YET: DB is still Down!`);
+              } else {
+                const testUrl = `${url}/node/health`;
+                this.logger.info(`Testing ${testUrl}`);
+                try {
+                  const healthStatus = await firstValueFrom(nodeRepository.getNodeHealth());
+                  if (healthStatus.apiNode === NodeStatusEnum.Down) {
+                    this.logger.warn(`Rest ${testUrl} is NOT up and running YET: Api Node is still Down!`);
+                    return false;
+                  }
+                  if (healthStatus.db === NodeStatusEnum.Down) {
+                    this.logger.warn(`Rest ${testUrl} is NOT up and running YET: DB is still Down!`);
+                    return false;
+                  }
+                  this.logger.info(`Rest ${testUrl} is up and running...`);
+                  return true;
+                } catch (e) {
+                  this.logger.warn(`Rest ${testUrl} is NOT up and running YET: ${Utils.getMessage(e)}`);
                   return false;
                 }
-                this.logger.info(`Rest ${testUrl} is up and running...`);
-                return true;
-              } catch (e) {
-                this.logger.warn(`Rest ${testUrl} is NOT up and running YET: ${Utils.getMessage(e)}`);
-                return false;
               }
             }
             return true;

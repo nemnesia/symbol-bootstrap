@@ -132,185 +132,6 @@
         "index.js"
       ]
     },
-    "decrypt": {
-      "aliases": [],
-      "args": {},
-      "description": "It decrypts a yml file using the provided password. The source file can be a custom preset file, a preset.yml file or an addresses.yml.\n\nThe main use case of this command is to verify private keys in encrypted files after encrypting a custom preset or running a bootstrap command with a provided --password.",
-      "examples": [
-        "\n$ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n$ symbol-bootstrap decrypt --password 1234 --source target/addresses.yml --destination plain-addresses.yml\n$ symbol-bootstrap decrypt --password 1234 --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml\n        ",
-        "\n$ symbol-bootstrap start --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n> password prompt\n$ symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n> password prompt (enter the same password)\n$ symbol-bootstrap decrypt --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n> password prompt (enter the same password)\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml",
-        "\n$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "source": {
-          "description": "The source encrypted yml file to be decrypted.",
-          "name": "source",
-          "required": true,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "destination": {
-          "description": "The destination decrypted file to create. The destination file must not exist.",
-          "name": "destination",
-          "required": true,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "password": {
-          "description": "The password to use to decrypt the source file into the destination file. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
-          "name": "password",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "decrypt",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "decrypt",
-        "index.js"
-      ]
-    },
-    "healthCheck": {
-      "aliases": [],
-      "args": {},
-      "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
-      "examples": [
-        "$ symbol-bootstrap healthCheck"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "healthCheck",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "healthCheck",
-        "index.js"
-      ]
-    },
-    "encrypt": {
-      "aliases": [],
-      "args": {},
-      "description": "It encrypts a yml file using the provided password. The source files would be a custom preset file, a preset.yml file or an addresses.yml.\n\nThe main use case of this command is encrypting custom presets files. If your custom preset contains private keys, it's highly recommended to encrypt it and use provide --password when starting or configuring the node with Bootstrap.",
-      "examples": [
-        "\n$ symbol-bootstrap encrypt --source plain-custom-preset.yml --destination encrypted-custom-preset.yml\n> password prompt\n$ symbol-bootstrap start --preset testnet --assembly dual --customPreset encrypted-custom-preset.yml\n> password prompt (enter the same password)\n        ",
-        "\n$ symbol-bootstrap encrypt --password 1234 --source plain-custom-preset.yml --destination encrypted-custom-preset.yml\n$ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --customPreset encrypted-custom-preset.yml\n",
-        "\n $ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap encrypt --source plain-custom-preset.yml --destination encrypted-custom-preset.yml\n "
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "source": {
-          "description": "The source plain yml file to be encrypted. If this file is encrypted, the command will raise an error.",
-          "name": "source",
-          "required": true,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "destination": {
-          "description": "The destination encrypted file to create. The destination file must not exist.",
-          "name": "destination",
-          "required": true,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "password": {
-          "description": "The password to use to encrypt the source file into the destination file. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
-          "name": "password",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "encrypt",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "encrypt",
-        "index.js"
-      ]
-    },
     "config": {
       "aliases": [],
       "args": {},
@@ -433,6 +254,185 @@
         "lib",
         "commands",
         "config",
+        "index.js"
+      ]
+    },
+    "decrypt": {
+      "aliases": [],
+      "args": {},
+      "description": "It decrypts a yml file using the provided password. The source file can be a custom preset file, a preset.yml file or an addresses.yml.\n\nThe main use case of this command is to verify private keys in encrypted files after encrypting a custom preset or running a bootstrap command with a provided --password.",
+      "examples": [
+        "\n$ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n$ symbol-bootstrap decrypt --password 1234 --source target/addresses.yml --destination plain-addresses.yml\n$ symbol-bootstrap decrypt --password 1234 --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml\n        ",
+        "\n$ symbol-bootstrap start --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n> password prompt\n$ symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n> password prompt (enter the same password)\n$ symbol-bootstrap decrypt --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n> password prompt (enter the same password)\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml",
+        "\n$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "source": {
+          "description": "The source encrypted yml file to be decrypted.",
+          "name": "source",
+          "required": true,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "destination": {
+          "description": "The destination decrypted file to create. The destination file must not exist.",
+          "name": "destination",
+          "required": true,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "password": {
+          "description": "The password to use to decrypt the source file into the destination file. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "name": "password",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "decrypt",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "decrypt",
+        "index.js"
+      ]
+    },
+    "encrypt": {
+      "aliases": [],
+      "args": {},
+      "description": "It encrypts a yml file using the provided password. The source files would be a custom preset file, a preset.yml file or an addresses.yml.\n\nThe main use case of this command is encrypting custom presets files. If your custom preset contains private keys, it's highly recommended to encrypt it and use provide --password when starting or configuring the node with Bootstrap.",
+      "examples": [
+        "\n$ symbol-bootstrap encrypt --source plain-custom-preset.yml --destination encrypted-custom-preset.yml\n> password prompt\n$ symbol-bootstrap start --preset testnet --assembly dual --customPreset encrypted-custom-preset.yml\n> password prompt (enter the same password)\n        ",
+        "\n$ symbol-bootstrap encrypt --password 1234 --source plain-custom-preset.yml --destination encrypted-custom-preset.yml\n$ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --customPreset encrypted-custom-preset.yml\n",
+        "\n $ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap encrypt --source plain-custom-preset.yml --destination encrypted-custom-preset.yml\n "
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "source": {
+          "description": "The source plain yml file to be encrypted. If this file is encrypted, the command will raise an error.",
+          "name": "source",
+          "required": true,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "destination": {
+          "description": "The destination encrypted file to create. The destination file must not exist.",
+          "name": "destination",
+          "required": true,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "password": {
+          "description": "The password to use to encrypt the source file into the destination file. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "name": "password",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "encrypt",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "encrypt",
+        "index.js"
+      ]
+    },
+    "healthCheck": {
+      "aliases": [],
+      "args": {},
+      "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
+      "examples": [
+        "$ symbol-bootstrap healthCheck"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "healthCheck",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "healthCheck",
         "index.js"
       ]
     },
@@ -1320,6 +1320,46 @@
         "index.js"
       ]
     },
+    "verify": {
+      "aliases": [],
+      "args": {},
+      "description": "It tests the installed software in the current computer reporting if there is any missing dependency, invalid version, or software related issue.",
+      "examples": [
+        "$ symbol-bootstrap verify"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "verify",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "verify",
+        "index.js"
+      ]
+    },
     "updateVotingKeys": {
       "aliases": [],
       "args": {},
@@ -1382,46 +1422,6 @@
         "lib",
         "commands",
         "updateVotingKeys",
-        "index.js"
-      ]
-    },
-    "verify": {
-      "aliases": [],
-      "args": {},
-      "description": "It tests the installed software in the current computer reporting if there is any missing dependency, invalid version, or software related issue.",
-      "examples": [
-        "$ symbol-bootstrap verify"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "verify",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "verify",
         "index.js"
       ]
     },
