@@ -437,6 +437,9 @@ export interface CommonConfigPreset extends NodeConfigPreset, GatewayConfigPrese
   knownPeers?: PeerInfo[];
   // Allows users to provide their own modification to the generate compose.yml, for example, a new docker service.
   compose: DeepPartial<DockerCompose>;
+
+  // Docker Compose Project Name
+  dockerComposeProjectName?: string;
 }
 
 export interface ConfigPreset extends CommonConfigPreset {
