@@ -6,11 +6,11 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [2.0.2] - 2025-03-06
 
-**マイルストーン**: メインネット(1.0.3.8)
+**Milestone**: Mainnet(1.0.3.8)
 
-| パッケージ       | バージョン | リンク                                                            |
-| ---------------- | ---------- | ----------------------------------------------------------------- |
-| Symbol Bootstrap | v2.0.2     | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
+| Package          | Version | Link                                                              |
+| ---------------- | ------- | ----------------------------------------------------------------- |
+| Symbol Bootstrap | v2.0.2  | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
 
 - Fixed missing support for Docker Compose projects when the assembly is Peer
 
