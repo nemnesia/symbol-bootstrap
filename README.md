@@ -4,13 +4,13 @@ This is a fork from [@fboucquez/symbol-bootstrap](https://github.com/fboucquez/s
 
 Symbol CLI tool that allows you creating, configuring and running [Symbol](https://docs.symbolplatform.com/) blockchain complete networks or nodes to be sync with existing networks.
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+<!-- [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/symbol-bootstrap.svg)](https://npmjs.org/package/symbol-bootstrap)
 [![Downloads/week](https://img.shields.io/npm/dw/symbol-bootstrap.svg)](https://npmjs.org/package/symbol-bootstrap)
 [![License](https://img.shields.io/npm/l/symbol-bootstrap.svg)](https://github.com/fboucquez/symbol-bootstrap/blob/master/package.json)
 [![Build](https://github.com/fboucquez/symbol-bootstrap/actions/workflows/build.yml/badge.svg)](https://github.com/fboucquez/symbol-bootstrap/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/fboucquez/symbol-bootstrap/badge.svg?branch=dev)](https://coveralls.io/github/fboucquez/symbol-bootstrap?branch=dev)
-[![Api Doc](https://img.shields.io/badge/api-doc-blue.svg)](https://fboucquez.github.io/symbol-bootstrap/)
+[![Api Doc](https://img.shields.io/badge/api-doc-blue.svg)](https://fboucquez.github.io/symbol-bootstrap/) -->
 
 <!-- toc -->
 * [symbol-bootstrap](#symbol-bootstrap)
@@ -130,7 +130,7 @@ $ npm install -g @nemneshia/symbol-bootstrap
 $ symbol-bootstrap COMMAND
 running command...
 $ symbol-bootstrap (--version)
-@nemneshia/symbol-bootstrap/2.0.0 win32-x64 node-v20.18.2
+@nemneshia/symbol-bootstrap/2.0.1 win32-x64 node-v20.18.2
 $ symbol-bootstrap --help [COMMAND]
 USAGE
   $ symbol-bootstrap COMMAND

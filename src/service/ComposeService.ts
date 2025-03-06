@@ -136,6 +136,8 @@ export class ComposeService {
       return _.merge({}, service, servicePreset.compose);
     };
 
+    const containerNamePrefix = presetData.dockerComposeProjectName ? `${presetData.dockerComposeProjectName}-` : '';
+
     await Promise.all(
       (presetData.databases || [])
         .filter((d) => !d.excludeDockerService)
@@ -254,11 +256,11 @@ export class ComposeService {
       (presetData.gateways || [])
         .filter((d) => !d.excludeDockerService)
         .map(async (n) => {
+          const volumes = [vol(`../${targetGatewaysFolder}/${n.name}`, nodeWorkingDirectory, false)];
           if (n.databaseHost) {
-            const volumes = [vol(`../${targetGatewaysFolder}/${n.name}`, nodeWorkingDirectory, false)];
             services.push(
               await resolveService(n, {
-                container_name: n.name,
+                container_name: containerNamePrefix + n.name,
                 user,
                 environment: { npm_config_cache: nodeWorkingDirectory },
                 image: presetData.symbolRestImage,
@@ -275,15 +277,16 @@ export class ComposeService {
           } else {
             services.push(
               await resolveService(n, {
-                container_name: n.name,
+                container_name: containerNamePrefix + n.name,
                 user,
                 environment: { npm_config_cache: nodeWorkingDirectory },
                 image: presetData.symbolRestImage,
-                command: 'npm start-light --prefix /app /symbol-workdir/rest.light.json',
+                command: 'npm run start-light --prefix /app /symbol-workdir/rest.light.json',
                 stop_signal: 'SIGINT',
                 working_dir: nodeWorkingDirectory,
                 ports: resolvePorts([{ internalPort: restInternalPort, openPort: n.openPort }]),
                 restart: restart,
+                volumes: volumes,
                 ...this.resolveDebugOptions(presetData.dockerComposeDebugMode, n.dockerComposeDebugMode),
               }),
             );
@@ -314,7 +317,7 @@ export class ComposeService {
           const restDependency = presetData.gateways?.[0]?.name;
           services.push(
             await resolveService(n, {
-              container_name: n.name,
+              container_name: containerNamePrefix + n.name,
               image: presetData.httpsPortalImage,
               stop_signal: 'SIGINT',
               ports: resolvePorts([
@@ -346,7 +349,7 @@ export class ComposeService {
           const entrypoint = `ash -c "/bin/ash ${nodeCommandsDirectory}/run.sh ${n.name}"`;
           services.push(
             await resolveService(n, {
-              container_name: n.name,
+              container_name: containerNamePrefix + n.name,
               image: presetData.symbolExplorerImage,
               entrypoint: entrypoint,
               stop_signal: 'SIGINT',
@@ -369,7 +372,7 @@ export class ComposeService {
           const { defaultNode } = await remoteNodeService.resolveRestUrlsForServices();
           services.push(
             await resolveService(n, {
-              container_name: n.name,
+              container_name: containerNamePrefix + n.name,
               image: presetData.symbolFaucetImage,
               stop_signal: 'SIGINT',
               environment: {

@@ -333,6 +333,7 @@ export interface GatewayPreset extends DockerServicePreset, Partial<GatewayConfi
   repeat?: number;
   apiNodeName: string;
   apiNodeHost: string;
+  apiNodeBrokerHost: string;
   databaseHost: string;
   name: string;
 }
@@ -437,6 +438,9 @@ export interface CommonConfigPreset extends NodeConfigPreset, GatewayConfigPrese
   knownPeers?: PeerInfo[];
   // Allows users to provide their own modification to the generate compose.yml, for example, a new docker service.
   compose: DeepPartial<DockerCompose>;
+
+  // Docker Compose Project Name
+  dockerComposeProjectName?: string;
 }
 
 export interface ConfigPreset extends CommonConfigPreset {

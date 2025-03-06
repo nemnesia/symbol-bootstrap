@@ -22,7 +22,7 @@ importanceGrouping: 180
 votingSetGrouping: 720
 votingKeyDesiredLifetime: 720
 votingKeyDesiredFutureLifetime: 120
-lastKnownNetworkEpoch: 3002
+lastKnownNetworkEpoch: 2888
 minVotingKeyLifetime: 28
 maxVotingKeyLifetime: 720
 stepDuration: 4m

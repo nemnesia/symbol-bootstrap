@@ -231,6 +231,9 @@ export class CertificateService {
     `;
     return `set -e
 
+# 暫定対応
+export OPENSSL_CONF=/usr/lib/ssl/openssl.cnf
+
 # Clean up old versions files.
 rm -rf new_certs
 rm -f index.txt*

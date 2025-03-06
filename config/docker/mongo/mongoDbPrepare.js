@@ -65,7 +65,7 @@
   db.transactionStatuses.createIndex({ 'status.hash': 1 }, { unique: true });
   db.transactionStatuses.createIndex({ 'status.deadline': -1 });
 
-  db.adminCommand({ setFeatureCompatibilityVersion: '6.0' });
+  db.adminCommand({ setFeatureCompatibilityVersion: '7.0', confirm: true });
 })();
 
 (function preparePluginDbCollections() {

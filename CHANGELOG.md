@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.0.1] - 2025-02-27
+
+**Milestone**: Mainnet(1.0.3.8)
+
+| Package          | Version | Link                                                              |
+| ---------------- | ------- | ----------------------------------------------------------------- |
+| Symbol Bootstrap | v2.0.1  | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
+
+- [Catapult Client v1.0.3.8](https://github.com/symbol/symbol/releases/tag/client%2Fcatapult%2Fv1.0.3.8)
+- [Rest 2.5.0](https://github.com/symbol/symbol/releases/tag/rest%2Fv2.5.0)
+- MongoDB 7.0.17
+- Support for Docker Compose projects
+
 ## [2.0.0] - 2025-02-24
 
 **Milestone**: Mainnet(1.0.3.7)

@@ -166,23 +166,38 @@ export class RunService {
               const url = 'http://localhost:' + externalPort;
               const repositoryFactory = new RepositoryFactoryHttp(url);
               const nodeRepository = repositoryFactory.createNodeRepository();
-              const testUrl = `${url}/node/health`;
-              this.logger.info(`Testing ${testUrl}`);
-              try {
-                const healthStatus = await firstValueFrom(nodeRepository.getNodeHealth());
-                if (healthStatus.apiNode === NodeStatusEnum.Down) {
-                  this.logger.warn(`Rest ${testUrl} is NOT up and running YET: Api Node is still Down!`);
+              if (service.command !== undefined && service.command.indexOf('start-light') > -1) {
+                // light rest
+                const testUrl = `${url}/node/info`;
+                this.logger.info(`Testing ${testUrl}`);
+                try {
+                  // 取得出来ればOK
+                  await firstValueFrom(nodeRepository.getNodeInfo());
+                  this.logger.info(`Rest ${testUrl} is up and running...`);
+                  return true;
+                } catch (e) {
+                  this.logger.warn(`Rest ${testUrl} is NOT up and running YET: ${Utils.getMessage(e)}`);
                   return false;
                 }
-                if (healthStatus.db === NodeStatusEnum.Down) {
-                  this.logger.warn(`Rest ${testUrl} is NOT up and running YET: DB is still Down!`);
+              } else {
+                const testUrl = `${url}/node/health`;
+                this.logger.info(`Testing ${testUrl}`);
+                try {
+                  const healthStatus = await firstValueFrom(nodeRepository.getNodeHealth());
+                  if (healthStatus.apiNode === NodeStatusEnum.Down) {
+                    this.logger.warn(`Rest ${testUrl} is NOT up and running YET: Api Node is still Down!`);
+                    return false;
+                  }
+                  if (healthStatus.db === NodeStatusEnum.Down) {
+                    this.logger.warn(`Rest ${testUrl} is NOT up and running YET: DB is still Down!`);
+                    return false;
+                  }
+                  this.logger.info(`Rest ${testUrl} is up and running...`);
+                  return true;
+                } catch (e) {
+                  this.logger.warn(`Rest ${testUrl} is NOT up and running YET: ${Utils.getMessage(e)}`);
                   return false;
                 }
-                this.logger.info(`Rest ${testUrl} is up and running...`);
-                return true;
-              } catch (e) {
-                this.logger.warn(`Rest ${testUrl} is NOT up and running YET: ${Utils.getMessage(e)}`);
-                return false;
               }
             }
             return true;
@@ -253,7 +268,13 @@ export class RunService {
 
   private async basicRun(extraArgs: string[]): Promise<string> {
     const dockerFile = join(this.params.target, `docker`, `compose.yml`);
-    const dockerComposeArgs = ['compose', '-f', dockerFile];
+    let dockerComposeArgs = ['compose', '-f', dockerFile];
+    // docker compose project
+    const presetData = this.configLoader.loadExistingPresetData(this.params.target, false);
+    const dockerComposeProjectName = presetData.dockerComposeProjectName;
+    if (dockerComposeProjectName) {
+      dockerComposeArgs = [...dockerComposeArgs, '-p', dockerComposeProjectName];
+    }
     const args = [...dockerComposeArgs, ...extraArgs];
     return this.runtimeService.spawn({ command: 'docker', args: args, useLogger: false });
   }
