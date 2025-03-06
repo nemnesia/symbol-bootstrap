@@ -26,4 +26,4 @@ EXAMPLES
   $ symbol-bootstrap resetData
 ```
 
-_See code: [src/commands/resetData/index.ts](https://github.com/nemneshia/symbol-bootstrap/blob/v2.0.1/src/commands/resetData/index.ts)_
+_See code: [src/commands/resetData/index.ts](https://github.com/nemneshia/symbol-bootstrap/blob/v2.0.2/src/commands/resetData/index.ts)_
