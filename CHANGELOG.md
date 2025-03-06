@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [2.0.1] - 2025-03-06
+## [2.0.2] - 2025-03-06
 
 **マイルストーン**: メインネット(1.0.3.8)
 
