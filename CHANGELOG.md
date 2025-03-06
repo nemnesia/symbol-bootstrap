@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.0.1] - 2025-03-06
+
+**マイルストーン**: メインネット(1.0.3.8)
+
+| パッケージ       | バージョン | リンク                                                            |
+| ---------------- | ---------- | ----------------------------------------------------------------- |
+| Symbol Bootstrap | v2.0.2     | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
+
+- Fixed missing support for Docker Compose projects when the assembly is Peer
+
 ## [2.0.1] - 2025-02-27
 
 **Milestone**: Mainnet(1.0.3.8)

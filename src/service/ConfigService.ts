@@ -179,16 +179,16 @@ export class ConfigService {
       // Docker Compose プロジェクト名のプレフィックスを追加
       const containerNamePrefix = presetData.dockerComposeProjectName ? `${presetData.dockerComposeProjectName}-` : '';
       presetData.nodes = presetData.nodes?.map((node) => {
-        node.name = containerNamePrefix + (node.name ?? '');
-        node.databaseHost = containerNamePrefix + (node.databaseHost ?? '');
-        node.brokerName = containerNamePrefix + (node.brokerName ?? '');
+        node.name = node.name ? containerNamePrefix + node.name : node.name;
+        node.databaseHost = node.databaseHost ? containerNamePrefix + node.databaseHost : node.databaseHost;
+        node.brokerName = node.brokerName ? containerNamePrefix + node.brokerName : node.brokerName;
         return { ...node };
       });
       presetData.gateways = presetData.gateways?.map((gateway) => {
-        gateway.apiNodeName = containerNamePrefix + (gateway.apiNodeName ?? '');
-        gateway.databaseHost = containerNamePrefix + (gateway.databaseHost ?? '');
-        gateway.apiNodeHost = containerNamePrefix + (gateway.apiNodeHost ?? '');
-        gateway.apiNodeBrokerHost = containerNamePrefix + (gateway.apiNodeBrokerHost ?? '');
+        gateway.apiNodeName = gateway.apiNodeName ? containerNamePrefix + gateway.apiNodeName : gateway.apiNodeName;
+        gateway.databaseHost = gateway.databaseHost ? containerNamePrefix + gateway.databaseHost : gateway.databaseHost;
+        gateway.apiNodeHost = gateway.apiNodeHost ? containerNamePrefix + gateway.apiNodeHost : gateway.apiNodeHost;
+        gateway.apiNodeBrokerHost = gateway.apiNodeBrokerHost ? containerNamePrefix + gateway.apiNodeBrokerHost : gateway.apiNodeBrokerHost;
         return { ...gateway };
       });
       presetData.databases = presetData.databases?.map((database) => {
