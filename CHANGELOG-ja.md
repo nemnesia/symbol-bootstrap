@@ -15,6 +15,7 @@
 - [Catapult Client v1.0.3.8](https://github.com/symbol/symbol/releases/tag/client%2Fcatapult%2Fv1.0.3.8)
 - [Rest 2.5.0](https://github.com/symbol/symbol/releases/tag/rest%2Fv2.5.0)
 - MongoDB 7.0.17
+- Docker Compose プロジェクトに対応
 
 ## [2.0.0] - 2025-02-24
 
