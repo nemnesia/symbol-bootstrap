@@ -268,7 +268,13 @@ export class RunService {
 
   private async basicRun(extraArgs: string[]): Promise<string> {
     const dockerFile = join(this.params.target, `docker`, `compose.yml`);
-    const dockerComposeArgs = ['compose', '-f', dockerFile];
+    let dockerComposeArgs = ['compose', '-f', dockerFile];
+    // docker compose project
+    const presetData = this.configLoader.loadExistingPresetData(this.params.target, false);
+    const dockerComposeProjectName = presetData.dockerComposeProjectName;
+    if (dockerComposeProjectName) {
+      dockerComposeArgs = [...dockerComposeArgs, '-p', dockerComposeProjectName];
+    }
     const args = [...dockerComposeArgs, ...extraArgs];
     return this.runtimeService.spawn({ command: 'docker', args: args, useLogger: false });
   }

@@ -136,6 +136,8 @@ export class ComposeService {
       return _.merge({}, service, servicePreset.compose);
     };
 
+    const containerNamePrefix = presetData.dockerComposeProjectName ? `${presetData.dockerComposeProjectName}-` : '';
+
     await Promise.all(
       (presetData.databases || [])
         .filter((d) => !d.excludeDockerService)
@@ -258,7 +260,7 @@ export class ComposeService {
           if (n.databaseHost) {
             services.push(
               await resolveService(n, {
-                container_name: n.name,
+                container_name: containerNamePrefix + n.name,
                 user,
                 environment: { npm_config_cache: nodeWorkingDirectory },
                 image: presetData.symbolRestImage,
@@ -275,7 +277,7 @@ export class ComposeService {
           } else {
             services.push(
               await resolveService(n, {
-                container_name: n.name,
+                container_name: containerNamePrefix + n.name,
                 user,
                 environment: { npm_config_cache: nodeWorkingDirectory },
                 image: presetData.symbolRestImage,
@@ -315,7 +317,7 @@ export class ComposeService {
           const restDependency = presetData.gateways?.[0]?.name;
           services.push(
             await resolveService(n, {
-              container_name: n.name,
+              container_name: containerNamePrefix + n.name,
               image: presetData.httpsPortalImage,
               stop_signal: 'SIGINT',
               ports: resolvePorts([
@@ -347,7 +349,7 @@ export class ComposeService {
           const entrypoint = `ash -c "/bin/ash ${nodeCommandsDirectory}/run.sh ${n.name}"`;
           services.push(
             await resolveService(n, {
-              container_name: n.name,
+              container_name: containerNamePrefix + n.name,
               image: presetData.symbolExplorerImage,
               entrypoint: entrypoint,
               stop_signal: 'SIGINT',
@@ -370,7 +372,7 @@ export class ComposeService {
           const { defaultNode } = await remoteNodeService.resolveRestUrlsForServices();
           services.push(
             await resolveService(n, {
-              container_name: n.name,
+              container_name: containerNamePrefix + n.name,
               image: presetData.symbolFaucetImage,
               stop_signal: 'SIGINT',
               environment: {
