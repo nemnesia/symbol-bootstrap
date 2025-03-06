@@ -1,5 +1,6 @@
 services:
   db:
+    user: '1000:1000'
     environment:
       MONGO_INITDB_DATABASE: catapult
     container_name: db
@@ -55,6 +56,7 @@ services:
     privileged: true
     stop_grace_period: 20s
   rest-gateway:
+    user: '1000:1000'
     container_name: rest-gateway
     environment:
       npm_config_cache: /symbol-workdir

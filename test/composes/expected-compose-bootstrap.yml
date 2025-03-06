@@ -1,5 +1,6 @@
 services:
   db-0:
+    user: '1000:1000'
     environment:
       MONGO_INITDB_DATABASE: catapult
     container_name: db-0
@@ -13,6 +14,7 @@ services:
       - ./mongo:/docker-entrypoint-initdb.d:ro
       - ../databases/db-0:/dbdata:rw
   peer-node-0:
+    user: '1000:1000'
     container_name: peer-node-0
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker peer-node-0 NORMAL false
@@ -31,6 +33,7 @@ services:
     hostname: peer-node-0
     stop_grace_period: 300s
   peer-node-1:
+    user: '1000:1000'
     container_name: peer-node-1
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker peer-node-1 NORMAL false
@@ -49,6 +52,7 @@ services:
     hostname: peer-node-1
     stop_grace_period: 300s
   api-node-0:
+    user: '1000:1000'
     container_name: api-node-0
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker api-node-0 NORMAL true
@@ -68,6 +72,7 @@ services:
     hostname: api-node-0
     stop_grace_period: 300s
   api-node-broker-0:
+    user: '1000:1000'
     container_name: api-node-broker-0
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     working_dir: /symbol-workdir
@@ -83,6 +88,7 @@ services:
       - db-0
     stop_grace_period: 20s
   rest-gateway-0:
+    user: '1000:1000'
     container_name: rest-gateway-0
     environment:
       npm_config_cache: /symbol-workdir

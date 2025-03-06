@@ -175,6 +175,27 @@ export class ConfigService {
       }
 
       const presetData: ConfigPreset = this.resolveCurrentPresetData(oldPresetData, password);
+
+      // Docker Compose プロジェクト名のプレフィックスを追加
+      const containerNamePrefix = presetData.dockerComposeProjectName ? `${presetData.dockerComposeProjectName}-` : '';
+      presetData.nodes = presetData.nodes?.map((node) => {
+        node.name = containerNamePrefix + (node.name ?? '');
+        node.databaseHost = containerNamePrefix + (node.databaseHost ?? '');
+        node.brokerName = containerNamePrefix + (node.brokerName ?? '');
+        return { ...node };
+      });
+      presetData.gateways = presetData.gateways?.map((gateway) => {
+        gateway.apiNodeName = containerNamePrefix + (gateway.apiNodeName ?? '');
+        gateway.databaseHost = containerNamePrefix + (gateway.databaseHost ?? '');
+        gateway.apiNodeHost = containerNamePrefix + (gateway.apiNodeHost ?? '');
+        gateway.apiNodeBrokerHost = containerNamePrefix + (gateway.apiNodeBrokerHost ?? '');
+        return { ...gateway };
+      });
+      presetData.databases = presetData.databases?.map((database) => {
+        database.name = containerNamePrefix + (database.name ?? '');
+        return { ...database };
+      });
+
       const addresses = await this.addressesService.resolveAddresses(oldAddresses, oldPresetData, presetData);
 
       const privateKeySecurityMode = CryptoUtils.getPrivateKeySecurityMode(presetData.privateKeySecurityMode);

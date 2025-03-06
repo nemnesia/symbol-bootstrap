@@ -143,7 +143,8 @@ export class RuntimeService {
   public async getDockerUserGroup(): Promise<string | undefined> {
     const isWin = OSUtils.isWindows();
     if (isWin) {
-      return undefined;
+      // ホストがWindowsの場合はパーミッションがないためrootで起動
+      return 'root:root';
     }
     if (RuntimeService.dockerUserId !== undefined) {
       return RuntimeService.dockerUserId;

@@ -333,6 +333,7 @@ export interface GatewayPreset extends DockerServicePreset, Partial<GatewayConfi
   repeat?: number;
   apiNodeName: string;
   apiNodeHost: string;
+  apiNodeBrokerHost: string;
   databaseHost: string;
   name: string;
 }

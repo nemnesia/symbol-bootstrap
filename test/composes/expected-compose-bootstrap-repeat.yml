@@ -1,5 +1,6 @@
 services:
   db-0:
+    user: '1000:1000'
     environment:
       MONGO_INITDB_DATABASE: catapult
     container_name: db-0
@@ -13,6 +14,7 @@ services:
       - ./mongo:/docker-entrypoint-initdb.d:ro
       - ../databases/db-0:/dbdata:rw
   db-1:
+    user: '1000:1000'
     environment:
       MONGO_INITDB_DATABASE: catapult
     container_name: db-1
@@ -26,6 +28,7 @@ services:
       - ./mongo:/docker-entrypoint-initdb.d:ro
       - ../databases/db-1:/dbdata:rw
   db-2:
+    user: '1000:1000'
     environment:
       MONGO_INITDB_DATABASE: catapult
     container_name: db-2
@@ -39,6 +42,7 @@ services:
       - ./mongo:/docker-entrypoint-initdb.d:ro
       - ../databases/db-2:/dbdata:rw
   db-3:
+    user: '1000:1000'
     environment:
       MONGO_INITDB_DATABASE: catapult
     container_name: db-3
@@ -52,6 +56,7 @@ services:
       - ./mongo:/docker-entrypoint-initdb.d:ro
       - ../databases/db-3:/dbdata:rw
   peer-node-0:
+    user: '1000:1000'
     container_name: peer-node-0
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker peer-node-0 NORMAL false
@@ -70,6 +75,7 @@ services:
     hostname: peer-node-0
     stop_grace_period: 300s
   peer-node-1:
+    user: '1000:1000'
     container_name: peer-node-1
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker peer-node-1 NORMAL false
@@ -88,6 +94,7 @@ services:
     hostname: peer-node-1
     stop_grace_period: 300s
   peer-node-2:
+    user: '1000:1000'
     container_name: peer-node-2
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker peer-node-2 NORMAL false
@@ -106,6 +113,7 @@ services:
     hostname: peer-node-2
     stop_grace_period: 300s
   api-node-0:
+    user: '1000:1000'
     container_name: api-node-0
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker api-node-0 NORMAL true
@@ -125,6 +133,7 @@ services:
     hostname: api-node-0
     stop_grace_period: 300s
   api-node-1:
+    user: '1000:1000'
     container_name: api-node-1
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker api-node-1 NORMAL true
@@ -144,6 +153,7 @@ services:
     hostname: api-node-1
     stop_grace_period: 300s
   api-node-2:
+    user: '1000:1000'
     container_name: api-node-2
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker api-node-2 NORMAL true
@@ -163,6 +173,7 @@ services:
     hostname: api-node-2
     stop_grace_period: 300s
   api-node-3:
+    user: '1000:1000'
     container_name: api-node-3
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     command: /bin/bash /symbol-commands/start.sh /usr/catapult ./data server broker api-node-3 NORMAL true
@@ -182,6 +193,7 @@ services:
     hostname: api-node-3
     stop_grace_period: 300s
   api-node-broker-0:
+    user: '1000:1000'
     container_name: api-node-broker-0
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     working_dir: /symbol-workdir
@@ -197,6 +209,7 @@ services:
       - db-0
     stop_grace_period: 20s
   api-node-broker-1:
+    user: '1000:1000'
     container_name: api-node-broker-1
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     working_dir: /symbol-workdir
@@ -212,6 +225,7 @@ services:
       - db-1
     stop_grace_period: 20s
   api-node-broker-2:
+    user: '1000:1000'
     container_name: api-node-broker-2
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     working_dir: /symbol-workdir
@@ -227,6 +241,7 @@ services:
       - db-2
     stop_grace_period: 20s
   api-node-broker-3:
+    user: '1000:1000'
     container_name: api-node-broker-3
     image: symbolplatform/symbol-server:gcc-1.0.3.8
     working_dir: /symbol-workdir
@@ -242,6 +257,7 @@ services:
       - db-3
     stop_grace_period: 20s
   rest-gateway-0:
+    user: '1000:1000'
     container_name: rest-gateway-0
     environment:
       npm_config_cache: /symbol-workdir
@@ -260,6 +276,7 @@ services:
       default:
         ipv4_address: 172.20.0.25
   rest-gateway-1:
+    user: '1000:1000'
     container_name: rest-gateway-1
     environment:
       npm_config_cache: /symbol-workdir
@@ -278,6 +295,7 @@ services:
       default:
         ipv4_address: 172.20.0.26
   rest-gateway-2:
+    user: '1000:1000'
     container_name: rest-gateway-2
     environment:
       npm_config_cache: /symbol-workdir
@@ -296,6 +314,7 @@ services:
       default:
         ipv4_address: 172.20.0.27
   rest-gateway-3:
+    user: '1000:1000'
     container_name: rest-gateway-3
     environment:
       npm_config_cache: /symbol-workdir

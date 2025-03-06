@@ -148,7 +148,7 @@ export class ComposeService {
             await resolveService(n, {
               user,
               environment: { MONGO_INITDB_DATABASE: databaseName },
-              container_name: containerNamePrefix + n.name,
+              container_name: n.name,
               image: presetData.mongoImage,
               command: `mongod --dbpath=/dbdata --bind_ip=${n.name} ${presetData.mongoComposeRunParam}`,
               stop_signal: 'SIGINT',
@@ -208,7 +208,7 @@ export class ComposeService {
             },
             {
               user: serverDebugMode === debugFlag ? undefined : user, // if debug on, run as root
-              container_name: containerNamePrefix + n.name,
+              container_name: n.name,
               image: presetData.symbolServerImage,
               command: serverCommand,
               stop_signal: 'SIGINT',
@@ -235,7 +235,7 @@ export class ComposeService {
                 },
                 {
                   user: brokerDebugMode === debugFlag ? undefined : user, // if debug on, run as root
-                  container_name: containerNamePrefix + n.brokerName,
+                  container_name: n.brokerName,
                   image: nodeService.image,
                   working_dir: nodeWorkingDirectory,
                   command: brokerCommand,

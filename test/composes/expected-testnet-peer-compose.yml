@@ -14,6 +14,7 @@ services:
       - '../nodes/node:/symbol-workdir:rw'
       - './server:/symbol-commands:ro'
   rest-gateway:
+    user: '1000:1000'
     container_name: rest-gateway
     environment:
       npm_config_cache: /symbol-workdir
