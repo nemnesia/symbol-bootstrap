@@ -102,9 +102,11 @@ It's recommended to backup the target folder before running this operation!
             main: resolveAccount(nodeAccount.main, nodePreset.mainPrivateKey),
             transport: resolveAccount(nodeAccount.transport, nodePreset.transportPrivateKey),
           };
+          // Docker Compose プロジェクト名のプレフィックスを追加
+          const containerNamePrefix = presetData.dockerComposeProjectName ? `${presetData.dockerComposeProjectName}-` : '';
           return certificateService.run(
             presetData,
-            nodePreset.name,
+            containerNamePrefix + nodePreset.name,
             providedCertificates,
             flags.force ? RenewMode.ALWAYS : RenewMode.WHEN_REQUIRED,
           );
