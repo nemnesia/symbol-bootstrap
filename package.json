@@ -1,7 +1,7 @@
 {
   "name": "@nemneshia/symbol-bootstrap",
   "description": "Symbol tool that allows you creating, configuring and running Symbol's networks",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "author": "Nemneshia <@nemneshia>",
   "type": "module",
   "bin": {
@@ -60,7 +60,7 @@
     "mock-stdin": "^1.0.0",
     "nock": "^14.0.1",
     "nyc": "^15.1.0",
-    "oclif": "^4.17.30",
+    "oclif": "^4.17.43",
     "prettier": "^2.5.1",
     "prettier-plugin-organize-imports": "^2.3.4",
     "sinon": "^13.0.1",

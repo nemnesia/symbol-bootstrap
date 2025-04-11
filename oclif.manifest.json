@@ -1,11 +1,13 @@
 {
   "commands": {
-    "clean": {
+    "decrypt": {
       "aliases": [],
       "args": {},
-      "description": "It removes the target folder deleting the generated configuration and data",
+      "description": "It decrypts a yml file using the provided password. The source file can be a custom preset file, a preset.yml file or an addresses.yml.\n\nThe main use case of this command is to verify private keys in encrypted files after encrypting a custom preset or running a bootstrap command with a provided --password.",
       "examples": [
-        "$ symbol-bootstrap clean"
+        "\n$ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n$ symbol-bootstrap decrypt --password 1234 --source target/addresses.yml --destination plain-addresses.yml\n$ symbol-bootstrap decrypt --password 1234 --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml\n        ",
+        "\n$ symbol-bootstrap start --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n> password prompt\n$ symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n> password prompt (enter the same password)\n$ symbol-bootstrap decrypt --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n> password prompt (enter the same password)\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml",
+        "\n$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n"
       ],
       "flags": {
         "help": {
@@ -15,11 +17,25 @@
           "allowNo": false,
           "type": "boolean"
         },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
+        "source": {
+          "description": "The source encrypted yml file to be decrypted.",
+          "name": "source",
+          "required": true,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "destination": {
+          "description": "The destination decrypted file to create. The destination file must not exist.",
+          "name": "destination",
+          "required": true,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "password": {
+          "description": "The password to use to decrypt the source file into the destination file. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
@@ -27,7 +43,7 @@
         "logger": {
           "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
           "name": "logger",
-          "default": "Console,File",
+          "default": "Console",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
@@ -35,7 +51,7 @@
       },
       "hasDynamicHelp": false,
       "hiddenAliases": [],
-      "id": "clean",
+      "id": "decrypt",
       "pluginAlias": "@nemneshia/symbol-bootstrap",
       "pluginName": "@nemneshia/symbol-bootstrap",
       "pluginType": "core",
@@ -45,7 +61,7 @@
       "relativePath": [
         "lib",
         "commands",
-        "clean",
+        "decrypt",
         "index.js"
       ]
     },
@@ -171,6 +187,55 @@
         "lib",
         "commands",
         "config",
+        "index.js"
+      ]
+    },
+    "clean": {
+      "aliases": [],
+      "args": {},
+      "description": "It removes the target folder deleting the generated configuration and data",
+      "examples": [
+        "$ symbol-bootstrap clean"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "clean",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "clean",
         "index.js"
       ]
     },
@@ -322,6 +387,119 @@
         "index.js"
       ]
     },
+    "link": {
+      "aliases": [],
+      "args": {},
+      "description": "It announces VRF and Voting Link transactions to the network for each node with 'Peer' or 'Voting' roles. This command finalizes the node registration to an existing network.",
+      "examples": [
+        "$ symbol-bootstrap link",
+        "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap link --unlink --useKnownRestGateways"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "unlink": {
+          "description": "Perform \"Unlink\" transactions unlinking the voting and VRF keys from the node signer account",
+          "name": "unlink",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "password": {
+          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "name": "password",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "noPassword": {
+          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "name": "noPassword",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "url": {
+          "char": "u",
+          "description": "the network url",
+          "name": "url",
+          "default": "http://localhost:3000",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "useKnownRestGateways": {
+          "description": "Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.",
+          "name": "useKnownRestGateways",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "ready": {
+          "description": "If --ready is provided, the command will not ask for confirmation when announcing transactions.",
+          "name": "ready",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "maxFee": {
+          "description": "the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.",
+          "name": "maxFee",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "customPreset": {
+          "char": "c",
+          "description": "This command uses the encrypted addresses.yml to resolve the main private key. If the main private is only stored in the custom preset, you can provide it using this param. Otherwise, the command may ask for it when required.",
+          "name": "customPreset",
+          "required": false,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "serviceProviderPublicKey": {
+          "description": "Public key of the service provider account, used when the transaction announcer(service provider account) is different than the main account private key holder",
+          "name": "serviceProviderPublicKey",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "link",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "link",
+        "index.js"
+      ]
+    },
     "healthCheck": {
       "aliases": [],
       "args": {},
@@ -368,201 +546,6 @@
         "lib",
         "commands",
         "healthCheck",
-        "index.js"
-      ]
-    },
-    "decrypt": {
-      "aliases": [],
-      "args": {},
-      "description": "It decrypts a yml file using the provided password. The source file can be a custom preset file, a preset.yml file or an addresses.yml.\n\nThe main use case of this command is to verify private keys in encrypted files after encrypting a custom preset or running a bootstrap command with a provided --password.",
-      "examples": [
-        "\n$ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n$ symbol-bootstrap decrypt --password 1234 --source target/addresses.yml --destination plain-addresses.yml\n$ symbol-bootstrap decrypt --password 1234 --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml\n        ",
-        "\n$ symbol-bootstrap start --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n> password prompt\n$ symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n> password prompt (enter the same password)\n$ symbol-bootstrap decrypt --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n> password prompt (enter the same password)\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml",
-        "\n$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "source": {
-          "description": "The source encrypted yml file to be decrypted.",
-          "name": "source",
-          "required": true,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "destination": {
-          "description": "The destination decrypted file to create. The destination file must not exist.",
-          "name": "destination",
-          "required": true,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "password": {
-          "description": "The password to use to decrypt the source file into the destination file. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
-          "name": "password",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "decrypt",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "decrypt",
-        "index.js"
-      ]
-    },
-    "pack": {
-      "aliases": [],
-      "args": {},
-      "description": "It configures and packages your node into a zip file that can be uploaded to the final node machine.",
-      "examples": [
-        "$ symbol-bootstrap pack",
-        "$ symbol-bootstrap pack -c custom-preset.yml",
-        "$ symbol-bootstrap pack -p testnet -a dual -c custom-preset.yml",
-        "$ symbol-bootstrap pack -p mainnet -a dual --password 1234 -c custom-preset.yml",
-        "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap pack -c custom-preset.yml"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
-          "name": "password",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
-          "name": "noPassword",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "upgrade": {
-          "description": "It regenerates the configuration reusing the previous keys. Use this flag when upgrading the version of bootstrap to keep your node up to date without dropping the local data. Backup the target folder before upgrading.",
-          "name": "upgrade",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "offline": {
-          "description": "If --offline is used, Bootstrap resolves the configuration without querying the running network.",
-          "name": "offline",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "user": {
-          "char": "u",
-          "description": "User used to run docker images when creating configuration files like certificates or nemesis block. \"current\" means the current user.",
-          "name": "user",
-          "default": "current",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "preset": {
-          "char": "p",
-          "description": "The network preset. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: bootstrap, testnet, mainnet, my-custom-network.yml (advanced, only for custom networks).",
-          "name": "preset",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "assembly": {
-          "char": "a",
-          "description": "The assembly that defines the node(s) layout. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: dual, peer, api, demo, multinode, services, my-custom-assembly.yml (advanced).",
-          "name": "assembly",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "customPreset": {
-          "char": "c",
-          "description": "External preset file. Values in this file will override the provided presets.",
-          "name": "customPreset",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "reset": {
-          "char": "r",
-          "description": "It resets the configuration generating a new one.",
-          "name": "reset",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "report": {
-          "description": "It generates reStructuredText (.rst) reports describing the configuration of each node.",
-          "name": "report",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "ready": {
-          "description": "If --ready is provided, the command will not ask offline confirmation.",
-          "name": "ready",
-          "allowNo": false,
-          "type": "boolean"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "pack",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "pack",
         "index.js"
       ]
     },
@@ -705,13 +688,16 @@
         "index.js"
       ]
     },
-    "link": {
+    "pack": {
       "aliases": [],
       "args": {},
-      "description": "It announces VRF and Voting Link transactions to the network for each node with 'Peer' or 'Voting' roles. This command finalizes the node registration to an existing network.",
+      "description": "It configures and packages your node into a zip file that can be uploaded to the final node machine.",
       "examples": [
-        "$ symbol-bootstrap link",
-        "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap link --unlink --useKnownRestGateways"
+        "$ symbol-bootstrap pack",
+        "$ symbol-bootstrap pack -c custom-preset.yml",
+        "$ symbol-bootstrap pack -p testnet -a dual -c custom-preset.yml",
+        "$ symbol-bootstrap pack -p mainnet -a dual --password 1234 -c custom-preset.yml",
+        "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap pack -c custom-preset.yml"
       ],
       "flags": {
         "help": {
@@ -730,12 +716,6 @@
           "multiple": false,
           "type": "option"
         },
-        "unlink": {
-          "description": "Perform \"Unlink\" transactions unlinking the voting and VRF keys from the node signer account",
-          "name": "unlink",
-          "allowNo": false,
-          "type": "boolean"
-        },
         "password": {
           "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
           "name": "password",
@@ -749,46 +729,23 @@
           "allowNo": false,
           "type": "boolean"
         },
-        "url": {
+        "upgrade": {
+          "description": "It regenerates the configuration reusing the previous keys. Use this flag when upgrading the version of bootstrap to keep your node up to date without dropping the local data. Backup the target folder before upgrading.",
+          "name": "upgrade",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "offline": {
+          "description": "If --offline is used, Bootstrap resolves the configuration without querying the running network.",
+          "name": "offline",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "user": {
           "char": "u",
-          "description": "the network url",
-          "name": "url",
-          "default": "http://localhost:3000",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "useKnownRestGateways": {
-          "description": "Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.",
-          "name": "useKnownRestGateways",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "ready": {
-          "description": "If --ready is provided, the command will not ask for confirmation when announcing transactions.",
-          "name": "ready",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "maxFee": {
-          "description": "the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.",
-          "name": "maxFee",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "customPreset": {
-          "char": "c",
-          "description": "This command uses the encrypted addresses.yml to resolve the main private key. If the main private is only stored in the custom preset, you can provide it using this param. Otherwise, the command may ask for it when required.",
-          "name": "customPreset",
-          "required": false,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "serviceProviderPublicKey": {
-          "description": "Public key of the service provider account, used when the transaction announcer(service provider account) is different than the main account private key holder",
-          "name": "serviceProviderPublicKey",
+          "description": "User used to run docker images when creating configuration files like certificates or nemesis block. \"current\" means the current user.",
+          "name": "user",
+          "default": "current",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
@@ -800,11 +757,54 @@
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
+        },
+        "preset": {
+          "char": "p",
+          "description": "The network preset. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: bootstrap, testnet, mainnet, my-custom-network.yml (advanced, only for custom networks).",
+          "name": "preset",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "assembly": {
+          "char": "a",
+          "description": "The assembly that defines the node(s) layout. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: dual, peer, api, demo, multinode, services, my-custom-assembly.yml (advanced).",
+          "name": "assembly",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "customPreset": {
+          "char": "c",
+          "description": "External preset file. Values in this file will override the provided presets.",
+          "name": "customPreset",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "reset": {
+          "char": "r",
+          "description": "It resets the configuration generating a new one.",
+          "name": "reset",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "report": {
+          "description": "It generates reStructuredText (.rst) reports describing the configuration of each node.",
+          "name": "report",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "ready": {
+          "description": "If --ready is provided, the command will not ask offline confirmation.",
+          "name": "ready",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "hasDynamicHelp": false,
       "hiddenAliases": [],
-      "id": "link",
+      "id": "pack",
       "pluginAlias": "@nemneshia/symbol-bootstrap",
       "pluginName": "@nemneshia/symbol-bootstrap",
       "pluginType": "core",
@@ -814,7 +814,7 @@
       "relativePath": [
         "lib",
         "commands",
-        "link",
+        "pack",
         "index.js"
       ]
     },
@@ -904,55 +904,6 @@
         "index.js"
       ]
     },
-    "resetData": {
-      "aliases": [],
-      "args": {},
-      "description": "It removes the data keeping the generated configuration, certificates, keys and block 1.",
-      "examples": [
-        "$ symbol-bootstrap resetData"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "resetData",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "resetData",
-        "index.js"
-      ]
-    },
     "report": {
       "aliases": [],
       "args": {},
@@ -999,6 +950,55 @@
         "lib",
         "commands",
         "report",
+        "index.js"
+      ]
+    },
+    "resetData": {
+      "aliases": [],
+      "args": {},
+      "description": "It removes the data keeping the generated configuration, certificates, keys and block 1.",
+      "examples": [
+        "$ symbol-bootstrap resetData"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "resetData",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "resetData",
         "index.js"
       ]
     },
@@ -1271,55 +1271,6 @@
         "index.js"
       ]
     },
-    "stop": {
-      "aliases": [],
-      "args": {},
-      "description": "It stops the docker compose network if running (symbol-bootstrap started with --detached). This is just a wrapper for the `docker compose down` bash call.",
-      "examples": [
-        "$ symbol-bootstrap stop"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "stop",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "stop",
-        "index.js"
-      ]
-    },
     "updateVotingKeys": {
       "aliases": [],
       "args": {},
@@ -1382,6 +1333,55 @@
         "lib",
         "commands",
         "updateVotingKeys",
+        "index.js"
+      ]
+    },
+    "stop": {
+      "aliases": [],
+      "args": {},
+      "description": "It stops the docker compose network if running (symbol-bootstrap started with --detached). This is just a wrapper for the `docker compose down` bash call.",
+      "examples": [
+        "$ symbol-bootstrap stop"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "stop",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "stop",
         "index.js"
       ]
     },
@@ -1516,5 +1516,5 @@
       ]
     }
   },
-  "version": "2.0.2"
+  "version": "2.0.4"
 }

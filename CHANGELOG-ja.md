@@ -4,7 +4,17 @@
 
 変更履歴の形式は[Keep a Changelog](https://keepachangelog.com/en/1.0.0/)に基づいています。
 
-## [2.0.3] - 2025-04-9
+## [2.0.4] - 2025-04-10
+
+**マイルストーン**: メインネット(1.0.3.8)
+
+| パッケージ       | バージョン | リンク                                                            |
+| ---------------- | ---------- | ----------------------------------------------------------------- |
+| Symbol Bootstrap | v2.0.4     | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
+
+- エクスプローラの Docker イメージを symbolplatform/symbol-explorer:1.3.0-amd64 に変更
+
+## [2.0.3] - 2025-04-09
 
 **マイルストーン**: メインネット(1.0.3.8)
 
