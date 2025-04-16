@@ -3,20 +3,30 @@ default_ca = CA_default
 
 [CA_default]
 new_certs_dir = ./new_certs
-database = index.txt
-serial   = serial.dat
 
+database = index.txt
+serial = serial.dat
 private_key = ca.key.pem
 certificate = ca.cert.pem
-
 policy = policy_catapult
 
 [policy_catapult]
-commonName              = supplied
+commonName = supplied
 
 [req]
 prompt = no
 distinguished_name = dn
+x509_extensions = x509_v3_ca
 
 [dn]
 CN = {{{name}}}-account
+
+[x509_v3_ca]
+basicConstraints = critical,CA:TRUE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+
+[x509_v3_node]
+basicConstraints = CA:FALSE
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
