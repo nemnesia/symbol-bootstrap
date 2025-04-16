@@ -4,6 +4,22 @@
 
 変更履歴の形式は[Keep a Changelog](https://keepachangelog.com/en/1.0.0/)に基づいています。
 
+## [2.0.5] - 2025-04-17
+
+**マイルストーン**: メインネット(1.0.3.8)
+
+| パッケージ       | バージョン | リンク                                                            |
+| ---------------- | ---------- | ----------------------------------------------------------------- |
+| Symbol Bootstrap | v2.0.5     | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
+
+- ノード証明書を x509v3 に変更  
+  CA 証明書から作り直す必要があるので、`cert` ディレクトリを削除して再生成する必要があります。
+
+  ```bash
+  rm -rf target/nodes/node/cert
+  sb config -c custom-preset.yaml --upgrade
+  ```
+
 ## [2.0.4] - 2025-04-10
 
 **マイルストーン**: メインネット(1.0.3.8)
