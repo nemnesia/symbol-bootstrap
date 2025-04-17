@@ -23,15 +23,15 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Made it possible to disable Metal decoding
 
   ```yaml
-  restMetal: null
+  metal: null
   ```
 
   Additionally, the method to change the cache size is as follows:
 
   ```yaml
-  restMetal:
-    restMetalCacheTtl: 350
-    restMetalSizeLimit: 15000000
+  metal:
+    cacheTtl: 350
+    sizeLimit: 15000000
   ```
 
 ## [2.0.4] - 2025-04-10

@@ -23,15 +23,15 @@
 - Metal デコードを無効化可能に変更
 
   ```yaml
-  restMetal: null
+  metal: null
   ```
 
   なお、キャッシュサイズの変更方法は以下の通りです。
 
   ```yaml
-  restMetal:
-    restMetalCacheTtl: 350
-    restMetalSizeLimit: 15000000
+  metal:
+    cacheTtl: 350
+    sizeLimit: 15000000
   ```
 
 ## [2.0.4] - 2025-04-10
