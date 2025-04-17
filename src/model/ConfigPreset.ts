@@ -324,8 +324,10 @@ export interface GatewayConfigPreset {
   restSSLCertificateFileName: string;
   restSSLKeyBase64?: string;
   restSSLCertificateBase64?: string;
-  restMetalCacheTtl: number;
-  restMetalSizeLimit: number;
+  metal: {
+    cacheTtl: number;
+    sizeLimit: number;
+  };
 }
 
 export interface GatewayPreset extends DockerServicePreset, Partial<GatewayConfigPreset> {
