@@ -1,5 +1,137 @@
 {
   "commands": {
+    "clean": {
+      "aliases": [],
+      "args": {},
+      "description": "It removes the target folder deleting the generated configuration and data",
+      "examples": [
+        "$ symbol-bootstrap clean"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "clean",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "clean",
+        "index.js"
+      ]
+    },
+    "compose": {
+      "aliases": [],
+      "args": {},
+      "description": "It generates the `compose.yml` file from the configured network.",
+      "examples": [
+        "$ symbol-bootstrap compose"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "password": {
+          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "name": "password",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "noPassword": {
+          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "name": "noPassword",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "upgrade": {
+          "description": "It regenerates the docker compose and utility files from the <target>/docker folder",
+          "name": "upgrade",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "offline": {
+          "description": "If --offline is used, Bootstrap resolves the configuration without querying the running network.",
+          "name": "offline",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "user": {
+          "char": "u",
+          "description": "User used to run the services in the compose.yml file. \"current\" means the current user.",
+          "name": "user",
+          "default": "current",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "compose",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "compose",
+        "index.js"
+      ]
+    },
     "decrypt": {
       "aliases": [],
       "args": {},
@@ -190,138 +322,6 @@
         "index.js"
       ]
     },
-    "clean": {
-      "aliases": [],
-      "args": {},
-      "description": "It removes the target folder deleting the generated configuration and data",
-      "examples": [
-        "$ symbol-bootstrap clean"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "clean",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "clean",
-        "index.js"
-      ]
-    },
-    "compose": {
-      "aliases": [],
-      "args": {},
-      "description": "It generates the `compose.yml` file from the configured network.",
-      "examples": [
-        "$ symbol-bootstrap compose"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
-          "name": "password",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
-          "name": "noPassword",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "upgrade": {
-          "description": "It regenerates the docker compose and utility files from the <target>/docker folder",
-          "name": "upgrade",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "offline": {
-          "description": "If --offline is used, Bootstrap resolves the configuration without querying the running network.",
-          "name": "offline",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "user": {
-          "char": "u",
-          "description": "User used to run the services in the compose.yml file. \"current\" means the current user.",
-          "name": "user",
-          "default": "current",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "compose",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "compose",
-        "index.js"
-      ]
-    },
     "encrypt": {
       "aliases": [],
       "args": {},
@@ -500,55 +500,6 @@
         "index.js"
       ]
     },
-    "healthCheck": {
-      "aliases": [],
-      "args": {},
-      "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
-      "examples": [
-        "$ symbol-bootstrap healthCheck"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "healthCheck",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "healthCheck",
-        "index.js"
-      ]
-    },
     "modifyMultisig": {
       "aliases": [],
       "args": {},
@@ -685,6 +636,55 @@
         "lib",
         "commands",
         "modifyMultisig",
+        "index.js"
+      ]
+    },
+    "healthCheck": {
+      "aliases": [],
+      "args": {},
+      "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
+      "examples": [
+        "$ symbol-bootstrap healthCheck"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "healthCheck",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "healthCheck",
         "index.js"
       ]
     },
@@ -1271,6 +1271,55 @@
         "index.js"
       ]
     },
+    "stop": {
+      "aliases": [],
+      "args": {},
+      "description": "It stops the docker compose network if running (symbol-bootstrap started with --detached). This is just a wrapper for the `docker compose down` bash call.",
+      "examples": [
+        "$ symbol-bootstrap stop"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "stop",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "stop",
+        "index.js"
+      ]
+    },
     "updateVotingKeys": {
       "aliases": [],
       "args": {},
@@ -1333,55 +1382,6 @@
         "lib",
         "commands",
         "updateVotingKeys",
-        "index.js"
-      ]
-    },
-    "stop": {
-      "aliases": [],
-      "args": {},
-      "description": "It stops the docker compose network if running (symbol-bootstrap started with --detached). This is just a wrapper for the `docker compose down` bash call.",
-      "examples": [
-        "$ symbol-bootstrap stop"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "stop",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "stop",
         "index.js"
       ]
     },
@@ -1516,5 +1516,5 @@
       ]
     }
   },
-  "version": "2.0.4"
+  "version": "2.0.5"
 }

@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.0.5] - 2025-04-17
+
+**Milestone**: Mainnet(1.0.3.8)
+
+| Package          | Version | Link                                                              |
+| ---------------- | ------- | ----------------------------------------------------------------- |
+| Symbol Bootstrap | v2.0.5  | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
+
+- Changed node certificates to x509v3.  
+  Since it is necessary to recreate them from the CA certificate, you need to delete the `cert` directory and regenerate it.
+
+  ```bash
+  rm -rf target/nodes/node/cert
+  sb config -c custom-preset.yaml --upgrade
+  ```
+
+- Made it possible to disable Metal decoding
+
+  ```yaml
+  metal: null
+  ```
+
+  Additionally, the method to change the cache size is as follows:
+
+  ```yaml
+  metal:
+    cacheTtl: 350
+    sizeLimit: 15000000
+  ```
+
 ## [2.0.4] - 2025-04-10
 
 **Milestone**: Mainnet(1.0.3.8)
