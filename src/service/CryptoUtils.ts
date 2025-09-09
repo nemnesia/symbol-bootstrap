@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { createDecipheriv, pbkdf2Sync } from 'crypto';
 import _ from 'lodash';
 import { Crypto } from 'symbol-sdk';
 import { PrivateKeySecurityMode } from '../model/index.js';
@@ -106,12 +107,21 @@ export class CryptoUtils {
       return _.mapValues(value, (value: any, name: string) => CryptoUtils.decrypt(value, password, name));
     }
     if (this.isEncryptableKeyField(value, fieldName) && value.startsWith(CryptoUtils.ENCRYPT_PREFIX)) {
-      let decryptedValue;
+      const encryptedValue = value.substring(CryptoUtils.ENCRYPT_PREFIX.length);
+      // 1) Try current symbol-sdk decryption first (crypto-js >= 4.2.0 compatible)
+      let decryptedValue: string | undefined;
       try {
-        const encryptedValue = value.substring(CryptoUtils.ENCRYPT_PREFIX.length);
         decryptedValue = Crypto.decrypt(encryptedValue, password);
       } catch (e) {
-        throw Error('Value could not be decrypted!');
+        decryptedValue = undefined;
+      }
+      // 2) Fallback to legacy decryption (crypto-js 4.1.1 equivalent: PBKDF2-SHA1 + AES-256-CBC)
+      if (!decryptedValue) {
+        try {
+          decryptedValue = CryptoUtils.decryptLegacy(encryptedValue, password);
+        } catch (e) {
+          throw Error('Value could not be decrypted!');
+        }
       }
       if (!decryptedValue) {
         throw Error('Value could not be decrypted!');
@@ -143,5 +153,27 @@ export class CryptoUtils {
     return (
       _.isString(value) && fieldName && CryptoUtils.ENCRYPTABLE_KEYS.some((key) => fieldName.toLowerCase().endsWith(key.toLowerCase()))
     );
+  }
+
+  /**
+   * Legacy decryption logic equivalent to crypto-js 4.1.1 (PBKDF2-SHA1, iterations=1024, keySize=32, AES-256-CBC, PKCS7)
+   * Input format: `salt(16 bytes hex)` + `iv(16 bytes hex)` + `ciphertext(base64)`
+   */
+  private static decryptLegacy(data: string, password: string): string {
+    if (!data || data.length < 64) {
+      throw new Error('Invalid encrypted payload');
+    }
+    const saltHex = data.substring(0, 32);
+    const ivHex = data.substring(32, 64);
+    const ciphertextBase64 = data.substring(64);
+
+    const salt = Buffer.from(saltHex, 'hex');
+    const iv = Buffer.from(ivHex, 'hex');
+    const key = pbkdf2Sync(Buffer.from(password, 'utf8'), salt, 1024, 32, 'sha1');
+
+    const decipher = createDecipheriv('aes-256-cbc', key, iv);
+    let decrypted = decipher.update(ciphertextBase64, 'base64', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
   }
 }

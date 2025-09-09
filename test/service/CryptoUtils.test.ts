@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { createCipheriv, pbkdf2Sync, randomBytes } from 'crypto';
 import 'mocha';
 import { Utils } from '../../src';
 import { PrivateKeySecurityMode } from '../../src/model';
@@ -124,6 +125,46 @@ describe('CryptoUtils', () => {
     const encryptedObject = CryptoUtils.encrypt(object, password);
     try {
       CryptoUtils.decrypt(encryptedObject, 'invalidPassword');
+      expect(1).eq(0);
+    } catch (e) {
+      expect(Utils.getMessage(e)).eq('Value could not be decrypted!');
+    }
+  });
+
+  it('decrypt legacy encrypted value (crypto-js 4.1.1 equivalent)', () => {
+    const password = '1234';
+    const plain = 'abc';
+
+    // Legacy format: salt(16 bytes hex) + iv(16 bytes hex) + ciphertext(base64)
+    const salt = randomBytes(16);
+    const iv = randomBytes(16);
+    const key = pbkdf2Sync(Buffer.from(password, 'utf8'), salt, 1024, 32, 'sha1');
+    const cipher = createCipheriv('aes-256-cbc', key, iv);
+    let ciphertext = cipher.update(plain, 'utf8', 'base64');
+    ciphertext += cipher.final('base64');
+    const payload = 'ENCRYPTED:' + salt.toString('hex') + iv.toString('hex') + ciphertext;
+
+    const obj = { anotherPrivateKey: payload } as any;
+    const decrypted = CryptoUtils.decrypt(obj, password);
+    expect(decrypted.anotherPrivateKey).eq(plain);
+  });
+
+  it('decrypt legacy encrypted value should fail with invalid password', () => {
+    const password = '1234';
+    const invalidPassword = '0000';
+    const plain = 'abc';
+
+    const salt = randomBytes(16);
+    const iv = randomBytes(16);
+    const key = pbkdf2Sync(Buffer.from(password, 'utf8'), salt, 1024, 32, 'sha1');
+    const cipher = createCipheriv('aes-256-cbc', key, iv);
+    let ciphertext = cipher.update(plain, 'utf8', 'base64');
+    ciphertext += cipher.final('base64');
+    const payload = 'ENCRYPTED:' + salt.toString('hex') + iv.toString('hex') + ciphertext;
+
+    const obj = { anotherPrivateKey: payload } as any;
+    try {
+      CryptoUtils.decrypt(obj, invalidPassword);
       expect(1).eq(0);
     } catch (e) {
       expect(Utils.getMessage(e)).eq('Value could not be decrypted!');
