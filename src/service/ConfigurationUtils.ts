@@ -76,7 +76,8 @@ export class ConfigurationUtils {
     return (
       presetData.nemesis &&
       !presetData.nemesisSeedFolder &&
-      (YamlUtils.isYmlFile(presetData.preset) || !existsSync(join(Constants.ROOT_FOLDER, 'presets', presetData.preset, 'seed')))
+      (YamlUtils.isYmlFile(presetData.preset) ||
+        !existsSync(join(Constants.ROOT_FOLDER, 'presets', presetData.preset, 'seed')))
     );
   }
 }

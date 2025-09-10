@@ -1,0 +1,22 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "rootDir": ".",
+    "types": ["vitest/globals", "node"],
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "baseUrl": "."
+  },
+  "include": ["./**/*.ts", "./**/*.js", "./**/*.e2e.ts", "../src/**/*.ts"],
+  "exclude": ["node_modules", "lib", "coverage", "**/*.d.ts"],
+  "references": [
+    {
+      "path": ".."
+    }
+  ]
+}

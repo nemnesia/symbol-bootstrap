@@ -25,7 +25,6 @@ import { YamlUtils } from './YamlUtils.js';
 
 export class HandlebarsUtils {
   public static async generateConfiguration(
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     templateContext: any,
     copyFrom: string,
     copyTo: string,
@@ -55,7 +54,9 @@ export class HandlebarsUtils {
 
               await fsPromises.writeFile(
                 destinationFile,
-                destinationFile.toLowerCase().endsWith('.json') ? HandlebarsUtils.formatJson(renderedTemplate) : renderedTemplate,
+                destinationFile.toLowerCase().endsWith('.json')
+                  ? HandlebarsUtils.formatJson(renderedTemplate)
+                  : renderedTemplate,
               );
             } else {
               await fsPromises.copyFile(fromPath, destinationFile);
@@ -64,7 +65,13 @@ export class HandlebarsUtils {
           }
         } else if (stat.isDirectory()) {
           await fsPromises.mkdir(toPath, { recursive: true });
-          await this.generateConfiguration(templateContext, fromPath, toPath, excludeFiles, includeFiles);
+          await this.generateConfiguration(
+            templateContext,
+            fromPath,
+            toPath,
+            excludeFiles,
+            includeFiles,
+          );
         }
       }),
     );
@@ -144,7 +151,6 @@ export class HandlebarsUtils {
     return renderedText.toString().split("'").join('').replace(/^(0x)/, '');
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static toJson(object: any): string {
     return JSON.stringify(object, null, 2);
   }

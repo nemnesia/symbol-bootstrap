@@ -32,7 +32,9 @@ export class YamlUtils {
   }
 
   public static async writeYaml(path: string, object: unknown, password: Password): Promise<void> {
-    const yamlString = this.toYaml(password ? CryptoUtils.encrypt(object, Utils.validatePassword(password)) : object);
+    const yamlString = this.toYaml(
+      password ? CryptoUtils.encrypt(object, Utils.validatePassword(password)) : object,
+    );
     await this.writeTextFile(path, yamlString);
   }
 
@@ -50,8 +52,10 @@ export class YamlUtils {
       Utils.validatePassword(password);
       try {
         return CryptoUtils.decrypt(object, password);
-      } catch (e) {
-        throw new KnownError(`Cannot decrypt file ${fileLocation}. Have you used the right password?`);
+      } catch {
+        throw new KnownError(
+          `Cannot decrypt file ${fileLocation}. Have you used the right password?`,
+        );
       }
     } else {
       if (password !== false && CryptoUtils.encryptedCount(object) > 0) {

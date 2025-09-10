@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { Account } from 'symbol-sdk';
@@ -54,8 +55,14 @@ export class NativeVotingKeyFileProvider implements VotingKeyFileProvider {
     const votingAccount = Account.generateNewAccount(presetData.networkType);
     const votingPrivateKey = votingAccount.privateKey;
     const votingUtils = new VotingUtils();
-    this.logger.info('Voting file is created using the native typescript voting key file generator!');
-    const votingFile = await votingUtils.createVotingFile(votingPrivateKey, votingKeyStartEpoch, votingKeyEndEpoch);
+    this.logger.info(
+      'Voting file is created using the native typescript voting key file generator!',
+    );
+    const votingFile = await votingUtils.createVotingFile(
+      votingPrivateKey,
+      votingKeyStartEpoch,
+      votingKeyEndEpoch,
+    );
     writeFileSync(join(votingKeysFolder, privateKeyTreeFileName), votingFile);
     return {
       publicKey: votingAccount.publicKey,
@@ -65,7 +72,10 @@ export class NativeVotingKeyFileProvider implements VotingKeyFileProvider {
 
 export class CatapultVotingKeyFileProvider implements VotingKeyFileProvider {
   private readonly runtimeService: RuntimeService;
-  constructor(private readonly logger: Logger, private readonly user: string) {
+  constructor(
+    private readonly logger: Logger,
+    private readonly user: string,
+  ) {
     this.runtimeService = new RuntimeService(logger);
   }
   public async createVotingFile({

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import * as os from 'os';
 import * as semver from 'semver';
 import { Logger } from '../logger/index.js';
@@ -49,7 +50,10 @@ export interface VerifyAction {
 
 export class AppVersionService {
   public static readonly semverOptions = { loose: true };
-  constructor(private readonly logger: Logger, private readonly runtimeService: RuntimeService) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly runtimeService: RuntimeService,
+  ) {}
   public loadVersion(text: string): string | undefined {
     return text
       .replace(',', '')
@@ -136,7 +140,10 @@ export class AppVersionVerifyAction implements VerifyAction {
 }
 
 export class DockerRunVerifyAction implements VerifyAction {
-  constructor(private readonly logger: Logger, private readonly runtimeService: RuntimeService) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly runtimeService: RuntimeService,
+  ) {}
   async verify(): Promise<ReportLine> {
     const header = 'Docker Run Test';
     const command = 'docker run hello-world';
@@ -189,7 +196,10 @@ export class VerifyService {
   public readonly actions: VerifyAction[] = [];
   private readonly runtimeService: RuntimeService;
 
-  constructor(private readonly logger: Logger, expectedVersions: Partial<ExpectedVersions> = {}) {
+  constructor(
+    private readonly logger: Logger,
+    expectedVersions: Partial<ExpectedVersions> = {},
+  ) {
     this.runtimeService = new RuntimeService(logger);
     this.expectedVersions = { ...defaultExpectedVersions, ...expectedVersions };
 
@@ -248,7 +258,9 @@ export class VerifyService {
     if (errors.length) {
       throw new Error(
         'There has been an error. Check the report:\n' +
-          errors.map((line) => ` - ${line.header}  - Error! - ${line.message} - ${line.recommendation}`).join('\n'),
+          errors
+            .map((line) => ` - ${line.header}  - Error! - ${line.message} - ${line.recommendation}`)
+            .join('\n'),
       );
     }
   }

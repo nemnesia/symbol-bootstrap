@@ -58,7 +58,11 @@ export class BootstrapService {
    * @param passedPresetData the created preset if you know it, otherwise will load the latest one resolved from the target folder.
    * @param passedAddresses the created addresses if you know if, otherwise will load the latest one resolved form the target folder.
    */
-  public compose(config: ComposeParams, passedPresetData?: ConfigPreset, passedAddresses?: Addresses): Promise<DockerCompose> {
+  public compose(
+    config: ComposeParams,
+    passedPresetData?: ConfigPreset,
+    passedAddresses?: Addresses,
+  ): Promise<DockerCompose> {
     return new ComposeService(this.logger, config).run(passedPresetData, passedAddresses);
   }
 
@@ -72,7 +76,11 @@ export class BootstrapService {
    * @param passedAddresses  the created addresses if you know it, otherwise will load the latest one resolved from the target folder.
    */
 
-  public link(config: LinkParams, passedPresetData?: ConfigPreset | undefined, passedAddresses?: Addresses | undefined): Promise<void> {
+  public link(
+    config: LinkParams,
+    passedPresetData?: ConfigPreset | undefined,
+    passedAddresses?: Addresses | undefined,
+  ): Promise<void> {
     return new LinkService(this.logger, config).run(passedPresetData, passedAddresses);
   }
 

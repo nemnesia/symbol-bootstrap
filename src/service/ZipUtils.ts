@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import archiver from 'archiver';
 import { createWriteStream } from 'fs';
 import StreamZip from 'node-stream-zip';
@@ -35,10 +36,12 @@ export class ZipUtils {
       zlib: { level: 9 }, // Sets the compression level.
     });
     archive.pipe(output);
-    return new Promise<void>(async (resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       output.on('close', () => {
         this.logger.info('');
-        this.logger.info(`Zip file ${destination} size ${Math.floor(archive.pointer() / 1024)} KB has been created.`);
+        this.logger.info(
+          `Zip file ${destination} size ${Math.floor(archive.pointer() / 1024)} KB has been created.`,
+        );
         resolve();
       });
 
@@ -52,17 +55,23 @@ export class ZipUtils {
         this.logger.info('');
         if (err.code === 'ENOENT') {
           // log warning
-          this.logger.info(`There has been an warning creating ZIP file '${destination}' ${err.message || err}`);
+          this.logger.info(
+            `There has been an warning creating ZIP file '${destination}' ${err.message || err}`,
+          );
         } else {
           // throw error
-          this.logger.info(`There has been an error creating ZIP file '${destination}' ${err.message || err}`);
+          this.logger.info(
+            `There has been an error creating ZIP file '${destination}' ${err.message || err}`,
+          );
           reject(err);
         }
       });
 
       // good practice to catch this error explicitly
       archive.on('error', (err: any) => {
-        this.logger.info(`There has been an error creating ZIP file '${destination}' ${err.message || err}`);
+        this.logger.info(
+          `There has been an error creating ZIP file '${destination}' ${err.message || err}`,
+        );
         reject(err);
       });
 
@@ -82,7 +91,7 @@ export class ZipUtils {
         const message = `${progress.entries.processed} entries zipped!`;
         Utils.logSameLineMessage(message);
       });
-      await archive.finalize();
+      archive.finalize();
     });
   }
 
@@ -91,7 +100,9 @@ export class ZipUtils {
       file: zipFile,
       storeEntries: true,
     });
-    this.logger.info(`Unzipping Backup Sync's '${innerFolder || 'ROOT'}' into '${targetFolder}'. This could take a while!`);
+    this.logger.info(
+      `Unzipping Backup Sync's '${innerFolder || 'ROOT'}' into '${targetFolder}'. This could take a while!`,
+    );
     let totalFiles = 0;
     let process = 0;
     return new Promise<void>((resolve, reject) => {

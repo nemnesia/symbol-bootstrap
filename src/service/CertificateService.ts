@@ -82,7 +82,9 @@ export class CertificateService {
     customCertFolder?: string,
     randomSerial?: string,
   ): Promise<boolean> {
-    const certFolder = customCertFolder || this.fileSystemService.getTargetNodesFolder(this.params.target, false, name, 'cert');
+    const certFolder =
+      customCertFolder ||
+      this.fileSystemService.getTargetNodesFolder(this.params.target, false, name, 'cert');
     const metadataFile = join(certFolder, 'metadata.yml');
     if (!(await this.shouldGenerateCertificate(metadataFile, providedCertificates))) {
       const willExpireReport = await this.willCertificateExpire(
@@ -91,7 +93,9 @@ export class CertificateService {
         CertificateService.NODE_CERTIFICATE_FILE_NAME,
         presetData.certificateExpirationWarningInDays,
       );
-      const shouldRenew = (willExpireReport.willExpire && renewMode == RenewMode.WHEN_REQUIRED) || renewMode == RenewMode.ALWAYS;
+      const shouldRenew =
+        (willExpireReport.willExpire && renewMode == RenewMode.WHEN_REQUIRED) ||
+        renewMode == RenewMode.ALWAYS;
       const logWarning =
         (willExpireReport.willExpire && renewMode == RenewMode.ONLY_WARNING) ||
         (!willExpireReport.willExpire && renewMode == RenewMode.ALWAYS);
@@ -116,11 +120,27 @@ export class CertificateService {
       else this.logger.info(message);
 
       if (shouldRenew) {
-        await this.createCertificate(true, presetData, certFolder, name, providedCertificates, metadataFile, randomSerial);
+        await this.createCertificate(
+          true,
+          presetData,
+          certFolder,
+          name,
+          providedCertificates,
+          metadataFile,
+          randomSerial,
+        );
       }
       return shouldRenew;
     } else {
-      await this.createCertificate(false, presetData, certFolder, name, providedCertificates, metadataFile, randomSerial);
+      await this.createCertificate(
+        false,
+        presetData,
+        certFolder,
+        name,
+        providedCertificates,
+        metadataFile,
+        randomSerial,
+      );
       return true;
     }
   }
@@ -169,7 +189,11 @@ export class CertificateService {
       (randomSerial?.trim() || Convert.uint8ToHex(Crypto.randomBytes(19))).toLowerCase() + '\n',
     );
 
-    const command = this.createCertCommands(renew, presetData.caCertificateExpirationInDays, presetData.nodeCertificateExpirationInDays);
+    const command = this.createCertCommands(
+      renew,
+      presetData.caCertificateExpirationInDays,
+      presetData.nodeCertificateExpirationInDays,
+    );
     await YamlUtils.writeTextFile(join(certFolder, 'createNodeCertificates.sh'), command);
 
     const { stdout, stderr } = await this.runOpenSslCommand(
@@ -186,16 +210,33 @@ export class CertificateService {
 
     const certificates = CertificateService.getCertificates(stdout);
     if (certificates.length != 2) {
-      throw new Error('Certificate creation failed. 2 certificates should have been created but got: ' + certificates.length);
+      throw new Error(
+        'Certificate creation failed. 2 certificates should have been created but got: ' +
+          certificates.length,
+      );
     }
-    this.logger.info(renew ? `Certificate for node ${name} renewed.` : `Certificate for node ${name} created.`);
+    this.logger.info(
+      renew ? `Certificate for node ${name} renewed.` : `Certificate for node ${name} created.`,
+    );
     const caCertificate = certificates[0];
     const nodeCertificate = certificates[1];
 
-    Utils.validateIsTrue(caCertificate.privateKey === mainAccount.privateKey, 'Invalid ca private key');
-    Utils.validateIsTrue(caCertificate.publicKey === providedCertificates.main.publicKey, 'Invalid ca public key');
-    Utils.validateIsTrue(nodeCertificate.privateKey === transportAccount.privateKey, 'Invalid Node private key');
-    Utils.validateIsTrue(nodeCertificate.publicKey === providedCertificates.transport.publicKey, 'Invalid Node public key');
+    Utils.validateIsTrue(
+      caCertificate.privateKey === mainAccount.privateKey,
+      'Invalid ca private key',
+    );
+    Utils.validateIsTrue(
+      caCertificate.publicKey === providedCertificates.main.publicKey,
+      'Invalid ca public key',
+    );
+    Utils.validateIsTrue(
+      nodeCertificate.privateKey === transportAccount.privateKey,
+      'Invalid Node private key',
+    );
+    Utils.validateIsTrue(
+      nodeCertificate.publicKey === providedCertificates.transport.publicKey,
+      'Invalid Node public key',
+    );
 
     const metadata: CertificateMetadata = {
       version: CertificateService.METADATA_VERSION,
@@ -205,7 +246,10 @@ export class CertificateService {
     await YamlUtils.writeYaml(metadataFile, metadata, undefined);
   }
 
-  private async shouldGenerateCertificate(metadataFile: string, providedCertificates: NodeCertificates): Promise<boolean> {
+  private async shouldGenerateCertificate(
+    metadataFile: string,
+    providedCertificates: NodeCertificates,
+  ): Promise<boolean> {
     if (!existsSync(metadataFile)) {
       return true;
     }
@@ -217,12 +261,19 @@ export class CertificateService {
         metadata.version !== CertificateService.METADATA_VERSION
       );
     } catch (e) {
-      this.logger.warn(`Cannot load node certificate metadata from file ${metadataFile}. Error: ${Utils.getMessage(e)}`, e);
+      this.logger.warn(
+        `Cannot load node certificate metadata from file ${metadataFile}. Error: ${Utils.getMessage(e)}`,
+        e,
+      );
       return true;
     }
   }
 
-  private createCertCommands(renew: boolean, caCertificateExpirationInDays: number, nodeCertificateExpirationInDays: number): string {
+  private createCertCommands(
+    renew: boolean,
+    caCertificateExpirationInDays: number,
+    nodeCertificateExpirationInDays: number,
+  ): string {
     const createCaCertificate = renew
       ? `openssl x509 -in ${CertificateService.CA_CERTIFICATE_FILE_NAME} -text -noout`
       : `# create CA cert and self-sign it
@@ -291,12 +342,19 @@ echo "Certificate Created"
     const command = `openssl x509 -enddate -noout -in ${certificateFileName} -checkend ${
       certificateExpirationWarningInDays * 24 * 60 * 60
     }`;
-    const { stdout, stderr } = await this.runOpenSslCommand(symbolServerImage, command, certFolder, true);
+    const { stdout, stderr } = await this.runOpenSslCommand(
+      symbolServerImage,
+      command,
+      certFolder,
+      true,
+    );
     const expirationDate = stdout.match('notAfter\\=(.*)\\n')?.[1];
     if (!expirationDate) {
       this.logger.info(Utils.secureString(stdout));
       this.logger.error(Utils.secureString(stderr));
-      throw new Error(`Cannot validate ${certificateFileName} certificate expiration. Expiration Date cannot be resolved. Check the logs!`);
+      throw new Error(
+        `Cannot validate ${certificateFileName} certificate expiration. Expiration Date cannot be resolved. Check the logs!`,
+      );
     }
     if (stdout.indexOf('Certificate will expire') > -1) {
       return {
@@ -312,7 +370,9 @@ echo "Certificate Created"
     }
     this.logger.info(Utils.secureString(stdout));
     this.logger.error(Utils.secureString(stderr));
-    throw new Error(`Cannot validate ${certificateFileName} certificate expiration. Check the logs!`);
+    throw new Error(
+      `Cannot validate ${certificateFileName} certificate expiration. Check the logs!`,
+    );
   }
 
   private async runOpenSslCommand(
@@ -352,7 +412,9 @@ echo "Certificate Created"
         .map((m) => m.trim())
         .join('');
       if (!key || key.length !== 64) {
-        throw Error(`SSL Certificate key cannot be loaded from the openssl script. Output: \n${subtext}`);
+        throw Error(
+          `SSL Certificate key cannot be loaded from the openssl script. Output: \n${subtext}`,
+        );
       }
       return key.toUpperCase();
     };
@@ -362,8 +424,12 @@ echo "Certificate Created"
     const to = 'Certificate';
 
     return locations(stdout, from).map((index) => {
-      const privateKey = extractKey(stdout.substring(index + from.length, stdout.indexOf(middle, index)));
-      const publicKey = extractKey(stdout.substring(stdout.indexOf(middle, index) + middle.length, stdout.indexOf(to, index)));
+      const privateKey = extractKey(
+        stdout.substring(index + from.length, stdout.indexOf(middle, index)),
+      );
+      const publicKey = extractKey(
+        stdout.substring(stdout.indexOf(middle, index) + middle.length, stdout.indexOf(to, index)),
+      );
       return { privateKey: privateKey, publicKey: publicKey };
     });
   }

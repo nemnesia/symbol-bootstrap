@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { confirm, password } from '@inquirer/prompts';
 import { Flags } from '@oclif/core';
 import { firstValueFrom } from 'rxjs';
@@ -65,7 +66,10 @@ export interface TransactionFactory {
 }
 
 export class AnnounceService {
-  constructor(private readonly logger: Logger, private readonly accountResolver: AccountResolver) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly accountResolver: AccountResolver,
+  ) {}
 
   private static onProcessListener = () => {
     process.on('SIGINT', () => {
@@ -85,10 +89,12 @@ export class AnnounceService {
         'Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.',
     }),
     ready: Flags.boolean({
-      description: 'If --ready is provided, the command will not ask for confirmation when announcing transactions.',
+      description:
+        'If --ready is provided, the command will not ask for confirmation when announcing transactions.',
     }),
     maxFee: Flags.integer({
-      description: 'the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.',
+      description:
+        'the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.',
     }),
     customPreset: Flags.string({
       char: 'c',
@@ -119,10 +125,17 @@ export class AnnounceService {
       return;
     }
     const url = providedUrl.replace(/\/$/, '');
-    const repositoryFactory = await TransactionUtils.getRepositoryFactory(this.logger, presetData, useKnownRestGateways ? undefined : url);
+    const repositoryFactory = await TransactionUtils.getRepositoryFactory(
+      this.logger,
+      presetData,
+      useKnownRestGateways ? undefined : url,
+    );
     const networkType = await firstValueFrom(repositoryFactory.getNetworkType());
     const transactionRepository = repositoryFactory.createTransactionRepository();
-    const transactionService = new TransactionService(transactionRepository, repositoryFactory.createReceiptRepository());
+    const transactionService = new TransactionService(
+      transactionRepository,
+      repositoryFactory.createReceiptRepository(),
+    );
     const epochAdjustment = await firstValueFrom(repositoryFactory.getEpochAdjustment());
     const listener = repositoryFactory.createListener();
     await listener.open();
@@ -130,9 +143,12 @@ export class AnnounceService {
     const currency = (await firstValueFrom(repositoryFactory.getCurrencies())).currency;
     const currencyMosaicId = currency.mosaicId;
     const deadline = Deadline.create(epochAdjustment);
-    const minFeeMultiplier = (await firstValueFrom(repositoryFactory.createNetworkRepository().getTransactionFees())).minFeeMultiplier;
-    const latestFinalizedBlockEpoch = (await firstValueFrom(repositoryFactory.createChainRepository().getChainInfo())).latestFinalizedBlock
-      .finalizationEpoch;
+    const minFeeMultiplier = (
+      await firstValueFrom(repositoryFactory.createNetworkRepository().getTransactionFees())
+    ).minFeeMultiplier;
+    const latestFinalizedBlockEpoch = (
+      await firstValueFrom(repositoryFactory.createChainRepository().getChainInfo())
+    ).latestFinalizedBlock.finalizationEpoch;
     if (!currencyMosaicId) {
       throw new Error('Mosaic Id must not be null!');
     }
@@ -154,7 +170,10 @@ export class AnnounceService {
         throw new Error('CA/Main account is required!');
       }
       const nodePreset = (presetData.nodes || [])[index];
-      const mainAccount = PublicAccount.createFromPublicKey(nodeAccount.main.publicKey, presetData.networkType);
+      const mainAccount = PublicAccount.createFromPublicKey(
+        nodeAccount.main.publicKey,
+        presetData.networkType,
+      );
       const serviceProviderPublicAccount = serviceProviderPublicKey
         ? PublicAccount.createFromPublicKey(serviceProviderPublicKey, presetData.networkType)
         : undefined;
@@ -165,14 +184,21 @@ export class AnnounceService {
           )} is creating transactions on behalf of your node account ${CommandUtils.formatAccount(mainAccount)}.`,
         );
       }
-      const announcerPublicAccount = serviceProviderPublicAccount ? serviceProviderPublicAccount : mainAccount;
+      const announcerPublicAccount = serviceProviderPublicAccount
+        ? serviceProviderPublicAccount
+        : mainAccount;
       const noFundsMessage = faucetUrl
         ? `Your account does not have enough XYM to complete this transaction. Send ${tokenAmount} tokens to ${announcerPublicAccount.address.plain()} via ${faucetUrl}/?recipient=${announcerPublicAccount.address.plain()}`
         : `Your account does not have enough XYM to complete this transaction. Send ${tokenAmount} tokens to ${announcerPublicAccount.address.plain()} .`;
-      const announcerAccountInfo = await this.getAccountInfo(repositoryFactory, announcerPublicAccount.address);
+      const announcerAccountInfo = await this.getAccountInfo(
+        repositoryFactory,
+        announcerPublicAccount.address,
+      );
 
       if (!announcerAccountInfo) {
-        this.logger.error(`Node signing account ${CommandUtils.formatAccount(announcerPublicAccount)} is not valid. \n\n${noFundsMessage}`);
+        this.logger.error(
+          `Node signing account ${CommandUtils.formatAccount(announcerPublicAccount)} is not valid. \n\n${noFundsMessage}`,
+        );
         continue;
       }
       if (this.isAccountEmpty(announcerAccountInfo, currencyMosaicId)) {
@@ -188,11 +214,16 @@ export class AnnounceService {
         ? announcerAccountInfo
         : await this.getAccountInfo(repositoryFactory, mainAccount.address);
       if (!mainAccountInfo) {
-        this.logger.info(`Main account ${CommandUtils.formatAccount(mainAccount)} is brand new. There are no records on the chain yet.`);
+        this.logger.info(
+          `Main account ${CommandUtils.formatAccount(mainAccount)} is brand new. There are no records on the chain yet.`,
+        );
       }
 
       const defaultMaxFee = UInt64.fromUint(providedMaxFee || 0);
-      const multisigAccountInfo = await TransactionUtils.getMultisigAccount(repositoryFactory, announcerPublicAccount.address);
+      const multisigAccountInfo = await TransactionUtils.getMultisigAccount(
+        repositoryFactory,
+        announcerPublicAccount.address,
+      );
       const params: TransactionFactoryParams = {
         presetData,
         nodePreset,
@@ -247,7 +278,9 @@ export class AnnounceService {
             this.logger.info(`There is no cosigner with enough tokens to announce!`);
             continue;
           }
-          this.logger.info(`Cosigner ${CommandUtils.formatAccount(bestCosigner.publicAccount)} is initializing the transactions.`);
+          this.logger.info(
+            `Cosigner ${CommandUtils.formatAccount(bestCosigner.publicAccount)} is initializing the transactions.`,
+          );
           signerAccount = bestCosigner; // override with a cosigner when multisig
           requiredCosignatures = multisigAccountInfo.minApproval;
         } else {
@@ -260,7 +293,10 @@ export class AnnounceService {
             'Should not generate!',
           );
         }
-        const mainMultisigAccountInfo = await TransactionUtils.getMultisigAccount(repositoryFactory, mainAccount.address);
+        const mainMultisigAccountInfo = await TransactionUtils.getMultisigAccount(
+          repositoryFactory,
+          mainAccount.address,
+        );
         requiredCosignatures += mainMultisigAccountInfo?.minApproval || 0; // mainAccount.minApproval
 
         const zeroAmountInnerTransaction = (account: PublicAccount): Transaction =>
@@ -275,7 +311,10 @@ export class AnnounceService {
 
         await this.announceAggregateBonded(
           signerAccount,
-          () => [...transactions.map((t) => t.toAggregate(mainAccount)), zeroAmountInnerTransaction(serviceProviderPublicAccount)],
+          () => [
+            ...transactions.map((t) => t.toAggregate(mainAccount)),
+            zeroAmountInnerTransaction(serviceProviderPublicAccount),
+          ],
           requiredCosignatures,
           deadline,
           networkType,
@@ -304,7 +343,9 @@ export class AnnounceService {
             this.logger.info(`There is no cosigner with enough tokens to announce!`);
             continue;
           }
-          this.logger.info(`Cosigner ${CommandUtils.formatAccount(bestCosigner.publicAccount)} is initializing the transactions.`);
+          this.logger.info(
+            `Cosigner ${CommandUtils.formatAccount(bestCosigner.publicAccount)} is initializing the transactions.`,
+          );
           if (cosigners.length >= multisigAccountInfo.minApproval) {
             //agg complete
             await this.announceAggregateComplete(
@@ -348,11 +389,13 @@ export class AnnounceService {
           const signerAccount = await resolveMainAccount();
           if (transactions.length == 1) {
             if (transactions[0].type === TransactionType.MULTISIG_ACCOUNT_MODIFICATION) {
-              const multisigModificationTx = transactions[0] as MultisigAccountModificationTransaction;
+              const multisigModificationTx =
+                transactions[0] as MultisigAccountModificationTransaction;
               await this.announceAggregateBonded(
                 signerAccount,
                 () => transactions.map((t) => t.toAggregate(mainAccount)),
-                (multisigModificationTx.addressAdditions || []).length + (multisigModificationTx.minApprovalDelta || 0),
+                (multisigModificationTx.addressAdditions || []).length +
+                  (multisigModificationTx.minApprovalDelta || 0),
                 deadline,
                 networkType,
                 defaultMaxFee,
@@ -405,7 +448,11 @@ export class AnnounceService {
     listener.close();
   }
 
-  private async promptAccounts(networkType: NetworkType, expectedAddresses: Address[], minApproval: number): Promise<Account[]> {
+  private async promptAccounts(
+    networkType: NetworkType,
+    expectedAddresses: Address[],
+    minApproval: number,
+  ): Promise<Account[]> {
     const providedAccounts: Account[] = [];
     const allowedAddresses = [...expectedAddresses];
     while (true) {
@@ -436,7 +483,9 @@ export class AnnounceService {
             return providedAccounts;
           }
           if (providedAccounts.length == minApproval) {
-            this.logger.info(`Min Approval of ${minApproval} has been reached. Aggregate Complete transaction can be created.`);
+            this.logger.info(
+              `Min Approval of ${minApproval} has been reached. Aggregate Complete transaction can be created.`,
+            );
             return providedAccounts;
           }
           const responses = await confirm({
@@ -453,10 +502,15 @@ export class AnnounceService {
     }
   }
 
-  private async getAccountInfo(repositoryFactory: RepositoryFactory, mainAccountAddress: Address): Promise<AccountInfo | undefined> {
+  private async getAccountInfo(
+    repositoryFactory: RepositoryFactory,
+    mainAccountAddress: Address,
+  ): Promise<AccountInfo | undefined> {
     try {
-      return await firstValueFrom(repositoryFactory.createAccountRepository().getAccountInfo(mainAccountAddress));
-    } catch (e) {
+      return await firstValueFrom(
+        repositoryFactory.createAccountRepository().getAccountInfo(mainAccountAddress),
+      );
+    } catch {
       return undefined;
     }
   }
@@ -469,16 +523,23 @@ export class AnnounceService {
     const accountRepository = repositoryFactory.createAccountRepository();
     for (const cosigner of cosigners) {
       try {
-        const accountInfo = await firstValueFrom(accountRepository.getAccountInfo(cosigner.address));
+        const accountInfo = await firstValueFrom(
+          accountRepository.getAccountInfo(cosigner.address),
+        );
         if (!this.isAccountEmpty(accountInfo, currencyMosaicId)) {
           return cosigner;
         }
-      } catch (e) {}
+      } catch {
+        //ignore
+      }
     }
     return undefined;
   }
 
-  private isAccountEmpty(mainAccountInfo: AccountInfo, currencyMosaicId: MosaicId | undefined): boolean {
+  private isAccountEmpty(
+    mainAccountInfo: AccountInfo,
+    currencyMosaicId: MosaicId | undefined,
+  ): boolean {
     if (!currencyMosaicId) {
       throw new Error('Mosaic Id must not be null!');
     }
@@ -503,9 +564,18 @@ export class AnnounceService {
     ready: boolean | undefined,
     nodeName: string,
   ): Promise<boolean> {
-    let aggregateTransaction = AggregateTransaction.createBonded(deadline, transactionFactory(), networkType, [], defaultMaxFee);
+    let aggregateTransaction = AggregateTransaction.createBonded(
+      deadline,
+      transactionFactory(),
+      networkType,
+      [],
+      defaultMaxFee,
+    );
     if (!providedMaxFee) {
-      aggregateTransaction = aggregateTransaction.setMaxFeeForAggregate(minFeeMultiplier, requiredCosignatures);
+      aggregateTransaction = aggregateTransaction.setMaxFeeForAggregate(
+        minFeeMultiplier,
+        requiredCosignatures,
+      );
     }
     const signedAggregateTransaction = signerAccount.signTransactionWithCosignatories(
       aggregateTransaction,
@@ -524,28 +594,57 @@ export class AnnounceService {
       lockFundsTransaction = lockFundsTransaction.setMaxFee(minFeeMultiplier);
     }
     const signedLockFundsTransaction = signerAccount.sign(lockFundsTransaction, generationHash);
-    if (!(await this.shouldAnnounce(lockFundsTransaction, signedLockFundsTransaction, ready, currency, nodeName))) {
+    if (
+      !(await this.shouldAnnounce(
+        lockFundsTransaction,
+        signedLockFundsTransaction,
+        ready,
+        currency,
+        nodeName,
+      ))
+    ) {
       return false;
     }
-    if (!(await this.shouldAnnounce(aggregateTransaction, signedAggregateTransaction, ready, currency, nodeName))) {
+    if (
+      !(await this.shouldAnnounce(
+        aggregateTransaction,
+        signedAggregateTransaction,
+        ready,
+        currency,
+        nodeName,
+      ))
+    ) {
       return false;
     }
 
     try {
-      this.logger.info(`Announcing ${this.getTransactionDescription(lockFundsTransaction, signedLockFundsTransaction, currency)}`);
+      this.logger.info(
+        `Announcing ${this.getTransactionDescription(lockFundsTransaction, signedLockFundsTransaction, currency)}`,
+      );
       await firstValueFrom(transactionService.announce(signedLockFundsTransaction, listener));
-      this.logger.info(`${this.getTransactionDescription(lockFundsTransaction, signedLockFundsTransaction, currency)} has been confirmed`);
+      this.logger.info(
+        `${this.getTransactionDescription(lockFundsTransaction, signedLockFundsTransaction, currency)} has been confirmed`,
+      );
 
-      this.logger.info(`Announcing Bonded ${this.getTransactionDescription(aggregateTransaction, signedAggregateTransaction, currency)}`);
-      await firstValueFrom(transactionService.announceAggregateBonded(signedAggregateTransaction, listener));
-      this.logger.info(`${this.getTransactionDescription(aggregateTransaction, signedAggregateTransaction, currency)} has been announced`);
+      this.logger.info(
+        `Announcing Bonded ${this.getTransactionDescription(aggregateTransaction, signedAggregateTransaction, currency)}`,
+      );
+      await firstValueFrom(
+        transactionService.announceAggregateBonded(signedAggregateTransaction, listener),
+      );
+      this.logger.info(
+        `${this.getTransactionDescription(aggregateTransaction, signedAggregateTransaction, currency)} has been announced`,
+      );
 
-      this.logger.info('Aggregate Bonded Transaction has been confirmed! Your cosigners would need to cosign!');
+      this.logger.info(
+        'Aggregate Bonded Transaction has been confirmed! Your cosigners would need to cosign!',
+      );
     } catch (e) {
       const message =
         `Aggregate Bonded Transaction ${signedAggregateTransaction.type} ${
           signedAggregateTransaction.hash
-        } - signer ${signedAggregateTransaction.getSignerAddress().plain()} failed!! ` + Utils.getMessage(e);
+        } - signer ${signedAggregateTransaction.getSignerAddress().plain()} failed!! ` +
+        Utils.getMessage(e);
       this.logger.error(message);
       return false;
     }
@@ -569,9 +668,18 @@ export class AnnounceService {
     requiredCosignatures?: number,
     cosigners?: Account[],
   ): Promise<boolean> {
-    let aggregateTransaction = AggregateTransaction.createComplete(deadline, transactionFactory(), networkType, [], defaultMaxFee);
+    let aggregateTransaction = AggregateTransaction.createComplete(
+      deadline,
+      transactionFactory(),
+      networkType,
+      [],
+      defaultMaxFee,
+    );
     if (!providedMaxFee) {
-      aggregateTransaction = aggregateTransaction.setMaxFeeForAggregate(minFeeMultiplier, requiredCosignatures || 0);
+      aggregateTransaction = aggregateTransaction.setMaxFeeForAggregate(
+        minFeeMultiplier,
+        requiredCosignatures || 0,
+      );
     }
     const signedAggregateTransaction = cosigners
       ? signer.signTransactionWithCosignatories(
@@ -580,19 +688,32 @@ export class AnnounceService {
           generationHash,
         )
       : signer.sign(aggregateTransaction, generationHash);
-    if (!(await this.shouldAnnounce(aggregateTransaction, signedAggregateTransaction, ready, currency, nodeName))) {
+    if (
+      !(await this.shouldAnnounce(
+        aggregateTransaction,
+        signedAggregateTransaction,
+        ready,
+        currency,
+        nodeName,
+      ))
+    ) {
       return false;
     }
     try {
-      this.logger.info(`Announcing ${this.getTransactionDescription(aggregateTransaction, signedAggregateTransaction, currency)}`);
+      this.logger.info(
+        `Announcing ${this.getTransactionDescription(aggregateTransaction, signedAggregateTransaction, currency)}`,
+      );
       await firstValueFrom(transactionService.announce(signedAggregateTransaction, listener));
-      this.logger.info(`${this.getTransactionDescription(aggregateTransaction, signedAggregateTransaction, currency)} has been confirmed`);
+      this.logger.info(
+        `${this.getTransactionDescription(aggregateTransaction, signedAggregateTransaction, currency)} has been confirmed`,
+      );
       return true;
     } catch (e) {
       const message =
         `Aggregate Complete Transaction ${signedAggregateTransaction.type} ${
           signedAggregateTransaction.hash
-        } - signer ${signedAggregateTransaction.getSignerAddress().plain()} failed!! ` + Utils.getMessage(e);
+        } - signer ${signedAggregateTransaction.getSignerAddress().plain()} failed!! ` +
+        Utils.getMessage(e);
       this.logger.error(message);
       return false;
     }
@@ -618,9 +739,13 @@ export class AnnounceService {
       return false;
     }
     try {
-      this.logger.info(`Announcing ${this.getTransactionDescription(transaction, signedTransaction, currency)}`);
+      this.logger.info(
+        `Announcing ${this.getTransactionDescription(transaction, signedTransaction, currency)}`,
+      );
       await firstValueFrom(transactionService.announce(signedTransaction, listener));
-      this.logger.info(`${this.getTransactionDescription(transaction, signedTransaction, currency)} has been confirmed`);
+      this.logger.info(
+        `${this.getTransactionDescription(transaction, signedTransaction, currency)} has been confirmed`,
+      );
       return true;
     } catch (e) {
       const message =
@@ -632,7 +757,11 @@ export class AnnounceService {
     }
   }
 
-  private getTransactionDescription(transaction: Transaction, signedTransaction: SignedTransaction, currency: Currency): string {
+  private getTransactionDescription(
+    transaction: Transaction,
+    signedTransaction: SignedTransaction,
+    currency: Currency,
+  ): string {
     const aggTypeDescription = (type: TransactionType) => {
       switch (type) {
         case TransactionType.AGGREGATE_BONDED:
@@ -684,7 +813,13 @@ export class AnnounceService {
           ', ',
         )}. The tool will ask for the cosigners provide keys in order to announce the transactions. These private keys are not stored anywhere!`,
     );
-    cosigners.push(...(await this.promptAccounts(networkType, msigAccountInfo.cosignatoryAddresses, msigAccountInfo.minApproval)));
+    cosigners.push(
+      ...(await this.promptAccounts(
+        networkType,
+        msigAccountInfo.cosignatoryAddresses,
+        msigAccountInfo.minApproval,
+      )),
+    );
     if (!cosigners.length) {
       return undefined;
     }

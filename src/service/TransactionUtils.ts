@@ -21,8 +21,16 @@ import { ConfigPreset } from '../model/index.js';
 import { RemoteNodeService } from './RemoteNodeService.js';
 
 export class TransactionUtils {
-  public static async getRepositoryFactory(logger: Logger, presetData: ConfigPreset, url: string | undefined): Promise<RepositoryFactory> {
-    const repositoryInfo = await new RemoteNodeService(logger, presetData, false).getBestRepositoryInfo(url);
+  public static async getRepositoryFactory(
+    logger: Logger,
+    presetData: ConfigPreset,
+    url: string | undefined,
+  ): Promise<RepositoryFactory> {
+    const repositoryInfo = await new RemoteNodeService(
+      logger,
+      presetData,
+      false,
+    ).getBestRepositoryInfo(url);
     return repositoryInfo.repositoryFactory;
   }
 
@@ -31,9 +39,11 @@ export class TransactionUtils {
     accountAddress: Address,
   ): Promise<MultisigAccountInfo | undefined> {
     try {
-      const info = await firstValueFrom(repositoryFactory.createMultisigRepository().getMultisigAccountInfo(accountAddress));
+      const info = await firstValueFrom(
+        repositoryFactory.createMultisigRepository().getMultisigAccountInfo(accountAddress),
+      );
       return info.isMultisig() ? info : undefined;
-    } catch (e) {
+    } catch {
       return undefined;
     }
   }

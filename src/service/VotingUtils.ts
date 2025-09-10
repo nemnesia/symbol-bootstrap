@@ -13,11 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import * as noble from '@noble/ed25519';
+import { createHash } from 'crypto';
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Convert, Crypto } from 'symbol-sdk';
 import nacl from 'tweetnacl';
+
+// Initialize noble-ed25519 with SHA-512 hash function for v3.0.0+
+// This is required for @noble/ed25519 v3.0.0+ to work properly
+if ((noble as any).hashes && typeof (noble as any).hashes === 'object') {
+  (noble as any).hashes.sha512 = (...messages: Uint8Array[]) => {
+    const hash = createHash('sha512');
+    for (const message of messages) {
+      hash.update(message);
+    }
+    return new Uint8Array(hash.digest());
+  };
+}
 
 export interface KeyPair {
   privateKey: Uint8Array;
@@ -64,9 +78,14 @@ export class VotingUtils {
     },
   };
 
-  public static implementations = [VotingUtils.nobleImplementation, VotingUtils.tweetNaClImplementation];
+  public static implementations = [
+    VotingUtils.nobleImplementation,
+    VotingUtils.tweetNaClImplementation,
+  ];
 
-  constructor(private readonly implementation: CryptoImplementation = VotingUtils.nobleImplementation) {}
+  constructor(
+    private readonly implementation: CryptoImplementation = VotingUtils.nobleImplementation,
+  ) {}
   public insert(result: Uint8Array, value: Uint8Array, index: number): number {
     result.set(value, index);
     return index + value.length;
@@ -82,7 +101,9 @@ export class VotingUtils {
     const headerSize = 64 + 16;
     const itemSize = 32 + 64;
     const totalSize = headerSize + items * itemSize;
-    const rootPrivateKey = await this.implementation.createKeyPairFromPrivateKey(Convert.hexToUint8(secret));
+    const rootPrivateKey = await this.implementation.createKeyPairFromPrivateKey(
+      Convert.hexToUint8(secret),
+    );
     const result = new Uint8Array(totalSize);
     //start-epoch (8b),
     let index = 0;
@@ -110,7 +131,9 @@ export class VotingUtils {
     // each key is:
     for (let i = 0; i < items; i++) {
       // random PRIVATE key (32b)
-      const randomPrivateKey = unitTestPrivateKeys ? unitTestPrivateKeys[i] : Crypto.randomBytes(32);
+      const randomPrivateKey = unitTestPrivateKeys
+        ? unitTestPrivateKeys[i]
+        : Crypto.randomBytes(32);
       if (randomPrivateKey.length != 32) {
         throw new Error(`Invalid private key size ${randomPrivateKey.length}!`);
       }
@@ -124,7 +147,10 @@ export class VotingUtils {
       //
       //   i.e. say your start-epoch = 2, end-epoch = 42
       const identifier = Convert.numberToUint8Array(votingKeyEndEpoch - i, 8);
-      const signature = await this.implementation.sign(rootPrivateKey, Uint8Array.from([...randomKeyPar.publicKey, ...identifier]));
+      const signature = await this.implementation.sign(
+        rootPrivateKey,
+        Uint8Array.from([...randomKeyPar.publicKey, ...identifier]),
+      );
       index = this.insert(result, signature, index);
     }
     //
@@ -168,7 +194,11 @@ export class VotingUtils {
     return readdirSync(folder)
       .map((filename: string) => {
         const currentPath = join(folder, filename);
-        if (lstatSync(currentPath).isFile() && filename.startsWith('private_key_tree') && filename.endsWith('.dat')) {
+        if (
+          lstatSync(currentPath).isFile() &&
+          filename.startsWith('private_key_tree') &&
+          filename.endsWith('.dat')
+        ) {
           return { ...this.readVotingFile(readFileSync(currentPath)), filename };
         } else {
           return undefined;

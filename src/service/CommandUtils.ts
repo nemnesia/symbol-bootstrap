@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { password } from '@inquirer/prompts';
 import { Flags } from '@oclif/core';
 import figlet from 'figlet';
@@ -23,7 +24,10 @@ import { Password } from './YamlUtils.js';
 
 export class CommandUtils {
   public static passwordPromptDefaultMessage = `Enter the password used to encrypt and decrypt custom presets, addresses.yml, and preset.yml files. When providing a password, private keys will be encrypted. Keep this password in a secure place!`;
-  public static helpFlag = Flags.help({ char: 'h', description: 'It shows the help of this command.' });
+  public static helpFlag = Flags.help({
+    char: 'h',
+    description: 'It shows the help of this command.',
+  });
 
   public static targetFlag = Flags.string({
     char: 't',
@@ -36,17 +40,24 @@ export class CommandUtils {
   );
 
   public static noPasswordFlag = Flags.boolean({
-    description: 'When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.',
+    description:
+      'When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.',
     default: false,
   });
 
   public static offlineFlag = Flags.boolean({
-    description: 'If --offline is used, Bootstrap resolves the configuration without querying the running network.',
+    description:
+      'If --offline is used, Bootstrap resolves the configuration without querying the running network.',
     default: false,
   });
 
   public static showBanner(): void {
-    console.log(figlet.textSync('symbol-bootstrap', { horizontalLayout: 'controlled smushing', font: 'Slant' }));
+    console.log(
+      figlet.textSync('symbol-bootstrap', {
+        horizontalLayout: 'controlled smushing',
+        font: 'Slant',
+      }),
+    );
   }
 
   public static getPasswordFlag(description: string) {
@@ -69,7 +80,9 @@ export class CommandUtils {
   }
 
   public static isValidPrivateKey(input: string): boolean | string {
-    return Convert.isHexString(input, 64) ? true : 'Invalid private key. It must have 64 hex characters.';
+    return Convert.isHexString(input, 64)
+      ? true
+      : 'Invalid private key. It must have 64 hex characters.';
   }
 
   public static async resolvePassword(
@@ -81,7 +94,10 @@ export class CommandUtils {
   ): Promise<string | undefined> {
     if (!providedPassword) {
       if (noPassword) {
-        if (log) logger.warn(`Password has not been provided (--noPassword)! It's recommended to use one for security!`);
+        if (log)
+          logger.warn(
+            `Password has not been provided (--noPassword)! It's recommended to use one for security!`,
+          );
         return undefined;
       }
       const responses = await password({
@@ -90,7 +106,10 @@ export class CommandUtils {
         validate: CommandUtils.isValidPassword,
       });
       if (responses === '' || !responses) {
-        if (log) logger.warn(`Password has not been provided (empty text)! It's recommended to use one for security!`);
+        if (log)
+          logger.warn(
+            `Password has not been provided (empty text)! It's recommended to use one for security!`,
+          );
         return undefined;
       }
       if (log) logger.info(`Password has been provided`);

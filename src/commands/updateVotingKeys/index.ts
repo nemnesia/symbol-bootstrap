@@ -79,10 +79,13 @@ When a new voting file is created, Bootstrap will advise running the \`link\` co
       );
     }
     const addresses = configLoader.loadExistingAddresses(target, password);
-    const privateKeySecurityMode = CryptoUtils.getPrivateKeySecurityMode(presetData.privateKeySecurityMode);
+    const privateKeySecurityMode = CryptoUtils.getPrivateKeySecurityMode(
+      presetData.privateKeySecurityMode,
+    );
 
     const finalizationEpoch =
-      flags.finalizationEpoch || (await new RemoteNodeService(logger, presetData, false).resolveCurrentFinalizationEpoch());
+      flags.finalizationEpoch ||
+      (await new RemoteNodeService(logger, presetData, false).resolveCurrentFinalizationEpoch());
 
     const votingKeyUpgrade = (
       await Promise.all(

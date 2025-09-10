@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Command, Flags } from '@oclif/core';
 import { Account } from 'symbol-sdk';
 import { LoggerFactory, System } from '../../logger/index.js';
 import { CertificatePair, ConfigAccount } from '../../model/index.js';
-import { BootstrapAccountResolver, CertificateService, CommandUtils, ConfigLoader, Constants, RenewMode } from '../../service/index.js';
+import {
+  BootstrapAccountResolver,
+  CertificateService,
+  CommandUtils,
+  ConfigLoader,
+  Constants,
+  RenewMode,
+} from '../../service/index.js';
 
 export default class RenewCertificates extends Command {
   static description = `It renews the SSL certificates of the node regenerating the node.csr.pem files but reusing the current private keys.
@@ -89,7 +97,10 @@ It's recommended to backup the target folder before running this operation!
           if (!nodeAccount) {
             throw new Error(`There is not node in addresses at index ${index}`);
           }
-          function resolveAccount(configAccount: ConfigAccount, providedPrivateKey: string | undefined): CertificatePair {
+          function resolveAccount(
+            configAccount: ConfigAccount,
+            providedPrivateKey: string | undefined,
+          ): CertificatePair {
             if (providedPrivateKey) {
               const account = Account.createFromPrivateKey(providedPrivateKey, networkType);
               if (account.address.plain() == configAccount.address) {
@@ -103,7 +114,9 @@ It's recommended to backup the target folder before running this operation!
             transport: resolveAccount(nodeAccount.transport, nodePreset.transportPrivateKey),
           };
           // Docker Compose プロジェクト名のプレフィックスを追加
-          const containerNamePrefix = presetData.dockerComposeProjectName ? `${presetData.dockerComposeProjectName}-` : '';
+          const containerNamePrefix = presetData.dockerComposeProjectName
+            ? `${presetData.dockerComposeProjectName}-`
+            : '';
           return certificateService.run(
             presetData,
             containerNamePrefix + nodePreset.name,

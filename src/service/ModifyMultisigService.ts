@@ -26,7 +26,11 @@ import {
 import { Logger } from '../logger/index.js';
 import { Addresses, ConfigPreset } from '../model/index.js';
 import { AccountResolver } from './AccountResolver.js';
-import { AnnounceService, TransactionFactory, TransactionFactoryParams } from './AnnounceService.js';
+import {
+  AnnounceService,
+  TransactionFactory,
+  TransactionFactoryParams,
+} from './AnnounceService.js';
 import { BootstrapAccountResolver } from './BootstrapAccountResolver.js';
 import { ConfigLoader } from './ConfigLoader.js';
 import { Constants } from './Constants.js';
@@ -63,15 +67,29 @@ export class ModifyMultisigService implements TransactionFactory {
 
   private readonly configLoader: ConfigLoader;
 
-  constructor(private readonly logger: Logger, protected readonly params: ModifyMultisigParams) {
+  constructor(
+    private readonly logger: Logger,
+    protected readonly params: ModifyMultisigParams,
+  ) {
     this.configLoader = new ConfigLoader(logger);
   }
 
-  public async run(passedPresetData?: ConfigPreset | undefined, passedAddresses?: Addresses | undefined): Promise<void> {
-    const presetData = passedPresetData ?? this.configLoader.loadExistingPresetData(this.params.target, this.params.password);
-    const addresses = passedAddresses ?? this.configLoader.loadExistingAddresses(this.params.target, this.params.password);
-    const customPreset = this.configLoader.loadCustomPreset(this.params.customPreset, this.params.password);
-    const accountResolver = this.params.accountResolver || new BootstrapAccountResolver(this.logger);
+  public async run(
+    passedPresetData?: ConfigPreset | undefined,
+    passedAddresses?: Addresses | undefined,
+  ): Promise<void> {
+    const presetData =
+      passedPresetData ??
+      this.configLoader.loadExistingPresetData(this.params.target, this.params.password);
+    const addresses =
+      passedAddresses ??
+      this.configLoader.loadExistingAddresses(this.params.target, this.params.password);
+    const customPreset = this.configLoader.loadCustomPreset(
+      this.params.customPreset,
+      this.params.password,
+    );
+    const accountResolver =
+      this.params.accountResolver || new BootstrapAccountResolver(this.logger);
     await new AnnounceService(this.logger, accountResolver).announce(
       this.params.url,
       this.params.maxFee,
@@ -86,11 +104,22 @@ export class ModifyMultisigService implements TransactionFactory {
     );
   }
 
-  public async createTransactions({ presetData, deadline, maxFee, mainAccount }: TransactionFactoryParams): Promise<Transaction[]> {
+  public async createTransactions({
+    presetData,
+    deadline,
+    maxFee,
+    mainAccount,
+  }: TransactionFactoryParams): Promise<Transaction[]> {
     const networkType = presetData.networkType;
 
-    const addressAdditions = await this.resolveAddressAdditions(networkType, this.params.addressAdditions);
-    const addressDeletions = await this.resolveAddressDeletions(networkType, this.params.addressDeletions);
+    const addressAdditions = await this.resolveAddressAdditions(
+      networkType,
+      this.params.addressAdditions,
+    );
+    const addressDeletions = await this.resolveAddressDeletions(
+      networkType,
+      this.params.addressDeletions,
+    );
     const minApprovalDelta = await this.resolveMinApprovalDelta(this.params.minApprovalDelta);
     const minRemovalDelta = await this.resolveMinRemovalDelta(this.params.minRemovalDelta);
 
@@ -100,15 +129,26 @@ export class ModifyMultisigService implements TransactionFactory {
       presetData,
       this.params.useKnownRestGateways ? undefined : url,
     );
-    const multisigInfo = await TransactionUtils.getMultisigAccount(repositoryFactory, mainAccount.address);
-    this.validateParams(addressAdditions, addressDeletions, minRemovalDelta, minApprovalDelta, multisigInfo);
+    const multisigInfo = await TransactionUtils.getMultisigAccount(
+      repositoryFactory,
+      mainAccount.address,
+    );
+    this.validateParams(
+      addressAdditions,
+      addressDeletions,
+      minRemovalDelta,
+      minApprovalDelta,
+      multisigInfo,
+    );
 
     this.logger.info(
       `Creating multisig account modification transaction [addressAdditions: "${addressAdditions
         ?.map((a) => a.plain())
         .join(' , ')}", addressDeletions: "${addressDeletions
         ?.map((a) => a.plain())
-        .join(' , ')}", minApprovalDelta: ${minApprovalDelta}, minRemovalDelta: ${minRemovalDelta}]`,
+        .join(
+          ' , ',
+        )}", minApprovalDelta: ${minApprovalDelta}, minRemovalDelta: ${minRemovalDelta}]`,
     );
     const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
       deadline,
@@ -140,7 +180,10 @@ export class ModifyMultisigService implements TransactionFactory {
         }))!;
   }
 
-  public async resolveAddressAdditions(networkType: NetworkType, cosigners?: string): Promise<UnresolvedAddress[]> {
+  public async resolveAddressAdditions(
+    networkType: NetworkType,
+    cosigners?: string,
+  ): Promise<UnresolvedAddress[]> {
     return this.resolveCosigners(
       networkType,
       'addressAdditions',
@@ -149,7 +192,10 @@ export class ModifyMultisigService implements TransactionFactory {
     );
   }
 
-  public async resolveAddressDeletions(networkType: NetworkType, cosigners?: string): Promise<UnresolvedAddress[]> {
+  public async resolveAddressDeletions(
+    networkType: NetworkType,
+    cosigners?: string,
+  ): Promise<UnresolvedAddress[]> {
     return this.resolveCosigners(
       networkType,
       'addressDeletions',
@@ -158,7 +204,12 @@ export class ModifyMultisigService implements TransactionFactory {
     );
   }
 
-  public async resolveCosigners(networkType: NetworkType, name: string, message: string, cosigners?: string): Promise<UnresolvedAddress[]> {
+  public async resolveCosigners(
+    networkType: NetworkType,
+    name: string,
+    message: string,
+    cosigners?: string,
+  ): Promise<UnresolvedAddress[]> {
     const resolution = cosigners !== undefined ? cosigners : await input({ message });
     if (!resolution) {
       return [];
@@ -181,7 +232,9 @@ export class ModifyMultisigService implements TransactionFactory {
     }
     const address = Address.createFromRawAddress(addressString);
     if (address.networkType !== networkType) {
-      throw new Error(`Address ${addressString} invalid network type. Expected ${networkType} but got ${address.networkType}`);
+      throw new Error(
+        `Address ${addressString} invalid network type. Expected ${networkType} but got ${address.networkType}`,
+      );
     }
     return address;
   }
@@ -194,27 +247,44 @@ export class ModifyMultisigService implements TransactionFactory {
     currentMultisigInfo?: MultisigAccountInfo,
   ): void {
     // calculate new min approval
-    const newMinApproval = currentMultisigInfo ? currentMultisigInfo.minApproval + (minApprovalDelta || 0) : minApprovalDelta || 0;
+    const newMinApproval = currentMultisigInfo
+      ? currentMultisigInfo.minApproval + (minApprovalDelta || 0)
+      : minApprovalDelta || 0;
 
     // calculate new min approval
-    const newMinRemoval = currentMultisigInfo ? currentMultisigInfo.minRemoval + (minRemovalDelta || 0) : minRemovalDelta || 0;
+    const newMinRemoval = currentMultisigInfo
+      ? currentMultisigInfo.minRemoval + (minRemovalDelta || 0)
+      : minRemovalDelta || 0;
 
     // calculate the delta of added cosigners
-    const numberOfAddedCosigners = (addressAdditions?.length || 0) - (addressDeletions?.length || 0);
+    const numberOfAddedCosigners =
+      (addressAdditions?.length || 0) - (addressDeletions?.length || 0);
 
     const newCosignatoryNumber = currentMultisigInfo
       ? currentMultisigInfo.cosignatoryAddresses.length + numberOfAddedCosigners
       : numberOfAddedCosigners;
 
     for (const addressToAdd of addressAdditions || []) {
-      if (currentMultisigInfo?.cosignatoryAddresses.some((ca) => ca && ca.plain() === addressToAdd.plain())) {
-        throw new Error(`Cannot add cosignatory! ${addressToAdd.plain()} is already a cosignatory!`);
+      if (
+        currentMultisigInfo?.cosignatoryAddresses.some(
+          (ca) => ca && ca.plain() === addressToAdd.plain(),
+        )
+      ) {
+        throw new Error(
+          `Cannot add cosignatory! ${addressToAdd.plain()} is already a cosignatory!`,
+        );
       }
     }
 
     for (const addressToRemove of addressDeletions || []) {
-      if (!currentMultisigInfo?.cosignatoryAddresses.some((ca) => ca && ca.plain() === addressToRemove.plain())) {
-        throw new Error(`Cannot remove cosignatory! ${addressToRemove.plain()} is not an actual cosignatory!`);
+      if (
+        !currentMultisigInfo?.cosignatoryAddresses.some(
+          (ca) => ca && ca.plain() === addressToRemove.plain(),
+        )
+      ) {
+        throw new Error(
+          `Cannot remove cosignatory! ${addressToRemove.plain()} is not an actual cosignatory!`,
+        );
       }
     }
 

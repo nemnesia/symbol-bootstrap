@@ -16,7 +16,7 @@ export interface Migration {
  */
 export class MigrationService {
   constructor(private readonly logger: Logger) {}
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+
   public migrateAddresses(addresses: any): Addresses {
     const addressesFileName = 'addresses.yml';
     const networkType = addresses.networkType;
@@ -49,7 +49,9 @@ export class MigrationService {
               nodeAddresses?.node?.privateKey,
             );
             if (!nodeAddresses.transport) {
-              nodeAddresses.transport = ConfigurationUtils.toConfigAccount(Account.generateNewAccount(networkType));
+              nodeAddresses.transport = ConfigurationUtils.toConfigAccount(
+                Account.generateNewAccount(networkType),
+              );
             }
             delete nodeAddresses.node;
             delete nodeAddresses.signing;
@@ -61,7 +63,12 @@ export class MigrationService {
     ];
   }
 
-  public static migrate<T extends { version?: number }>(logger: Logger, entityName: string, versioned: T, migrations: Migration[] = []): T {
+  public static migrate<T extends { version?: number }>(
+    logger: Logger,
+    entityName: string,
+    versioned: T,
+    migrations: Migration[] = [],
+  ): T {
     if (!versioned) {
       return versioned;
     }
@@ -71,18 +78,24 @@ export class MigrationService {
     if (versioned.version == currentVersion) {
       return versioned;
     }
-    logger.info(`Migrating object ${entityName} from version ${versioned.version} to version ${currentVersion}`);
+    logger.info(
+      `Migrating object ${entityName} from version ${versioned.version} to version ${currentVersion}`,
+    );
     if (versioned.version > currentVersion) {
-      throw new Error(`Current data version is ${versioned.version} but higher version is ${currentVersion}`);
+      throw new Error(
+        `Current data version is ${versioned.version} but higher version is ${currentVersion}`,
+      );
     }
-    const migratedVersioned = migrations.slice(versioned.version - 1).reduce((toMigrateData, migration) => {
-      if (toMigrateData === undefined) {
-        logger.info(`data to migrate is undefined, ignoring migration ${migration.description}`);
-        return undefined;
-      }
-      logger.info(`Applying migration ${migration.description}`);
-      return migration.migrate(toMigrateData);
-    }, versioned);
+    const migratedVersioned = migrations
+      .slice(versioned.version - 1)
+      .reduce((toMigrateData, migration) => {
+        if (toMigrateData === undefined) {
+          logger.info(`data to migrate is undefined, ignoring migration ${migration.description}`);
+          return undefined;
+        }
+        logger.info(`Applying migration ${migration.description}`);
+        return migration.migrate(toMigrateData);
+      }, versioned);
     migratedVersioned.version = currentVersion;
     logger.info(`Object ${entityName} migrated to version ${currentVersion}`);
     return migratedVersioned;

@@ -35,7 +35,8 @@ import Compose from '../compose/index.js';
 import Config from '../config/index.js';
 
 export default class Pack extends Command {
-  static description = 'It configures and packages your node into a zip file that can be uploaded to the final node machine.';
+  static description =
+    'It configures and packages your node into a zip file that can be uploaded to the final node machine.';
 
   static examples = [
     `$ symbol-bootstrap pack`,
@@ -62,7 +63,9 @@ export default class Pack extends Command {
     const targetZip = join(dirname(flags.target), `symbol-node.zip`);
 
     if (existsSync(targetZip)) {
-      throw new Error(`The target zip file ${targetZip} already exist. Do you want to delete it before repackaging your target folder?`);
+      throw new Error(
+        `The target zip file ${targetZip} already exist. Do you want to delete it before repackaging your target folder?`,
+      );
     }
     logger.info('');
     logger.info('');
@@ -118,7 +121,9 @@ export default class Pack extends Command {
     await new ZipUtils(logger).zip(targetZip, zipItems);
     await new FileSystemService(logger).deleteFile(noPrivateKeyTempFile);
     logger.info('');
-    logger.info(`Zip file ${targetZip} has been created. You can unzip it in your node's machine and run:`);
+    logger.info(
+      `Zip file ${targetZip} has been created. You can unzip it in your node's machine and run:`,
+    );
     logger.info(`$ symbol-bootstrap start`);
   }
 }

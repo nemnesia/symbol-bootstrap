@@ -39,17 +39,20 @@ export default class Run extends Command {
     }),
 
     resetData: Flags.boolean({
-      description: 'It reset the database and node data but keeps the generated configuration, keys, voting tree files and block 1',
+      description:
+        'It reset the database and node data but keeps the generated configuration, keys, voting tree files and block 1',
     }),
 
     pullImages: Flags.boolean({
-      description: 'It pulls the images from DockerHub when running the configuration. It only affects alpha/dev docker images.',
+      description:
+        'It pulls the images from DockerHub when running the configuration. It only affects alpha/dev docker images.',
       default: RunService.defaultParams.pullImages,
     }),
 
     args: Flags.string({
       multiple: true,
-      description: 'Add extra arguments to the docker compose up command. Check out https://docs.docker.com/compose/reference/up.',
+      description:
+        'Add extra arguments to the docker compose up command. Check out https://docs.docker.com/compose/reference/up.',
     }),
 
     build: Flags.boolean({

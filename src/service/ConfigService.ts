@@ -31,7 +31,14 @@ import {
   VrfKeyLinkTransaction,
 } from 'symbol-sdk';
 import { Logger } from '../logger/index.js';
-import { Addresses, ConfigPreset, CustomPreset, GatewayConfigPreset, NodeAccount, PeerInfo } from '../model/index.js';
+import {
+  Addresses,
+  ConfigPreset,
+  CustomPreset,
+  GatewayConfigPreset,
+  NodeAccount,
+  PeerInfo,
+} from '../model/index.js';
 import { AccountResolver, DefaultAccountResolver } from './AccountResolver.js';
 import { AddressesService } from './AddressesService.js';
 import { CertificateService, RenewMode } from './CertificateService.js';
@@ -117,7 +124,10 @@ export class ConfigService {
   private readonly fileSystemService: FileSystemService;
   private readonly addressesService: AddressesService;
 
-  constructor(private readonly logger: Logger, private readonly params: ConfigParams) {
+  constructor(
+    private readonly logger: Logger,
+    private readonly params: ConfigParams,
+  ) {
     this.configLoader = new ConfigLoader(logger);
     this.fileSystemService = new FileSystemService(logger);
     this.addressesService = new AddressesService(logger, params.accountResolver);
@@ -163,11 +173,15 @@ export class ConfigService {
       const oldAddresses = this.configLoader.loadExistingAddressesIfPreset(target, password);
 
       if (oldAddresses && !oldPresetData) {
-        throw new KnownError(`Configuration cannot be upgraded without a previous ${presetLocation} file. (run -r to reset)`);
+        throw new KnownError(
+          `Configuration cannot be upgraded without a previous ${presetLocation} file. (run -r to reset)`,
+        );
       }
 
       if (!oldAddresses && oldPresetData) {
-        throw new KnownError(`Configuration cannot be upgraded without a previous ${addressesLocation} file. (run -r to reset)`);
+        throw new KnownError(
+          `Configuration cannot be upgraded without a previous ${addressesLocation} file. (run -r to reset)`,
+        );
       }
 
       if (oldAddresses && oldPresetData) {
@@ -177,18 +191,30 @@ export class ConfigService {
       const presetData: ConfigPreset = this.resolveCurrentPresetData(oldPresetData, password);
 
       // Docker Compose プロジェクト名のプレフィックスを追加
-      const containerNamePrefix = presetData.dockerComposeProjectName ? `${presetData.dockerComposeProjectName}-` : '';
+      const containerNamePrefix = presetData.dockerComposeProjectName
+        ? `${presetData.dockerComposeProjectName}-`
+        : '';
       presetData.nodes = presetData.nodes?.map((node) => {
         node.name = node.name ? containerNamePrefix + node.name : node.name;
-        node.databaseHost = node.databaseHost ? containerNamePrefix + node.databaseHost : node.databaseHost;
+        node.databaseHost = node.databaseHost
+          ? containerNamePrefix + node.databaseHost
+          : node.databaseHost;
         node.brokerName = node.brokerName ? containerNamePrefix + node.brokerName : node.brokerName;
         return { ...node };
       });
       presetData.gateways = presetData.gateways?.map((gateway) => {
-        gateway.apiNodeName = gateway.apiNodeName ? containerNamePrefix + gateway.apiNodeName : gateway.apiNodeName;
-        gateway.databaseHost = gateway.databaseHost ? containerNamePrefix + gateway.databaseHost : gateway.databaseHost;
-        gateway.apiNodeHost = gateway.apiNodeHost ? containerNamePrefix + gateway.apiNodeHost : gateway.apiNodeHost;
-        gateway.apiNodeBrokerHost = gateway.apiNodeBrokerHost ? containerNamePrefix + gateway.apiNodeBrokerHost : gateway.apiNodeBrokerHost;
+        gateway.apiNodeName = gateway.apiNodeName
+          ? containerNamePrefix + gateway.apiNodeName
+          : gateway.apiNodeName;
+        gateway.databaseHost = gateway.databaseHost
+          ? containerNamePrefix + gateway.databaseHost
+          : gateway.databaseHost;
+        gateway.apiNodeHost = gateway.apiNodeHost
+          ? containerNamePrefix + gateway.apiNodeHost
+          : gateway.apiNodeHost;
+        gateway.apiNodeBrokerHost = gateway.apiNodeBrokerHost
+          ? containerNamePrefix + gateway.apiNodeBrokerHost
+          : gateway.apiNodeBrokerHost;
         return { ...gateway };
       });
       presetData.databases = presetData.databases?.map((database) => {
@@ -196,9 +222,15 @@ export class ConfigService {
         return { ...database };
       });
 
-      const addresses = await this.addressesService.resolveAddresses(oldAddresses, oldPresetData, presetData);
+      const addresses = await this.addressesService.resolveAddresses(
+        oldAddresses,
+        oldPresetData,
+        presetData,
+      );
 
-      const privateKeySecurityMode = CryptoUtils.getPrivateKeySecurityMode(presetData.privateKeySecurityMode);
+      const privateKeySecurityMode = CryptoUtils.getPrivateKeySecurityMode(
+        presetData.privateKeySecurityMode,
+      );
       await this.fileSystemService.mkdir(target);
 
       const remoteNodeService = new RemoteNodeService(this.logger, presetData, this.params.offline);
@@ -221,7 +253,11 @@ export class ConfigService {
         CryptoUtils.removePrivateKeysAccordingToSecurityMode(addresses, privateKeySecurityMode),
         password,
       );
-      await YamlUtils.writeYaml(presetLocation, CryptoUtils.removePrivateKeys(presetData), password);
+      await YamlUtils.writeYaml(
+        presetLocation,
+        CryptoUtils.removePrivateKeys(presetData),
+        password,
+      );
       this.logger.info(`Configuration generated.`);
       return { presetData, addresses };
     } catch (e) {
@@ -247,7 +283,10 @@ export class ConfigService {
   private async copyNemesis(addresses: Addresses) {
     const target = this.params.target;
     const nemesisSeedFolder = this.fileSystemService.getTargetNemesisFolder(target, false, 'seed');
-    await this.fileSystemService.validateSeedFolder(nemesisSeedFolder, `Invalid final seed folder ${nemesisSeedFolder}`);
+    await this.fileSystemService.validateSeedFolder(
+      nemesisSeedFolder,
+      `Invalid final seed folder ${nemesisSeedFolder}`,
+    );
     await Promise.all(
       (addresses.nodes || []).map(async (account) => {
         const name = account.name;
@@ -259,7 +298,11 @@ export class ConfigService {
     );
   }
 
-  private async resolveNemesis(presetData: ConfigPreset, addresses: Addresses, isUpgrade: boolean): Promise<void> {
+  private async resolveNemesis(
+    presetData: ConfigPreset,
+    addresses: Addresses,
+    isUpgrade: boolean,
+  ): Promise<void> {
     const target = this.params.target;
     const nemesisSeedFolder = this.fileSystemService.getTargetNemesisFolder(target, false, 'seed');
     await this.fileSystemService.mkdir(nemesisSeedFolder);
@@ -270,7 +313,10 @@ export class ConfigService {
         this.fileSystemService.deleteFolder(nemesisSeedFolder);
         await this.fileSystemService.mkdir(nemesisSeedFolder);
         await this.generateNemesisConfig(presetData, addresses);
-        await this.fileSystemService.validateSeedFolder(nemesisSeedFolder, `Is the generated nemesis seed a valid seed folder?`);
+        await this.fileSystemService.validateSeedFolder(
+          nemesisSeedFolder,
+          `Is the generated nemesis seed a valid seed folder?`,
+        );
       }
       return;
     }
@@ -302,7 +348,9 @@ export class ConfigService {
       return;
     }
     if (YamlUtils.isYmlFile(presetData.preset)) {
-      throw new KnownError(`Seed for preset ${presetData.preset} could not be found. Please provide 'nemesisSeedFolder'!`);
+      throw new KnownError(
+        `Seed for preset ${presetData.preset} could not be found. Please provide 'nemesisSeedFolder'!`,
+      );
     } else {
       const networkNemesisSeed = join(Constants.ROOT_FOLDER, 'presets', presetData.preset, 'seed');
       if (existsSync(networkNemesisSeed)) {
@@ -315,12 +363,18 @@ export class ConfigService {
         );
         return;
       }
-      this.logger.warn(`Seed for preset ${presetData.preset} could not be found in ${networkNemesisSeed}`);
+      this.logger.warn(
+        `Seed for preset ${presetData.preset} could not be found in ${networkNemesisSeed}`,
+      );
       throw new Error('Seed could not be found!!!!');
     }
   }
 
-  private async generateNodes(presetData: ConfigPreset, addresses: Addresses, remoteNodeService: RemoteNodeService): Promise<void> {
+  private async generateNodes(
+    presetData: ConfigPreset,
+    addresses: Addresses,
+    remoteNodeService: RemoteNodeService,
+  ): Promise<void> {
     const currentFinalizationEpoch = await remoteNodeService.resolveCurrentFinalizationEpoch();
     const externalPeers: PeerInfo[] = await remoteNodeService.getPeerInfos();
     const localPeers: PeerInfo[] = (presetData.nodes || []).map((nodePresetData, index) => {
@@ -340,12 +394,21 @@ export class ConfigService {
     const allPeers = _.uniqBy([...externalPeers, ...localPeers], (p) => p.publicKey);
     await Promise.all(
       (addresses.nodes || []).map((account, index) =>
-        this.generateNodeConfiguration(account, index, presetData, currentFinalizationEpoch, allPeers),
+        this.generateNodeConfiguration(
+          account,
+          index,
+          presetData,
+          currentFinalizationEpoch,
+          allPeers,
+        ),
       ),
     );
   }
 
-  private async generateNodeCertificates(presetData: ConfigPreset, addresses: Addresses): Promise<void> {
+  private async generateNodeCertificates(
+    presetData: ConfigPreset,
+    addresses: Addresses,
+  ): Promise<void> {
     await Promise.all(
       (addresses.nodes || []).map((account) => {
         const providedCertificates = {
@@ -372,9 +435,24 @@ export class ConfigService {
     const copyFrom = join(Constants.ROOT_FOLDER, 'config', 'node');
     const name = account.name;
 
-    const serverConfig = this.fileSystemService.getTargetNodesFolder(this.params.target, false, name, 'server-config');
-    const brokerConfig = this.fileSystemService.getTargetNodesFolder(this.params.target, false, name, 'broker-config');
-    const dataFolder = this.fileSystemService.getTargetNodesFolder(this.params.target, false, name, 'data');
+    const serverConfig = this.fileSystemService.getTargetNodesFolder(
+      this.params.target,
+      false,
+      name,
+      'server-config',
+    );
+    const brokerConfig = this.fileSystemService.getTargetNodesFolder(
+      this.params.target,
+      false,
+      name,
+      'broker-config',
+    );
+    const dataFolder = this.fileSystemService.getTargetNodesFolder(
+      this.params.target,
+      false,
+      name,
+      'data',
+    );
     await this.fileSystemService.mkdir(dataFolder);
 
     const nodePreset = (presetData.nodes || [])[index];
@@ -411,7 +489,8 @@ export class ConfigService {
       unfinalizedBlocksDuration: nodePreset.voting
         ? presetData.votingUnfinalizedBlocksDuration
         : presetData.nonVotingUnfinalizedBlocksDuration,
-      beneficiaryAddress: beneficiaryAddress == undefined ? account.main.address : beneficiaryAddress,
+      beneficiaryAddress:
+        beneficiaryAddress == undefined ? account.main.address : beneficiaryAddress,
       roles: ConfigurationUtils.resolveRoles(nodePreset),
     };
     const templateContext: any = { ...presetData, ...generatedContext, ...nodePreset };
@@ -442,10 +521,18 @@ export class ConfigService {
     };
 
     this.logger.info(`Generating ${name} server configuration`);
-    await HandlebarsUtils.generateConfiguration({ ...serverRecoveryConfig, ...templateContext }, copyFrom, serverConfig, excludeFiles);
+    await HandlebarsUtils.generateConfiguration(
+      { ...serverRecoveryConfig, ...templateContext },
+      copyFrom,
+      serverConfig,
+      excludeFiles,
+    );
 
-    const isPeer = (nodePresetData: PeerInfo): boolean => nodePresetData.metadata.roles.includes('Peer');
-    const peers = knownPeers.filter((peer) => isPeer(peer) && peer.publicKey != account.main.publicKey);
+    const isPeer = (nodePresetData: PeerInfo): boolean =>
+      nodePresetData.metadata.roles.includes('Peer');
+    const peers = knownPeers.filter(
+      (peer) => isPeer(peer) && peer.publicKey != account.main.publicKey,
+    );
     const peersP2PFile = await this.generateP2PFile(
       peers,
       presetData.peersP2PListLimit,
@@ -454,8 +541,11 @@ export class ConfigService {
       'peers-p2p.json',
     );
 
-    const isApi = (nodePresetData: PeerInfo): boolean => nodePresetData.metadata.roles.includes('Api');
-    const apiPeers = knownPeers.filter((peer) => isApi(peer) && peer.publicKey != account.main.publicKey);
+    const isApi = (nodePresetData: PeerInfo): boolean =>
+      nodePresetData.metadata.roles.includes('Api');
+    const apiPeers = knownPeers.filter(
+      (peer) => isApi(peer) && peer.publicKey != account.main.publicKey,
+    );
     const peersApiFile = await this.generateP2PFile(
       apiPeers,
       presetData.peersApiListLimit,
@@ -465,11 +555,18 @@ export class ConfigService {
     );
 
     if (!peers.length && !apiPeers.length) {
-      this.logger.warn('The peer lists could not be resolved. peers-p2p.json and peers-api.json are empty!');
+      this.logger.warn(
+        'The peer lists could not be resolved. peers-p2p.json and peers-api.json are empty!',
+      );
     }
     if (nodePreset.brokerName) {
       this.logger.info(`Generating ${nodePreset.brokerName} broker configuration`);
-      await HandlebarsUtils.generateConfiguration({ ...brokerRecoveryConfig, ...templateContext }, copyFrom, brokerConfig, excludeFiles);
+      await HandlebarsUtils.generateConfiguration(
+        { ...brokerRecoveryConfig, ...templateContext },
+        copyFrom,
+        brokerConfig,
+        excludeFiles,
+      );
       copyFileSync(peersP2PFile, join(join(brokerConfig, 'resources', 'peers-p2p.json')));
       copyFileSync(peersApiFile, join(join(brokerConfig, 'resources', 'peers-api.json')));
     }
@@ -484,7 +581,13 @@ export class ConfigService {
     );
   }
 
-  private async generateP2PFile(knownPeers: PeerInfo[], listLimit: number, outputFolder: string, info: string, jsonFileName: string) {
+  private async generateP2PFile(
+    knownPeers: PeerInfo[],
+    listLimit: number,
+    outputFolder: string,
+    info: string,
+    jsonFileName: string,
+  ) {
     const data = {
       _info: info,
       knownPeers: knownPeers.length > listLimit ? _.sampleSize(knownPeers, listLimit) : knownPeers,
@@ -501,16 +604,31 @@ export class ConfigService {
     }
     const target = this.params.target;
     const nemesisWorkingDir = this.fileSystemService.getTargetNemesisFolder(target, false);
-    const transactionsDirectory = join(nemesisWorkingDir, presetData.nemesis.transactionsDirectory || presetData.transactionsDirectory);
+    const transactionsDirectory = join(
+      nemesisWorkingDir,
+      presetData.nemesis.transactionsDirectory || presetData.transactionsDirectory,
+    );
     await this.fileSystemService.mkdir(transactionsDirectory);
     const copyFrom = join(Constants.ROOT_FOLDER, `config`, `nemesis`);
     const moveTo = join(nemesisWorkingDir, `server-config`);
     const templateContext = { ...(presetData as any), addresses };
-    const nodes = (addresses.nodes || []).filter((n, index) => !presetData.nodes?.[index]?.excludeFromNemesis);
+    const nodes = (addresses.nodes || []).filter(
+      (n, index) => !presetData.nodes?.[index]?.excludeFromNemesis,
+    );
 
-    await Promise.all(nodes.filter((n) => n.vrf).map((n) => this.createVrfTransaction(transactionsDirectory, presetData, n)));
-    await Promise.all(nodes.filter((n) => n.remote).map((n) => this.createAccountKeyLinkTransaction(transactionsDirectory, presetData, n)));
-    await Promise.all(nodes.map((n) => this.createVotingKeyTransactions(transactionsDirectory, presetData, n)));
+    await Promise.all(
+      nodes
+        .filter((n) => n.vrf)
+        .map((n) => this.createVrfTransaction(transactionsDirectory, presetData, n)),
+    );
+    await Promise.all(
+      nodes
+        .filter((n) => n.remote)
+        .map((n) => this.createAccountKeyLinkTransaction(transactionsDirectory, presetData, n)),
+    );
+    await Promise.all(
+      nodes.map((n) => this.createVotingKeyTransactions(transactionsDirectory, presetData, n)),
+    );
 
     if (presetData.nemesis.transactions) {
       const transactionHashes: string[] = [];
@@ -523,7 +641,9 @@ export class ConfigService {
                 Array.from(Convert.hexToUint8(presetData.nemesisGenerationHashSeed)),
               );
               if (transactionHashes.indexOf(transactionHash) > -1) {
-                this.logger.warn(`Transaction ${key} wth hash ${transactionHash} already exist. Excluded from folder.`);
+                this.logger.warn(
+                  `Transaction ${key} wth hash ${transactionHash} already exist. Excluded from folder.`,
+                );
                 return undefined;
               }
               transactionHashes.push(transactionHash);
@@ -539,7 +659,11 @@ export class ConfigService {
     await new NemgenService(this.logger, this.params).run(presetData);
   }
 
-  private async createVrfTransaction(transactionsDirectory: string, presetData: ConfigPreset, node: NodeAccount): Promise<Transaction> {
+  private async createVrfTransaction(
+    transactionsDirectory: string,
+    presetData: ConfigPreset,
+    node: NodeAccount,
+  ): Promise<Transaction> {
     if (!node.vrf) {
       throw new Error('VRF keys should have been generated!!');
     }
@@ -547,7 +671,13 @@ export class ConfigService {
       throw new Error('Main keys should have been generated!!');
     }
     const deadline = Deadline.createFromDTO('1');
-    const vrf = VrfKeyLinkTransaction.create(deadline, node.vrf.publicKey, LinkAction.Link, presetData.networkType, UInt64.fromUint(0));
+    const vrf = VrfKeyLinkTransaction.create(
+      deadline,
+      node.vrf.publicKey,
+      LinkAction.Link,
+      presetData.networkType,
+      UInt64.fromUint(0),
+    );
     const account = await this.params.accountResolver.resolveAccount(
       presetData.networkType,
       node.main,
@@ -557,7 +687,11 @@ export class ConfigService {
       'Should not generate!',
     );
     const signedTransaction = account.sign(vrf, presetData.nemesisGenerationHashSeed);
-    return this.storeTransaction(transactionsDirectory, `vrf_${node.name}`, signedTransaction.payload);
+    return this.storeTransaction(
+      transactionsDirectory,
+      `vrf_${node.name}`,
+      signedTransaction.payload,
+    );
   }
 
   private async createAccountKeyLinkTransaction(
@@ -588,7 +722,11 @@ export class ConfigService {
       'Should not generate!',
     );
     const signedTransaction = account.sign(akl, presetData.nemesisGenerationHashSeed);
-    return this.storeTransaction(transactionsDirectory, `remote_${node.name}`, signedTransaction.payload);
+    return this.storeTransaction(
+      transactionsDirectory,
+      `remote_${node.name}`,
+      signedTransaction.payload,
+    );
   }
 
   private async createVotingKeyTransactions(
@@ -618,14 +756,25 @@ export class ConfigService {
           UInt64.fromUint(0),
         );
         const signedTransaction = account.sign(voting, presetData.nemesisGenerationHashSeed);
-        return this.storeTransaction(transactionsDirectory, `voting_${node.name}`, signedTransaction.payload);
+        return this.storeTransaction(
+          transactionsDirectory,
+          `voting_${node.name}`,
+          signedTransaction.payload,
+        );
       }),
     );
   }
 
-  private async storeTransaction(transactionsDirectory: string, name: string, payload: string): Promise<Transaction> {
+  private async storeTransaction(
+    transactionsDirectory: string,
+    name: string,
+    payload: string,
+  ): Promise<Transaction> {
     const transaction = TransactionMapping.createFromPayload(payload);
-    await fs.promises.writeFile(`${transactionsDirectory}/${name}.bin`, Convert.hexToUint8(payload));
+    await fs.promises.writeFile(
+      `${transactionsDirectory}/${name}.bin`,
+      Convert.hexToUint8(payload),
+    );
     return transaction as Transaction;
   }
 
@@ -639,7 +788,11 @@ export class ConfigService {
         };
         const templateContext = { ...generatedContext, ...presetData, ...gatewayPreset };
         const name = templateContext.name || `rest-gateway-${index}`;
-        const moveTo = this.fileSystemService.getTargetGatewayFolder(this.params.target, false, name);
+        const moveTo = this.fileSystemService.getTargetGatewayFolder(
+          this.params.target,
+          false,
+          name,
+        );
         await HandlebarsUtils.generateConfiguration(templateContext, copyFrom, moveTo);
         const apiNodeConfigFolder = this.fileSystemService.getTargetNodesFolder(
           this.params.target,
@@ -648,7 +801,12 @@ export class ConfigService {
           'server-config',
           'resources',
         );
-        const apiNodeCertFolder = this.fileSystemService.getTargetNodesFolder(this.params.target, false, gatewayPreset.apiNodeName, 'cert');
+        const apiNodeCertFolder = this.fileSystemService.getTargetNodesFolder(
+          this.params.target,
+          false,
+          gatewayPreset.apiNodeName,
+          'cert',
+        );
         await HandlebarsUtils.generateConfiguration(
           {},
           apiNodeConfigFolder,
@@ -666,8 +824,16 @@ export class ConfigService {
 
         if (gatewayPreset.restProtocol === 'HTTPS') {
           if (gatewayPreset.restSSLKeyBase64 && gatewayPreset.restSSLCertificateBase64) {
-            fs.writeFileSync(join(moveTo, presetData.restSSLKeyFileName), gatewayPreset.restSSLKeyBase64, 'base64');
-            fs.writeFileSync(join(moveTo, presetData.restSSLCertificateFileName), gatewayPreset.restSSLCertificateBase64, 'base64');
+            fs.writeFileSync(
+              join(moveTo, presetData.restSSLKeyFileName),
+              gatewayPreset.restSSLKeyBase64,
+              'base64',
+            );
+            fs.writeFileSync(
+              join(moveTo, presetData.restSSLCertificateFileName),
+              gatewayPreset.restSSLCertificateBase64,
+              'base64',
+            );
           } else {
             if (
               !existsSync(join(moveTo, presetData.restSSLKeyFileName)) &&
@@ -677,7 +843,9 @@ export class ConfigService {
                 `Native SSL is enabled but restSSLKeyBase64 or restSSLCertificateBase64 properties are not found in the custom-preset file! Either use 'symbol-bootstrap wizard' command to fill those properties in the custom-preset or make sure you copy your SSL key and cert files to ${moveTo} folder.`,
               );
             } else {
-              this.logger.info(`Native SSL certificates for gateway ${gatewayPreset.name} have been previously provided. Reusing...`);
+              this.logger.info(
+                `Native SSL certificates for gateway ${gatewayPreset.name} have been previously provided. Reusing...`,
+              );
             }
           }
         }
@@ -707,7 +875,12 @@ export class ConfigService {
           ...explorerPreset,
         };
         const name = templateContext.name || `explorer-${index}`;
-        const moveTo = this.fileSystemService.getTargetFolder(this.params.target, false, Constants.targetExplorersFolder, name);
+        const moveTo = this.fileSystemService.getTargetFolder(
+          this.params.target,
+          false,
+          Constants.targetExplorersFolder,
+          name,
+        );
         await HandlebarsUtils.generateConfiguration(templateContext, copyFrom, moveTo);
       }),
     );
@@ -716,14 +889,29 @@ export class ConfigService {
   private cleanUpConfiguration(presetData: ConfigPreset) {
     const target = this.params.target;
     (presetData.nodes || []).forEach(({ name }) => {
-      const serverConfigFolder = this.fileSystemService.getTargetNodesFolder(target, false, name, 'server-config');
+      const serverConfigFolder = this.fileSystemService.getTargetNodesFolder(
+        target,
+        false,
+        name,
+        'server-config',
+      );
       this.fileSystemService.deleteFolder(serverConfigFolder);
 
-      const brokerConfigFolder = this.fileSystemService.getTargetNodesFolder(target, false, name, 'broker-config');
+      const brokerConfigFolder = this.fileSystemService.getTargetNodesFolder(
+        target,
+        false,
+        name,
+        'broker-config',
+      );
       this.fileSystemService.deleteFolder(brokerConfigFolder);
 
       // Remove old user configs when upgrading.
-      const userConfigFolder = this.fileSystemService.getTargetNodesFolder(target, false, name, 'userconfig');
+      const userConfigFolder = this.fileSystemService.getTargetNodesFolder(
+        target,
+        false,
+        name,
+        'userconfig',
+      );
       this.fileSystemService.deleteFolder(userConfigFolder);
 
       const seedFolder = this.fileSystemService.getTargetNodesFolder(target, false, name, 'seed');

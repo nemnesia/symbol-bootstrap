@@ -48,7 +48,10 @@ export class RuntimeService {
   public static readonly CURRENT_USER = 'current';
   constructor(private readonly logger: Logger) {}
 
-  public exec(runCommand: string, ignoreErrors?: boolean): Promise<{ stdout: string; stderr: string }> {
+  public exec(
+    runCommand: string,
+    ignoreErrors?: boolean,
+  ): Promise<{ stdout: string; stderr: string }> {
     this.logger.debug(`Exec command: ${runCommand}`);
     return exec(runCommand).catch((error) => {
       if (ignoreErrors) return { stdout: error.stdout, stderr: error.stderr };
@@ -68,14 +71,22 @@ export class RuntimeService {
     const volumes = binds.map((b) => `-v ${b}`).join(' ');
     const userParam = userId ? `-u ${userId}` : '';
     const workdirParam = workdir ? `--workdir=${workdir}` : '';
-    const environmentParam = catapultAppFolder ? `--env LD_LIBRARY_PATH=${catapultAppFolder}/lib:${catapultAppFolder}/deps` : '';
+    const environmentParam = catapultAppFolder
+      ? `--env LD_LIBRARY_PATH=${catapultAppFolder}/lib:${catapultAppFolder}/deps`
+      : '';
     const commandLine = cmds.map((a) => `"${a}"`).join(' ');
     const runCommand = `docker run --rm ${userParam} ${workdirParam} ${environmentParam} ${volumes} ${image} ${commandLine}`;
     this.logger.info(Utils.secureString(`Running image using Exec: ${image} ${cmds.join(' ')}`));
     return this.exec(runCommand, ignoreErrors);
   }
 
-  public async spawn({ command, args, useLogger, logPrefix = '', shell }: SpawnParams): Promise<string> {
+  public async spawn({
+    command,
+    args,
+    useLogger,
+    logPrefix = '',
+    shell,
+  }: SpawnParams): Promise<string> {
     const cmd = spawn(command, args, { shell: shell });
     return new Promise<string>((resolve, reject) => {
       this.logger.info(`Spawn command: ${command} ${args.join(' ')}`);
@@ -132,11 +143,16 @@ export class RuntimeService {
     }
     try {
       this.logger.info(`Pulling image ${image}`);
-      const stdout = await this.spawn({ command: 'docker', args: ['pull', image], useLogger: true, logPrefix: `${image} ` });
+      const stdout = await this.spawn({
+        command: 'docker',
+        args: ['pull', image],
+        useLogger: true,
+        logPrefix: `${image} `,
+      });
       const outputLines = stdout.toString().split('\n');
       this.logger.info(`Image pulled: ${outputLines[outputLines.length - 2]}`);
       RuntimeService.pulledImages.push(image);
-    } catch (e) {
+    } catch {
       this.logger.warn(`Image ${image} could not be pulled!`);
     }
   }
@@ -151,7 +167,8 @@ export class RuntimeService {
     }
     try {
       const userId = process && typeof process.getuid === 'function' ? process.getuid() : undefined;
-      const groupId = process && typeof process.getgid === 'function' ? process.getgid() : undefined;
+      const groupId =
+        process && typeof process.getgid === 'function' ? process.getgid() : undefined;
       const user = `${userId}:${groupId}`;
       this.logger.info(`User for docker resolved: ${user}`);
       if (userId === 0) {
@@ -165,7 +182,9 @@ export class RuntimeService {
     }
   }
 
-  public async resolveDockerUserFromParam(paramUser: string | undefined): Promise<string | undefined> {
+  public async resolveDockerUserFromParam(
+    paramUser: string | undefined,
+  ): Promise<string | undefined> {
     if (!paramUser || paramUser.trim() === '') {
       return undefined;
     }

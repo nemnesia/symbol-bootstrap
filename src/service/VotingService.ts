@@ -18,7 +18,11 @@ import { join } from 'path';
 import { Logger } from '../logger/index.js';
 import { ConfigPreset, NodeAccount, NodePreset } from '../model/index.js';
 import { FileSystemService } from './FileSystemService.js';
-import { CatapultVotingKeyFileProvider, NativeVotingKeyFileProvider, VotingKeyFileProvider } from './VotingKeyFileProvider.js';
+import {
+  CatapultVotingKeyFileProvider,
+  NativeVotingKeyFileProvider,
+  VotingKeyFileProvider,
+} from './VotingKeyFileProvider.js';
 import { VotingUtils } from './VotingUtils.js';
 
 export interface VotingParams {
@@ -29,7 +33,10 @@ export interface VotingParams {
 
 export class VotingService {
   private readonly fileSystemService: FileSystemService;
-  constructor(private readonly logger: Logger, protected readonly params: VotingParams) {
+  constructor(
+    private readonly logger: Logger,
+    protected readonly params: VotingParams,
+  ) {
     this.fileSystemService = new FileSystemService(logger);
   }
 
@@ -42,7 +49,8 @@ export class VotingService {
     nemesisBlock: boolean,
   ): Promise<boolean> {
     const networkEpoch = currentNetworkEpoch || presetData.lastKnownNetworkEpoch || 1;
-    const update = updateVotingKey === undefined ? presetData.autoUpdateVotingKeys : updateVotingKey;
+    const update =
+      updateVotingKey === undefined ? presetData.autoUpdateVotingKeys : updateVotingKey;
     const logger = this.logger;
     if (!nodePreset?.voting) {
       logger.info(`Node ${nodeAccount.name} is not voting.`);
@@ -64,7 +72,10 @@ export class VotingService {
     const votingUtils = new VotingUtils();
     this.fileSystemService.deleteFile(join(votingKeysFolder, 'metadata.yml'));
     const currentVotingFiles = votingUtils.loadVotingFiles(votingKeysFolder);
-    const maxVotingKeyEndEpoch = Math.max(currentVotingFiles[currentVotingFiles.length - 1]?.endEpoch || 0, networkEpoch - 1);
+    const maxVotingKeyEndEpoch = Math.max(
+      currentVotingFiles[currentVotingFiles.length - 1]?.endEpoch || 0,
+      networkEpoch - 1,
+    );
 
     //This updates the addresses.yml data about existing voting files. If a user puts a manual file into the voting folder, this will update the yml file automatically.
     nodeAccount.voting = currentVotingFiles;
@@ -76,14 +87,18 @@ export class VotingService {
     // First file is created automatically on start, second file may or may not.
     if (!update && currentVotingFiles.length > 0) {
       logger.warn('');
-      logger.warn(`Voting key files are close to EXPIRATION or have EXPIRED!. Run the 'symbol-bootstrap updateVotingKeys' command!`);
+      logger.warn(
+        `Voting key files are close to EXPIRATION or have EXPIRED!. Run the 'symbol-bootstrap updateVotingKeys' command!`,
+      );
       logger.warn('');
       return false;
     }
     const votingKeyStartEpoch = maxVotingKeyEndEpoch + 1;
     const votingKeyEndEpoch = maxVotingKeyEndEpoch + votingKeyDesiredLifetime;
     const epochs = votingKeyEndEpoch - votingKeyStartEpoch + 1;
-    logger.info(`Creating Voting key file of ${epochs} epochs for node ${nodeAccount.name}. This could take a while!`);
+    logger.info(
+      `Creating Voting key file of ${epochs} epochs for node ${nodeAccount.name}. This could take a while!`,
+    );
     const privateKeyTreeFileName = `private_key_tree${currentVotingFiles.length + 1}.dat`;
     const provider =
       this.params.votingKeyFileProvider ||
@@ -115,7 +130,9 @@ export class VotingService {
       logger.warn(
         `Remember to send a Voting Key Link transaction from main ${nodeAccount.main.address} using the Voting Public Key: ${publicKey} with startEpoch: ${votingKeyStartEpoch} and endEpoch: ${votingKeyEndEpoch}`,
       );
-      logger.warn(`For linking, you can use 'symbol-bootstrap link' command, the symbol cli, or the symbol desktop wallet.`);
+      logger.warn(
+        `For linking, you can use 'symbol-bootstrap link' command, the symbol cli, or the symbol desktop wallet.`,
+      );
       logger.warn('');
     }
     nodeAccount.voting = votingUtils.loadVotingFiles(votingKeysFolder);

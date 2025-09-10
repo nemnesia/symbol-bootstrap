@@ -66,9 +66,14 @@ export class AsyncUtils {
           return Promise.resolve(false);
         }
         const endTime = new Date().getMilliseconds();
-        const newPollingTime: number = Math.max(totalPollingTime - pollIntervalMs - (endTime - startTime), 0);
+        const newPollingTime: number = Math.max(
+          totalPollingTime - pollIntervalMs - (endTime - startTime),
+          0,
+        );
         if (newPollingTime) {
-          logger.info(`Retrying in ${pollIntervalMs / 1000} seconds. Polling will stop in ${newPollingTime / 1000} seconds`);
+          logger.info(
+            `Retrying in ${pollIntervalMs / 1000} seconds. Polling will stop in ${newPollingTime / 1000} seconds`,
+          );
           await AsyncUtils.sleep(pollIntervalMs);
           return this.poll(logger, promiseFunction, newPollingTime, pollIntervalMs);
         } else {

@@ -14,6 +14,9 @@ Symbol CLI tool that allows you creating, configuring and running [Symbol](https
 
 <!-- toc -->
 * [symbol-bootstrap](#symbol-bootstrap)
+* [Run all tests](#run-all-tests)
+* [Run tests in watch mode](#run-tests-in-watch-mode)
+* [Run tests with coverage](#run-tests-with-coverage)
 * [Command Topics](#command-topics)
 <!-- tocstop -->
 
@@ -130,7 +133,7 @@ $ npm install -g @nemneshia/symbol-bootstrap
 $ symbol-bootstrap COMMAND
 running command...
 $ symbol-bootstrap (--version)
-@nemneshia/symbol-bootstrap/2.0.5 win32-x64 node-v22.14.0
+@nemneshia/symbol-bootstrap/2.0.5 linux-x64 node-v24.4.1
 $ symbol-bootstrap --help [COMMAND]
 USAGE
   $ symbol-bootstrap COMMAND
@@ -218,6 +221,26 @@ To format the source code, verify/fix lint issues, and generate the commands doc
 
 ```shell
 npm run style:fix
+```
+
+### Testing
+
+This project uses Vitest for testing with a separated structure:
+
+- `tests/` - Contains test source files (*.test.ts)
+- `test-fixtures/` - Contains test data files (YAML configurations, certificates, expected outputs, etc.)
+
+To run tests:
+
+```shell
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
 ```
 
 ## Support

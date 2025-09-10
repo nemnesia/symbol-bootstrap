@@ -28,7 +28,10 @@ type NemgenParams = ConfigParams;
 export class NemgenService {
   private readonly runtimeService: RuntimeService;
   private readonly fileSystemService: FileSystemService;
-  constructor(private readonly logger: Logger, protected readonly params: NemgenParams) {
+  constructor(
+    private readonly logger: Logger,
+    protected readonly params: NemgenParams,
+  ) {
     this.runtimeService = new RuntimeService(logger);
     this.fileSystemService = new FileSystemService(logger);
   }
@@ -45,9 +48,17 @@ export class NemgenService {
     const nemesisWorkingDir = this.fileSystemService.getTargetNemesisFolder(target, true);
     const nemesisSeedFolder = join(nemesisWorkingDir, `seed`, networkIdentifier, `0000`);
     await this.fileSystemService.mkdir(nemesisSeedFolder);
-    await promises.copyFile(join(Constants.ROOT_FOLDER, `config`, `hashes.dat`), join(nemesisSeedFolder, `hashes.dat`));
+    await promises.copyFile(
+      join(Constants.ROOT_FOLDER, `config`, `hashes.dat`),
+      join(nemesisSeedFolder, `hashes.dat`),
+    );
     const name = presetData.nodes[0].name;
-    const serverConfigWorkingDir = this.fileSystemService.getTargetNodesFolder(target, true, name, 'server-config');
+    const serverConfigWorkingDir = this.fileSystemService.getTargetNodesFolder(
+      target,
+      true,
+      name,
+      'server-config',
+    );
 
     this.fileSystemService.validateFolder(nemesisWorkingDir);
     this.fileSystemService.validateFolder(serverConfigWorkingDir);

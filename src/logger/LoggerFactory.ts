@@ -16,7 +16,7 @@
 
 import { join, resolve } from 'path';
 import * as winston from 'winston';
-import { FileTransportInstance } from 'winston/lib/winston/transports';
+import { FileTransportInstance } from 'winston/lib/winston/transports/index.js';
 import { Constants } from '../service/index.js';
 import { Logger } from './Logger.js';
 import { LogType } from './LogType.js';
@@ -56,7 +56,10 @@ export class LoggerFactory {
     );
   }
 
-  public static getLoggerFromTypes(logTypes: LogType[], workingDir = Constants.defaultWorkingDir): Logger {
+  public static getLoggerFromTypes(
+    logTypes: LogType[],
+    workingDir = Constants.defaultWorkingDir,
+  ): Logger {
     const id = logTypes.join(LoggerFactory.separator);
     if (!winston.loggers.has(id)) {
       const transports = logTypes.map((logType) => {

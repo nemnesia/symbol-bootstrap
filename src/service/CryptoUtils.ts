@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import _ from 'lodash';
 import { Crypto } from 'symbol-sdk';
 import { PrivateKeySecurityMode } from '../model/index.js';
@@ -20,9 +21,12 @@ import { KnownError } from './KnownError.js';
 
 export class CryptoUtils {
   private static readonly ENCRYPT_PREFIX = 'ENCRYPTED:';
-  private static readonly ENCRYPTABLE_KEYS = ['privateKey', 'restSSLKeyBase64', 'privateFileContent'];
+  private static readonly ENCRYPTABLE_KEYS = [
+    'privateKey',
+    'restSSLKeyBase64',
+    'privateFileContent',
+  ];
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static encrypt(value: any, password: string, fieldName?: string): any {
     if (!value) {
       return value;
@@ -32,7 +36,9 @@ export class CryptoUtils {
     }
 
     if (_.isObject(value)) {
-      return _.mapValues(value, (value: any, name: string) => CryptoUtils.encrypt(value, password, name));
+      return _.mapValues(value, (value: any, name: string) =>
+        CryptoUtils.encrypt(value, password, name),
+      );
     }
 
     if (this.isEncryptableKeyField(value, fieldName)) {
@@ -50,11 +56,15 @@ export class CryptoUtils {
     if (securityMode) {
       return securityMode;
     }
-    throw new KnownError(`${value} is not a valid Security Mode. Please use one of ${securityModes.join(', ')}`);
+    throw new KnownError(
+      `${value} is not a valid Security Mode. Please use one of ${securityModes.join(', ')}`,
+    );
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  public static removePrivateKeysAccordingToSecurityMode(value: any, securityMode: PrivateKeySecurityMode): any {
+  public static removePrivateKeysAccordingToSecurityMode(
+    value: any,
+    securityMode: PrivateKeySecurityMode,
+  ): any {
     if (securityMode === PrivateKeySecurityMode.PROMPT_MAIN) {
       return this.removePrivateKeys(value, ['main', 'voting']);
     }
@@ -67,7 +77,6 @@ export class CryptoUtils {
     return this.removePrivateKeys(value, ['voting']);
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static removePrivateKeys(value: any, blacklistNames: string[] = []): any {
     if (!value) {
       return value;
@@ -80,12 +89,18 @@ export class CryptoUtils {
       return _.mapValues(
         _.pickBy(value, (value: any, name: string) => {
           const isBlacklisted =
-            !blacklistNames.length || blacklistNames.find((blacklistName) => name.toLowerCase().indexOf(blacklistName.toLowerCase()) > -1);
+            !blacklistNames.length ||
+            blacklistNames.find(
+              (blacklistName) => name.toLowerCase().indexOf(blacklistName.toLowerCase()) > -1,
+            );
           return !isBlacklisted || !this.isEncryptableKeyField(value, name);
         }),
         (value: any, name: string) => {
           const isBlacklisted =
-            !blacklistNames.length || blacklistNames.find((blacklistName) => name.toLowerCase().indexOf(blacklistName.toLowerCase()) > -1);
+            !blacklistNames.length ||
+            blacklistNames.find(
+              (blacklistName) => name.toLowerCase().indexOf(blacklistName.toLowerCase()) > -1,
+            );
           return CryptoUtils.removePrivateKeys(value, isBlacklisted ? [] : blacklistNames);
         },
       );
@@ -93,7 +108,6 @@ export class CryptoUtils {
     return value;
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static decrypt(value: any, password: string, fieldName?: string): any {
     if (!value) {
       return value;
@@ -103,14 +117,19 @@ export class CryptoUtils {
     }
 
     if (_.isObject(value)) {
-      return _.mapValues(value, (value: any, name: string) => CryptoUtils.decrypt(value, password, name));
+      return _.mapValues(value, (value: any, name: string) =>
+        CryptoUtils.decrypt(value, password, name),
+      );
     }
-    if (this.isEncryptableKeyField(value, fieldName) && value.startsWith(CryptoUtils.ENCRYPT_PREFIX)) {
+    if (
+      this.isEncryptableKeyField(value, fieldName) &&
+      value.startsWith(CryptoUtils.ENCRYPT_PREFIX)
+    ) {
       let decryptedValue;
       try {
         const encryptedValue = value.substring(CryptoUtils.ENCRYPT_PREFIX.length);
         decryptedValue = Crypto.decrypt(encryptedValue, password);
-      } catch (e) {
+      } catch {
         throw Error('Value could not be decrypted!');
       }
       if (!decryptedValue) {
@@ -121,7 +140,6 @@ export class CryptoUtils {
     return value;
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static encryptedCount(value: any, fieldName?: string): number {
     if (!value) {
       return 0;
@@ -131,9 +149,14 @@ export class CryptoUtils {
     }
 
     if (_.isObject(value)) {
-      return _.sum(Object.entries(value).map(([fieldName, value]) => this.encryptedCount(value, fieldName)));
+      return _.sum(
+        Object.entries(value).map(([fieldName, value]) => this.encryptedCount(value, fieldName)),
+      );
     }
-    if (this.isEncryptableKeyField(value, fieldName) && value.startsWith(CryptoUtils.ENCRYPT_PREFIX)) {
+    if (
+      this.isEncryptableKeyField(value, fieldName) &&
+      value.startsWith(CryptoUtils.ENCRYPT_PREFIX)
+    ) {
       return 1;
     }
     return 0;
@@ -141,7 +164,11 @@ export class CryptoUtils {
 
   private static isEncryptableKeyField(value: any, fieldName: string | undefined) {
     return (
-      _.isString(value) && fieldName && CryptoUtils.ENCRYPTABLE_KEYS.some((key) => fieldName.toLowerCase().endsWith(key.toLowerCase()))
+      _.isString(value) &&
+      fieldName &&
+      CryptoUtils.ENCRYPTABLE_KEYS.some((key) =>
+        fieldName.toLowerCase().endsWith(key.toLowerCase()),
+      )
     );
   }
 }

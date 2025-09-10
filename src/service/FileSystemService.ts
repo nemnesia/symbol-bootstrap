@@ -1,4 +1,13 @@
-import { createWriteStream, existsSync, lstatSync, promises as fsPromises, readdirSync, rmdirSync, statSync, unlinkSync } from 'fs';
+import {
+  createWriteStream,
+  existsSync,
+  promises as fsPromises,
+  lstatSync,
+  readdirSync,
+  rmdirSync,
+  statSync,
+  unlinkSync,
+} from 'fs';
 import { default as https } from 'https';
 import { basename, dirname, join } from 'path';
 import { Logger } from '../logger/index.js';
@@ -49,7 +58,12 @@ export class FileSystemService {
       return this.mkdir(parentFolder);
     }
   }
-  public async copyDir(copyFrom: string, copyTo: string, excludeFiles: string[] = [], includeFiles: string[] = []): Promise<void> {
+  public async copyDir(
+    copyFrom: string,
+    copyTo: string,
+    excludeFiles: string[] = [],
+    includeFiles: string[] = [],
+  ): Promise<void> {
     await this.mkdir(copyTo);
     const files = await fsPromises.readdir(copyFrom);
     await Promise.all(
@@ -152,7 +166,8 @@ export class FileSystemService {
     fileLocation: string;
   }> {
     const destinationSize = existsSync(dest) ? statSync(dest).size : -1;
-    const isHttpRequest = url.toLowerCase().startsWith('https:') || url.toLowerCase().startsWith('http:');
+    const isHttpRequest =
+      url.toLowerCase().startsWith('https:') || url.toLowerCase().startsWith('http:');
     if (!isHttpRequest) {
       const stats = statSync(url);
       if (existsSync(url) && !stats.isDirectory()) {
@@ -168,7 +183,8 @@ export class FileSystemService {
       return new Promise((resolve, reject) => {
         function showDownloadingProgress(received: number, total: number) {
           const percentage = ((received * 100) / total).toFixed(2);
-          const message = percentage + '% | ' + received + ' bytes downloaded out of ' + total + ' bytes.';
+          const message =
+            percentage + '% | ' + received + ' bytes downloaded out of ' + total + ' bytes.';
           Utils.logSameLineMessage(message);
         }
         const request = https.get(url, (response) => {
@@ -182,7 +198,7 @@ export class FileSystemService {
               fileLocation: dest,
             });
           } else if (response.statusCode === 200) {
-            existsSync(dest) && unlinkSync(dest);
+            if (existsSync(dest)) unlinkSync(dest);
             const file = createWriteStream(dest, { flags: 'wx' });
             this.logger.info(`Downloading file ${url}. This could take a while!`);
             response.pipe(file);
@@ -208,12 +224,16 @@ export class FileSystemService {
               }
             });
           } else {
-            reject(new Error(`Server responded with ${response.statusCode} ${response.statusMessage || ''}`.trim()));
+            reject(
+              new Error(
+                `Server responded with ${response.statusCode} ${response.statusMessage || ''}`.trim(),
+              ),
+            );
           }
         });
 
         request.on('error', (err) => {
-          existsSync(dest) && unlinkSync(dest); // Delete temp file
+          if (existsSync(dest)) unlinkSync(dest); // Delete temp file
           reject(err.message);
         });
       });

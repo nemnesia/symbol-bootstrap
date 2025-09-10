@@ -13,12 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import fetch from 'cross-fetch';
 import { lookup } from 'dns';
 import _ from 'lodash';
 import { firstValueFrom } from 'rxjs';
 import { ChainInfo, RepositoryFactory, RepositoryFactoryHttp, RoleType } from 'symbol-sdk';
-import { Configuration, NodeApi, NodeListFilter, RequestContext } from 'symbol-statistics-service-typescript-fetch-client';
+import {
+  Configuration,
+  NodeApi,
+  NodeListFilter,
+  RequestContext,
+} from 'symbol-statistics-service-typescript-fetch-client';
 import { Logger } from '../logger/index.js';
 import { ConfigPreset, PeerInfo } from '../model/index.js';
 import { KnownError } from './KnownError.js';
@@ -30,7 +36,11 @@ export interface RepositoryInfo {
   chainInfo: ChainInfo;
 }
 export class RemoteNodeService {
-  constructor(private readonly logger: Logger, private readonly presetData: ConfigPreset, private readonly offline: boolean) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly presetData: ConfigPreset,
+    private readonly offline: boolean,
+  ) {}
   private restUrls: string[] | undefined;
 
   public async resolveCurrentFinalizationEpoch(): Promise<number> {
@@ -49,7 +59,9 @@ export class RemoteNodeService {
     if (!urls.length) {
       return undefined;
     }
-    const repositoryInfo = this.sortByHeight(await this.getKnownNodeRepositoryInfos(urls)).find((i) => i);
+    const repositoryInfo = this.sortByHeight(await this.getKnownNodeRepositoryInfos(urls)).find(
+      (i) => i,
+    );
     const finalizationEpoch = repositoryInfo?.chainInfo.latestFinalizedBlock.finalizationEpoch;
     if (finalizationEpoch) {
       this.logger.info(`The current network finalization epoch is ${finalizationEpoch}`);
@@ -59,7 +71,9 @@ export class RemoteNodeService {
 
   public async getBestRepositoryInfo(url: string | undefined): Promise<RepositoryInfo> {
     const urls = url ? [url] : await this.getRestUrls();
-    const repositoryInfo = this.sortByHeight(await this.getKnownNodeRepositoryInfos(urls)).find((i) => i);
+    const repositoryInfo = this.sortByHeight(await this.getKnownNodeRepositoryInfos(urls)).find(
+      (i) => i,
+    );
     if (!repositoryInfo) {
       throw new Error(`No up and running node could be found out of: \n - ${urls.join('\n - ')}`);
     }
@@ -103,7 +117,9 @@ export class RemoteNodeService {
         urls.map(async (restGatewayUrl): Promise<RepositoryInfo | undefined> => {
           const repositoryFactory = new RepositoryFactoryHttp(restGatewayUrl);
           try {
-            const chainInfo = await firstValueFrom(repositoryFactory.createChainRepository().getChainInfo());
+            const chainInfo = await firstValueFrom(
+              repositoryFactory.createChainRepository().getChainInfo(),
+            );
             return {
               restGatewayUrl,
               repositoryFactory,
@@ -134,7 +150,9 @@ export class RemoteNodeService {
         const filter = presetData.statisticsServiceRestFilter as NodeListFilter;
         const limit = presetData.statisticsServiceRestLimit;
         const nodes = await client.getNodes(filter ? filter : undefined, limit);
-        urls.push(...nodes.map((n) => n.apiStatus?.restGatewayUrl).filter((url): url is string => !!url));
+        urls.push(
+          ...nodes.map((n) => n.apiStatus?.restGatewayUrl).filter((url): url is string => !!url),
+        );
       } catch (e) {
         this.logger.warn(
           `There has been an error connecting to statistics ${statisticsServiceUrl}. Rest urls cannot be resolved! Error ${Utils.getMessage(
@@ -180,7 +198,13 @@ export class RemoteNodeService {
         const nodes = await client.getNodes(filter ? filter : undefined, limit);
         const peerInfos = nodes
           .map((n): PeerInfo | undefined => {
-            if (!n.peerStatus?.isAvailable || !n.publicKey || !n.port || !n.friendlyName || !n.roles) {
+            if (
+              !n.peerStatus?.isAvailable ||
+              !n.publicKey ||
+              !n.port ||
+              !n.friendlyName ||
+              !n.roles
+            ) {
               return undefined;
             }
             return {

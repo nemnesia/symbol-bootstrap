@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { password } from '@inquirer/prompts';
 import { Account, NetworkType, PublicAccount } from 'symbol-sdk';
 import { Logger } from '../logger/index.js';
@@ -48,7 +49,10 @@ export class BootstrapAccountResolver implements AccountResolver {
     while (true) {
       this.logger.info('');
       this.logger.info(`${keyName} private key is required when ${operationDescription}.`);
-      const address = PublicAccount.createFromPublicKey(account.publicKey, networkType).address.plain();
+      const address = PublicAccount.createFromPublicKey(
+        account.publicKey,
+        networkType,
+      ).address.plain();
       const nodeDescription = nodeName === '' ? `of` : `of the Node's '${nodeName}'`;
       const responses = await password({
         message: `Enter the 64 HEX private key ${nodeDescription} ${keyName} account with Address: ${address} and Public Key: ${account.publicKey}:`,

@@ -27,7 +27,8 @@ import {
 } from '../../service/index.js';
 
 export default class Config extends Command {
-  static description = 'Command used to set up the configuration files and the nemesis block for the current network';
+  static description =
+    'Command used to set up the configuration files and the nemesis block for the current network';
 
   static examples = [
     `$ symbol-bootstrap config -p bootstrap`,
@@ -71,7 +72,8 @@ export default class Config extends Command {
     }),
     offline: CommandUtils.offlineFlag,
     report: Flags.boolean({
-      description: 'It generates reStructuredText (.rst) reports describing the configuration of each node.',
+      description:
+        'It generates reStructuredText (.rst) reports describing the configuration of each node.',
       default: ConfigService.defaultParams.report,
     }),
 

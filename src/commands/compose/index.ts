@@ -29,7 +29,8 @@ export default class Compose extends Command {
     password: CommandUtils.passwordFlag,
     noPassword: CommandUtils.noPasswordFlag,
     upgrade: Flags.boolean({
-      description: 'It regenerates the docker compose and utility files from the <target>/docker folder',
+      description:
+        'It regenerates the docker compose and utility files from the <target>/docker folder',
       default: ComposeService.defaultParams.upgrade,
     }),
     offline: CommandUtils.offlineFlag,

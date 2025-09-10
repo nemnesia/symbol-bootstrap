@@ -19,7 +19,8 @@ import { LoggerFactory, System } from '../../logger/index.js';
 import { BootstrapService, CommandUtils, Constants } from '../../service/index.js';
 
 export default class Report extends Command {
-  static description = 'it generates reStructuredText (.rst) reports describing the configuration of each node.';
+  static description =
+    'it generates reStructuredText (.rst) reports describing the configuration of each node.';
 
   static examples = [`$ symbol-bootstrap report`];
 

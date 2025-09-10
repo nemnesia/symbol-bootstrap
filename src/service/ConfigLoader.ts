@@ -13,12 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { existsSync } from 'fs';
 import _ from 'lodash';
 import { join } from 'path';
 import { Account, PublicAccount } from 'symbol-sdk';
 import { Logger } from '../logger/index.js';
-import { Addresses, ConfigAccount, ConfigPreset, CustomPreset, NodePreset } from '../model/index.js';
+import {
+  Addresses,
+  ConfigAccount,
+  ConfigPreset,
+  CustomPreset,
+  NodePreset,
+} from '../model/index.js';
 import { Assembly, defaultAssembly } from './ConfigService.js';
 import { Constants } from './Constants.js';
 import { HandlebarsUtils } from './HandlebarsUtils.js';
@@ -48,7 +55,12 @@ export class ConfigLoader {
   }
 
   public static loadAssembly(preset: string, assembly: string, workingDir: string): CustomPreset {
-    const fileLocation = join(Constants.ROOT_FOLDER, 'presets', 'assemblies', `assembly-${assembly}.yml`);
+    const fileLocation = join(
+      Constants.ROOT_FOLDER,
+      'presets',
+      'assemblies',
+      `assembly-${assembly}.yml`,
+    );
     const errorMessage = `Assembly '${assembly}' is not valid for preset '${preset}'. Have you provided the right --preset <preset> --assembly <assembly> ?`;
     return this.loadBundledPreset(assembly, fileLocation, workingDir, errorMessage);
   }
@@ -59,7 +71,12 @@ export class ConfigLoader {
     return this.loadBundledPreset(preset, fileLocation, workingDir, errorMessage);
   }
 
-  private static loadBundledPreset(presetFile: string, bundledLocation: string, workingDir: string, errorMessage: string): CustomPreset {
+  private static loadBundledPreset(
+    presetFile: string,
+    bundledLocation: string,
+    workingDir: string,
+    errorMessage: string,
+  ): CustomPreset {
     if (YamlUtils.isYmlFile(presetFile)) {
       const assemblyFile = Utils.resolveWorkingDirPath(workingDir, presetFile);
       if (!existsSync(assemblyFile)) {
@@ -74,14 +91,22 @@ export class ConfigLoader {
   }
 
   public static loadSharedPreset(): CustomPreset {
-    return YamlUtils.loadYaml(join(Constants.ROOT_FOLDER, 'presets', 'shared.yml'), false) as ConfigPreset;
+    return YamlUtils.loadYaml(
+      join(Constants.ROOT_FOLDER, 'presets', 'shared.yml'),
+      false,
+    ) as ConfigPreset;
   }
-  public mergePresets<T extends CustomPreset>(object: T | undefined, ...otherArgs: (CustomPreset | undefined)[]): T {
+  public mergePresets<T extends CustomPreset>(
+    object: T | undefined,
+    ...otherArgs: (CustomPreset | undefined)[]
+  ): T {
     const presets = [object, ...otherArgs];
     const reversed = [...presets].reverse();
     const presetData = _.merge({}, ...presets);
     const inflation = reversed.find((p) => !_.isEmpty(p?.inflation))?.inflation;
-    const knownRestGateways = reversed.find((p) => !_.isEmpty(p?.knownRestGateways))?.knownRestGateways;
+    const knownRestGateways = reversed.find(
+      (p) => !_.isEmpty(p?.knownRestGateways),
+    )?.knownRestGateways;
     const knownPeers = reversed.find((p) => !_.isEmpty(p?.knownPeers))?.knownPeers;
     if (inflation) presetData.inflation = inflation;
     if (knownRestGateways) presetData.knownRestGateways = knownRestGateways;
@@ -102,7 +127,11 @@ export class ConfigLoader {
     const customPresetObject = params.customPresetObject;
     const oldPresetData = params.oldPresetData;
     const customPresetFileObject = this.loadCustomPreset(customPreset, params.password);
-    const preset = params.preset || params.customPresetObject?.preset || customPresetFileObject?.preset || oldPresetData?.preset;
+    const preset =
+      params.preset ||
+      params.customPresetObject?.preset ||
+      customPresetFileObject?.preset ||
+      oldPresetData?.preset;
     if (!preset) {
       throw new KnownError(
         'Preset value could not be resolved from target folder contents. Please provide the --preset parameter when running the config/start command.',
@@ -127,8 +156,15 @@ export class ConfigLoader {
 
     const assemblyPreset = ConfigLoader.loadAssembly(preset, assembly, params.workingDir);
     const providedCustomPreset = this.mergePresets(customPresetFileObject, customPresetObject);
-    const resolvedCustomPreset = _.isEmpty(providedCustomPreset) ? oldPresetData?.customPresetCache || {} : providedCustomPreset;
-    const presetData = this.mergePresets(sharedPreset, networkPreset, assemblyPreset, resolvedCustomPreset) as ConfigPreset;
+    const resolvedCustomPreset = _.isEmpty(providedCustomPreset)
+      ? oldPresetData?.customPresetCache || {}
+      : providedCustomPreset;
+    const presetData = this.mergePresets(
+      sharedPreset,
+      networkPreset,
+      assemblyPreset,
+      resolvedCustomPreset,
+    ) as ConfigPreset;
 
     if (!ConfigLoader.presetInfoLogged) {
       this.logger.info(`Generating config from preset '${preset}'`);
@@ -223,7 +259,6 @@ export class ConfigLoader {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public applyValueTemplate(context: any, value: any): any {
     if (!value) {
       return value;
@@ -242,7 +277,6 @@ export class ConfigLoader {
     return HandlebarsUtils.runTemplate(value, context);
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public expandServicesRepeat(context: any, services: any[]): any[] {
     return _.flatMap(services || [], (service) => {
       if (!_.isObject(service)) {
@@ -270,7 +304,10 @@ export class ConfigLoader {
     });
   }
 
-  public loadExistingPresetDataIfPreset(target: string, password: Password): ConfigPreset | undefined {
+  public loadExistingPresetDataIfPreset(
+    target: string,
+    password: Password,
+  ): ConfigPreset | undefined {
     const generatedPresetLocation = this.getGeneratedPresetLocation(target);
     if (existsSync(generatedPresetLocation)) {
       return YamlUtils.loadYaml(generatedPresetLocation, password);
@@ -297,7 +334,9 @@ export class ConfigLoader {
   public loadExistingAddressesIfPreset(target: string, password: Password): Addresses | undefined {
     const generatedAddressLocation = this.getGeneratedAddressLocation(target);
     if (existsSync(generatedAddressLocation)) {
-      return new MigrationService(this.logger).migrateAddresses(YamlUtils.loadYaml(generatedAddressLocation, password));
+      return new MigrationService(this.logger).migrateAddresses(
+        YamlUtils.loadYaml(generatedAddressLocation, password),
+      );
     }
     return undefined;
   }

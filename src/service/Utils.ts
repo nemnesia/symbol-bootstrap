@@ -47,7 +47,9 @@ export class Utils {
   public static validatePassword(password: string): string {
     const passwordMinSize = 4;
     if (password.length < passwordMinSize) {
-      throw new KnownError(`Password is too short. It should have at least ${passwordMinSize} characters!`);
+      throw new KnownError(
+        `Password is too short. It should have at least ${passwordMinSize} characters!`,
+      );
     }
     return password;
   }
@@ -73,11 +75,15 @@ export class Utils {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static pruneEmpty(obj: any): any {
     return (function prune(current: any) {
       _.forOwn(current, (value, key) => {
-        if (_.isUndefined(value) || _.isNull(value) || _.isNaN(value) || (_.isObject(value) && _.isEmpty(prune(value)))) {
+        if (
+          _.isUndefined(value) ||
+          _.isNull(value) ||
+          _.isNaN(value) ||
+          (_.isObject(value) && _.isEmpty(prune(value)))
+        ) {
           delete current[key];
         }
       });

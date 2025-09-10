@@ -16,7 +16,12 @@
 
 import { Command } from '@oclif/core';
 import { LoggerFactory } from '../../logger/index.js';
-import { BootstrapAccountResolver, BootstrapService, CommandUtils, Constants } from '../../service/index.js';
+import {
+  BootstrapAccountResolver,
+  BootstrapService,
+  CommandUtils,
+  Constants,
+} from '../../service/index.js';
 import Clean from '../clean/index.js';
 import Compose from '../compose/index.js';
 import Config from '../config/index.js';
