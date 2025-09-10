@@ -119,6 +119,7 @@ export class CryptoUtils {
       if (!decryptedValue) {
         try {
           decryptedValue = CryptoUtils.decryptLegacy(encryptedValue, password);
+          CryptoUtils._legacyUpgradeDetected = true;
         } catch (e) {
           throw Error('Value could not be decrypted!');
         }
@@ -130,6 +131,19 @@ export class CryptoUtils {
     }
     return value;
   }
+
+  /**
+   * Decrypts data and returns both the decrypted result and information about whether legacy encryption was upgraded.
+   * This method provides visibility into whether the data should be re-saved with stronger encryption.
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  public static decryptWithUpgradeInfo(value: any, password: string, fieldName?: string): { data: any; hasLegacyUpgrade: boolean } {
+    CryptoUtils._legacyUpgradeDetected = false;
+    const data = this.decrypt(value, password, fieldName);
+    return { data, hasLegacyUpgrade: CryptoUtils._legacyUpgradeDetected };
+  }
+
+  private static _legacyUpgradeDetected = false;
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static encryptedCount(value: any, fieldName?: string): number {

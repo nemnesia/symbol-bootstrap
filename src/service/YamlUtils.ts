@@ -45,11 +45,27 @@ export class YamlUtils {
   }
 
   public static loadYaml(fileLocation: string, password: Password): any {
+    return this.loadYamlWithUpgradeInfo(fileLocation, password).data;
+  }
+
+  /**
+   * Loads YAML file and returns both the data and information about whether legacy encryption was upgraded.
+   * This method provides visibility into whether the file should be re-saved with stronger encryption.
+   */
+  public static loadYamlWithUpgradeInfo(
+    fileLocation: string,
+    password: Password,
+  ): { data: any; hasLegacyUpgrade: boolean; filePath: string } {
     const object = this.fromYaml(this.loadFileAsText(fileLocation));
     if (password) {
       Utils.validatePassword(password);
       try {
-        return CryptoUtils.decrypt(object, password);
+        const result = CryptoUtils.decryptWithUpgradeInfo(object, password);
+        return {
+          data: result.data,
+          hasLegacyUpgrade: result.hasLegacyUpgrade,
+          filePath: fileLocation,
+        };
       } catch (e) {
         throw new KnownError(`Cannot decrypt file ${fileLocation}. Have you used the right password?`);
       }
@@ -60,7 +76,7 @@ export class YamlUtils {
         );
       }
     }
-    return object;
+    return { data: object, hasLegacyUpgrade: false, filePath: fileLocation };
   }
 
   public static async writeTextFile(path: string, text: string): Promise<void> {

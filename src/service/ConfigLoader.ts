@@ -297,7 +297,22 @@ export class ConfigLoader {
   public loadExistingAddressesIfPreset(target: string, password: Password): Addresses | undefined {
     const generatedAddressLocation = this.getGeneratedAddressLocation(target);
     if (existsSync(generatedAddressLocation)) {
-      return new MigrationService(this.logger).migrateAddresses(YamlUtils.loadYaml(generatedAddressLocation, password));
+      const result = YamlUtils.loadYamlWithUpgradeInfo(generatedAddressLocation, password);
+      const addresses = new MigrationService(this.logger).migrateAddresses(result.data);
+
+      // If legacy encryption was upgraded, re-save the file with stronger encryption
+      if (result.hasLegacyUpgrade && password) {
+        this.logger.warn(`Legacy encryption detected in ${generatedAddressLocation}. Upgrading to stronger encryption...`);
+        YamlUtils.writeYaml(generatedAddressLocation, addresses, password)
+          .then(() => {
+            this.logger.info(`Successfully upgraded encryption for ${generatedAddressLocation}`);
+          })
+          .catch((e) => {
+            this.logger.error(`Failed to upgrade encryption for ${generatedAddressLocation}: ${e.message}`);
+          });
+      }
+
+      return addresses;
     }
     return undefined;
   }

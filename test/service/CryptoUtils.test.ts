@@ -171,6 +171,53 @@ describe('CryptoUtils', () => {
     }
   });
 
+  it('decryptWithUpgradeInfo should detect legacy encryption upgrade', () => {
+    const password = '1234';
+    const plain = 'secretKey123';
+
+    // Create legacy encrypted data
+    const salt = randomBytes(16);
+    const iv = randomBytes(16);
+    const key = pbkdf2Sync(Buffer.from(password, 'utf8'), salt, 1024, 32, 'sha1');
+    const cipher = createCipheriv('aes-256-cbc', key, iv);
+    let ciphertext = cipher.update(plain, 'utf8', 'base64');
+    ciphertext += cipher.final('base64');
+    const legacyPayload = 'ENCRYPTED:' + salt.toString('hex') + iv.toString('hex') + ciphertext;
+
+    const originalObj = {
+      anotherPrivateKey: legacyPayload,
+      publicKey: 'notEncrypted',
+    };
+
+    // Decrypt with upgrade info
+    const result = CryptoUtils.decryptWithUpgradeInfo(originalObj, password);
+
+    // Should indicate legacy encryption was used
+    expect(result.hasLegacyUpgrade).to.be.true;
+
+    // Data should be properly decrypted
+    expect(result.data.anotherPrivateKey).eq(plain);
+    expect(result.data.publicKey).eq('notEncrypted');
+  });
+
+  it('decryptWithUpgradeInfo should not flag current encrypted data as upgraded', () => {
+    const password = '1234';
+    const plain = 'secretKey123';
+
+    // Create current encrypted data using current method
+    const currentObj = { anotherPrivateKey: plain };
+    const encryptedObj = CryptoUtils.encrypt(currentObj, password);
+
+    // Decrypt with upgrade info
+    const result = CryptoUtils.decryptWithUpgradeInfo(encryptedObj, password);
+
+    // Should indicate no legacy upgrade was needed
+    expect(result.hasLegacyUpgrade).to.be.false;
+
+    // Data should be properly decrypted
+    expect(result.data.anotherPrivateKey).eq(plain);
+  });
+
   it('it removes private keys', () => {
     const object = {
       version: 2,
