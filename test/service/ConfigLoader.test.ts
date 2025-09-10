@@ -15,9 +15,13 @@
  */
 
 import { expect } from 'chai';
+import { createCipheriv, pbkdf2Sync, randomBytes } from 'crypto';
+import { existsSync } from 'fs';
 import 'mocha';
+import { join } from 'path';
+import sinon from 'sinon';
 import { Assembly, Constants, LoggerFactory, LogType, Utils, YamlUtils } from '../../src';
-import { ConfigLoader, Preset } from '../../src/service';
+import { ConfigLoader, FileSystemService, Preset } from '../../src/service';
 
 const logger = LoggerFactory.getLogger(LogType.Silent);
 
@@ -557,5 +561,151 @@ describe('ConfigLoader', () => {
 
     expect(configLoader.applyValueTemplate({}, value)).to.be.deep.eq(value);
     expect(configLoader.applyValueTemplate({}, YamlUtils.fromYaml(YamlUtils.toYaml(value)))).to.be.deep.eq(value);
+  });
+
+  describe('loadExistingAddressesIfPreset legacy encryption upgrade', () => {
+    const fileSystemService = new FileSystemService(logger);
+    const testTarget = 'target/test-config-loader-legacy-upgrade';
+    const testAddressesFile = join(testTarget, 'addresses.yml');
+
+    beforeEach(async () => {
+      // Clean up test directory
+      fileSystemService.deleteFolder(testTarget);
+      await fileSystemService.mkdir(testTarget);
+    });
+
+    afterEach(() => {
+      fileSystemService.deleteFolder(testTarget);
+    });
+
+    it('should create backup and upgrade when legacy encryption is detected', async () => {
+      const password = '1234';
+      const configLoader = new ConfigLoader(logger);
+
+      // Create test addresses data with legacy encrypted private keys
+      const addresses = {
+        version: 2,
+        networkType: 104,
+        nodes: [
+          {
+            name: 'node1',
+            main: {
+              privateKey: createLegacyEncryptedValue('6A4E05F63EA94949D1043D59A704CBA1E1FA1F57BF99E41D5F5DCF89E549D4E8', password),
+              publicKey: 'F71853563BEE2C580C9AFA0A1A84203D14868C19279ABAABF8ADE89AF9AA9B30',
+              address: 'TAEAUXUZOFODY2ZQZGV5DUVQ2TN3HBSXKGBEH5Q',
+            },
+            transport: {
+              privateKey: createLegacyEncryptedValue('E07C107F25DE9CBBC301683F527EBE05A47572EE810DB91D5C4FA6A7E0B9D5BF', password),
+              publicKey: '41470F3A43095F493319A2241C3059B5EA0ECC89318E6ED32381A4AAEC4D13D1',
+              address: 'TCZARKJGP4RXWWTUZRRYW4X5Z7UQFUXQ5K2VIJQ',
+            },
+          },
+        ],
+      };
+
+      // Write the addresses file with legacy encryption
+      await YamlUtils.writeYaml(testAddressesFile, addresses, '');
+
+      // Mock logger methods to capture log output
+      const loggerWarnSpy = sinon.spy(logger, 'warn');
+      const loggerInfoSpy = sinon.spy(logger, 'info');
+      const loggerErrorSpy = sinon.spy(logger, 'error');
+
+      // Call the method under test
+      const result = configLoader.loadExistingAddressesIfPreset(testTarget, password);
+
+      // Should return the decrypted addresses
+      expect(result).to.not.be.undefined;
+      if (result && result.nodes && result.nodes.length > 0) {
+        expect(result.nodes[0].main.privateKey).to.eq('6A4E05F63EA94949D1043D59A704CBA1E1FA1F57BF99E41D5F5DCF89E549D4E8');
+        expect(result.nodes[0].transport.privateKey).to.eq('E07C107F25DE9CBBC301683F527EBE05A47572EE810DB91D5C4FA6A7E0B9D5BF');
+      }
+
+      // Wait for async operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verify backup file was created
+      const backupFile = `${testAddressesFile}.bk`;
+      expect(existsSync(backupFile)).to.be.true;
+
+      // Verify logging occurred
+      expect(loggerWarnSpy.calledWith(sinon.match('Legacy encryption detected'))).to.be.true;
+      expect(loggerInfoSpy.calledWith(sinon.match('Creating backup of original file'))).to.be.true;
+
+      // Restore logger methods
+      loggerWarnSpy.restore();
+      loggerInfoSpy.restore();
+      loggerErrorSpy.restore();
+    });
+
+    it('should not create backup when current encryption is used', async () => {
+      const password = '1234';
+      const configLoader = new ConfigLoader(logger);
+
+      // Create test addresses data with current encryption
+      const plainAddresses = {
+        version: 2,
+        networkType: 104,
+        nodes: [
+          {
+            name: 'node1',
+            main: {
+              privateKey: '6A4E05F63EA94949D1043D59A704CBA1E1FA1F57BF99E41D5F5DCF89E549D4E8',
+              publicKey: 'F71853563BEE2C580C9AFA0A1A84203D14868C19279ABAABF8ADE89AF9AA9B30',
+              address: 'TAEAUXUZOFODY2ZQZGV5DUVQ2TN3HBSXKGBEH5Q',
+            },
+          },
+        ],
+      };
+
+      // Encrypt with current method and write the file
+      await YamlUtils.writeYaml(testAddressesFile, plainAddresses, password);
+
+      // Mock logger methods
+      const loggerWarnSpy = sinon.spy(logger, 'warn');
+
+      // Call the method under test
+      const result = configLoader.loadExistingAddressesIfPreset(testTarget, password);
+
+      // Should return the decrypted addresses
+      expect(result).to.not.be.undefined;
+      if (result && result.nodes && result.nodes.length > 0) {
+        expect(result.nodes[0].main.privateKey).to.eq('6A4E05F63EA94949D1043D59A704CBA1E1FA1F57BF99E41D5F5DCF89E549D4E8');
+      }
+
+      // Wait for async operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verify backup file was NOT created
+      const backupFile = `${testAddressesFile}.bk`;
+      expect(existsSync(backupFile)).to.be.false;
+
+      // Verify no warning was logged
+      expect(loggerWarnSpy.calledWith(sinon.match('Legacy encryption detected'))).to.be.false;
+
+      // Restore logger methods
+      loggerWarnSpy.restore();
+    });
+
+    it('should return undefined when addresses file does not exist', () => {
+      const configLoader = new ConfigLoader(logger);
+      const result = configLoader.loadExistingAddressesIfPreset('nonexistent-target', '1234');
+      expect(result).to.be.undefined;
+    });
+
+    /**
+     * Helper function to create legacy encrypted value (equivalent to crypto-js 4.1.1)
+     */
+    function createLegacyEncryptedValue(plaintext: string, password: string): string {
+      const salt = randomBytes(16);
+      const iv = randomBytes(16);
+      const key = pbkdf2Sync(Buffer.from(password, 'utf8'), salt, 1024, 32, 'sha1');
+
+      const cipher = createCipheriv('aes-256-cbc', key, iv);
+      let ciphertext = cipher.update(plaintext, 'utf8', 'base64');
+      ciphertext += cipher.final('base64');
+
+      return 'ENCRYPTED:' + salt.toString('hex') + iv.toString('hex') + ciphertext;
+    }
   });
 });
