@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { promises as fsPromises, readFileSync } from 'fs';
+import { copyFileSync, promises as fsPromises, readFileSync } from 'fs';
 import * as yaml from 'js-yaml';
 import { dirname } from 'path';
 import { CryptoUtils } from './CryptoUtils.js';
@@ -45,7 +45,33 @@ export class YamlUtils {
   }
 
   public static loadYaml(fileLocation: string, password: Password): any {
-    return this.loadYamlWithUpgradeInfo(fileLocation, password).data;
+    const result = this.loadYamlWithUpgradeInfo(fileLocation, password);
+
+    // If legacy encryption was upgraded, re-save the file with stronger encryption
+    if (result.hasLegacyUpgrade && password) {
+      const backupLocation = `${fileLocation}.bk`;
+      console.log(`Legacy encryption detected in ${fileLocation}. Upgrading to stronger encryption...`);
+      console.log(`Creating backup of original file at ${backupLocation}`);
+
+      try {
+        copyFileSync(fileLocation, backupLocation);
+        console.log(`Backup created successfully`);
+
+        // Re-encrypt and save the file with stronger encryption (this is async, but we'll handle it in background)
+        YamlUtils.writeYaml(fileLocation, result.data, password)
+          .then(() => {
+            console.log(`Successfully upgraded encryption for ${fileLocation}`);
+            console.log(`Original file backed up to ${backupLocation} (encrypted with legacy method)`);
+          })
+          .catch((e) => {
+            console.error(`Failed to upgrade encryption for ${fileLocation}: ${e.message}`);
+          });
+      } catch (e) {
+        console.error(`Failed to create backup for ${fileLocation}: ${e instanceof Error ? e.message : e}`);
+      }
+    }
+
+    return result.data;
   }
 
   /**
