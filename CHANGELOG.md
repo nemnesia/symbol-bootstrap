@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.0.6] - 2025-09-10
+
+**Milestone**: Crypto-js compatibility improvements
+
+| Package          | Version | Link                                                              |
+| ---------------- | ------- | ----------------------------------------------------------------- |
+| Symbol Bootstrap | v2.0.6  | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
+
+### Added
+- Legacy crypto-js 4.1.1 compatibility support with automatic upgrade to stronger encryption
+- Backup creation when legacy encrypted files are detected
+- Comprehensive test coverage for legacy encryption upgrade functionality
+
+### Fixed
+- Compatibility issues between crypto-js version 4.1.1 and 4.2.0+ encryption methods
+- Backup file creation for legacy encrypted addresses in decrypt command
+
+### Changed
+- Enhanced CryptoUtils with fallback decryption for legacy encrypted data
+- Improved YamlUtils and ConfigLoader to handle encryption upgrades seamlessly
+
 ## [2.0.5] - 2025-04-17
 
 **Milestone**: Mainnet(1.0.3.8)
