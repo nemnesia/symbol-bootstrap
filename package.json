@@ -65,6 +65,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0",
     "sinon": "^13.0.1",
+    "ts-node": "^10.9.2",
     "tsx": "^4.20.5",
     "typedoc": "^0.28.12",
     "typescript": "^5.9.2"

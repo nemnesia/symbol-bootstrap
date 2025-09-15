@@ -61,6 +61,7 @@ class I18nService {
           en: { translation: enTranslation },
           ja: { translation: jaTranslation },
         },
+        interpolation: { escapeValue: false },
       });
 
       this.initialized = true;
