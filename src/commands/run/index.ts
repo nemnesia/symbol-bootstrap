@@ -20,8 +20,7 @@ import { BootstrapService, CommandUtils, RunService } from '../../service/index.
 import HealthCheck from '../healthCheck/index.js';
 
 export default class Run extends Command {
-  static description =
-    'It boots the network via docker using the generated `compose.yml` file and configuration. The config and compose methods/commands need to be called before this method. This is just a wrapper for the `docker compose up` bash call.';
+  static description = 'commands.run.description';
 
   static examples = [`$ symbol-bootstrap run`];
 
@@ -30,43 +29,36 @@ export default class Run extends Command {
     target: CommandUtils.targetFlag,
     detached: Flags.boolean({
       char: 'd',
-      description:
-        'If provided, docker compose will run with -d (--detached) and this command will wait unit server is running before returning',
+      description: 'flags.run.detached.description',
     }),
-
     healthCheck: Flags.boolean({
       description: HealthCheck.description,
     }),
-
     resetData: Flags.boolean({
-      description: 'It reset the database and node data but keeps the generated configuration, keys, voting tree files and block 1',
+      description: 'flags.run.resetData.description',
     }),
-
     pullImages: Flags.boolean({
-      description: 'It pulls the images from DockerHub when running the configuration. It only affects alpha/dev docker images.',
+      description: 'flags.run.pullImages.description',
       default: RunService.defaultParams.pullImages,
     }),
-
     args: Flags.string({
       multiple: true,
-      description: 'Add extra arguments to the docker compose up command. Check out https://docs.docker.com/compose/reference/up.',
+      description: 'flags.run.args.description',
     }),
-
     build: Flags.boolean({
       char: 'b',
-      description: 'If provided, docker compose will run with -b (--build)',
+      description: 'flags.run.build.description',
     }),
-
     timeout: Flags.integer({
-      description: 'If running in detached mode, how long before timing out (in milliseconds)',
+      description: 'flags.run.timeout.description',
       default: RunService.defaultParams.timeout,
     }),
     logger: CommandUtils.getLoggerFlag(...System),
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Run);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(Run);
     const logger = LoggerFactory.getLogger(flags.logger);
     return new BootstrapService(logger).run(flags);
   }

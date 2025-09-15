@@ -16,12 +16,27 @@
 
 import { Command, Flags } from '@oclif/core';
 import { LoggerFactory, System } from '../../logger/index.js';
-import { BootstrapService, CommandUtils, ComposeService, Constants } from '../../service/index.js';
+import {
+  BootstrapService,
+  CommandUtils,
+  ComposeService,
+  Constants,
+  keyWithOptions,
+} from '../../service/index.js';
 
 export default class Compose extends Command {
-  static description = 'It generates the `compose.yml` file from the configured network.';
+  static description = 'commands.compose.description';
 
   static examples = [`$ symbol-bootstrap compose`];
+
+  static userFlag() {
+    const param = { currentUser: Constants.CURRENT_USER };
+    return Flags.string({
+      char: 'u',
+      description: keyWithOptions('flags.compose.user.description', param),
+      default: Constants.CURRENT_USER,
+    });
+  }
 
   static flags = {
     help: CommandUtils.helpFlag,
@@ -29,21 +44,17 @@ export default class Compose extends Command {
     password: CommandUtils.passwordFlag,
     noPassword: CommandUtils.noPasswordFlag,
     upgrade: Flags.boolean({
-      description: 'It regenerates the docker compose and utility files from the <target>/docker folder',
+      description: 'flags.compose.upgrade.description',
       default: ComposeService.defaultParams.upgrade,
     }),
     offline: CommandUtils.offlineFlag,
-    user: Flags.string({
-      char: 'u',
-      description: `User used to run the services in the compose.yml file. "${Constants.CURRENT_USER}" means the current user.`,
-      default: 'current',
-    }),
+    user: this.userFlag(),
     logger: CommandUtils.getLoggerFlag(...System),
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Compose);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(Compose);
 
     const logger = LoggerFactory.getLogger(flags.logger);
     flags.password = await CommandUtils.resolvePassword(

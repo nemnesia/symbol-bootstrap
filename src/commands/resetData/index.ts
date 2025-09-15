@@ -19,7 +19,7 @@ import { LoggerFactory, System } from '../../logger/index.js';
 import { BootstrapService, CommandUtils } from '../../service/index.js';
 
 export default class ResetData extends Command {
-  static description = 'It removes the data keeping the generated configuration, certificates, keys and block 1.';
+  static description = 'commands.resetData.description';
 
   static examples = [`$ symbol-bootstrap resetData`];
 
@@ -30,8 +30,8 @@ export default class ResetData extends Command {
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(ResetData);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(ResetData);
     const logger = LoggerFactory.getLogger(flags.logger);
     await new BootstrapService(logger).resetData(flags);
   }

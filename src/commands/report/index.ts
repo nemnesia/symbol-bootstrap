@@ -19,7 +19,7 @@ import { LoggerFactory, System } from '../../logger/index.js';
 import { BootstrapService, CommandUtils, Constants } from '../../service/index.js';
 
 export default class Report extends Command {
-  static description = 'it generates reStructuredText (.rst) reports describing the configuration of each node.';
+  static description = 'commands.report.description';
 
   static examples = [`$ symbol-bootstrap report`];
 
@@ -30,8 +30,8 @@ export default class Report extends Command {
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Report);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(Report);
     const logger = LoggerFactory.getLogger(flags.logger);
     const workingDir = Constants.defaultWorkingDir;
     await new BootstrapService(logger).report({ ...flags, workingDir });

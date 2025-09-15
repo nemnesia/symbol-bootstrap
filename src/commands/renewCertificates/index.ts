@@ -13,23 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Command, Flags } from '@oclif/core';
+import { t } from 'i18next';
 import { Account } from 'symbol-sdk';
 import { LoggerFactory, System } from '../../logger/index.js';
 import { CertificatePair, ConfigAccount } from '../../model/index.js';
-import { BootstrapAccountResolver, CertificateService, CommandUtils, ConfigLoader, Constants, RenewMode } from '../../service/index.js';
+import {
+  BootstrapAccountResolver,
+  CertificateService,
+  CommandUtils,
+  ConfigLoader,
+  Constants,
+  keyWithOptions,
+  RenewMode,
+} from '../../service/index.js';
 
 export default class RenewCertificates extends Command {
-  static description = `It renews the SSL certificates of the node regenerating the node.csr.pem files but reusing the current private keys.
-
-The certificates are only regenerated when they are closed to expiration (30 days). If you want to renew anyway, use the --force param.
-
-This command does not change the node private key (yet). This change would require a harvesters.dat migration and relinking the node key.
-
-It's recommended to backup the target folder before running this operation!
-`;
+  static description = 'commands.renewCertificates.description';
 
   static examples = [`$ symbol-bootstrap renewCertificates`];
+
+  static userFlag() {
+    const param = { currentUser: Constants.CURRENT_USER };
+    return Flags.string({
+      char: 'u',
+      description: keyWithOptions('flags.renewCertificates.user.description', param),
+      default: Constants.CURRENT_USER,
+    });
+  }
 
   static flags = {
     help: CommandUtils.helpFlag,
@@ -38,25 +50,18 @@ It's recommended to backup the target folder before running this operation!
     noPassword: CommandUtils.noPasswordFlag,
     customPreset: Flags.string({
       char: 'c',
-      description: `This command uses the encrypted addresses.yml to resolve the main and transport private key. If the main and transport privates are only stored in the custom preset, you can provide them using this param. Otherwise, the command may ask for them when required.`,
-      required: false,
+      description: 'flags.renewCertificates.customPreset.description',
     }),
-    user: Flags.string({
-      char: 'u',
-      description: `User used to run docker images when generating the certificates. "${Constants.CURRENT_USER}" means the current user.`,
-      default: Constants.CURRENT_USER,
-    }),
-
+    user: this.userFlag(),
     force: Flags.boolean({
-      description: `Renew the certificates even though they are not close to expire.`,
-      default: false,
+      description: 'flags.renewCertificates.force.description',
     }),
     logger: CommandUtils.getLoggerFlag(...System),
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(RenewCertificates);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(RenewCertificates);
     const logger = LoggerFactory.getLogger(flags.logger);
     const password = await CommandUtils.resolvePassword(
       logger,
@@ -87,9 +92,12 @@ It's recommended to backup the target folder before running this operation!
         (presetData.nodes || []).map((nodePreset, index) => {
           const nodeAccount = addresses.nodes?.[index];
           if (!nodeAccount) {
-            throw new Error(`There is not node in addresses at index ${index}`);
+            throw new Error(t('messages.renewCertificates.error.nodeNotFound', { index }));
           }
-          function resolveAccount(configAccount: ConfigAccount, providedPrivateKey: string | undefined): CertificatePair {
+          function resolveAccount(
+            configAccount: ConfigAccount,
+            providedPrivateKey: string | undefined,
+          ): CertificatePair {
             if (providedPrivateKey) {
               const account = Account.createFromPrivateKey(providedPrivateKey, networkType);
               if (account.address.plain() == configAccount.address) {
@@ -103,7 +111,9 @@ It's recommended to backup the target folder before running this operation!
             transport: resolveAccount(nodeAccount.transport, nodePreset.transportPrivateKey),
           };
           // Docker Compose プロジェクト名のプレフィックスを追加
-          const containerNamePrefix = presetData.dockerComposeProjectName ? `${presetData.dockerComposeProjectName}-` : '';
+          const containerNamePrefix = presetData.dockerComposeProjectName
+            ? `${presetData.dockerComposeProjectName}-`
+            : '';
           return certificateService.run(
             presetData,
             containerNamePrefix + nodePreset.name,
@@ -115,11 +125,11 @@ It's recommended to backup the target folder before running this operation!
     ).find((f) => f);
     if (certificateUpgraded) {
       logger.warn('');
-      logger.warn('Bootstrap has created new SSL certificates. Review the logs!');
+      logger.warn(t('messages.renewCertificates.info.created'));
       logger.warn('');
     } else {
       logger.info('');
-      logger.info('The SSL certificates are up-to-date. There is nothing to upgrade.');
+      logger.info(t('messages.renewCertificates.info.upToDate'));
       logger.info('');
     }
   }

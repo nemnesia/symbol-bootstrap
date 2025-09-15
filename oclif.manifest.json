@@ -1,23 +1,23 @@
 {
   "commands": {
-    "clean": {
+    "checkHealth": {
       "aliases": [],
       "args": {},
-      "description": "It removes the target folder deleting the generated configuration and data",
+      "description": "commands.healthCheck.description",
       "examples": [
-        "$ symbol-bootstrap clean"
+        "$ symbol-bootstrap healthCheck\n$ symbol-bootstrap checkHealth"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -25,7 +25,56 @@
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "checkHealth",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "checkHealth",
+        "index.js"
+      ]
+    },
+    "clean": {
+      "aliases": [],
+      "args": {},
+      "description": "commands.clean.description",
+      "examples": [
+        "$ symbol-bootstrap clean"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "flags.help.description",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "flags.target.description",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -36,8 +85,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "clean",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -52,21 +101,21 @@
     "compose": {
       "aliases": [],
       "args": {},
-      "description": "It generates the `compose.yml` file from the configured network.",
+      "description": "commands.compose.description",
       "examples": [
         "$ symbol-bootstrap compose"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -74,33 +123,33 @@
           "type": "option"
         },
         "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "description": "flags.password.description",
           "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "description": "flags.noPassword.description",
           "name": "noPassword",
           "allowNo": false,
           "type": "boolean"
         },
         "upgrade": {
-          "description": "It regenerates the docker compose and utility files from the <target>/docker folder",
+          "description": "flags.compose.upgrade.description",
           "name": "upgrade",
           "allowNo": false,
           "type": "boolean"
         },
         "offline": {
-          "description": "If --offline is used, Bootstrap resolves the configuration without querying the running network.",
+          "description": "flags.offline.description",
           "name": "offline",
           "allowNo": false,
           "type": "boolean"
         },
         "user": {
           "char": "u",
-          "description": "User used to run the services in the compose.yml file. \"current\" means the current user.",
+          "description": "flags.compose.user.description|||{\"currentUser\":\"current\"}",
           "name": "user",
           "default": "current",
           "hasDynamicHelp": false,
@@ -108,7 +157,7 @@
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -119,8 +168,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "compose",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -132,75 +181,10 @@
         "index.js"
       ]
     },
-    "decrypt": {
-      "aliases": [],
-      "args": {},
-      "description": "It decrypts a yml file using the provided password. The source file can be a custom preset file, a preset.yml file or an addresses.yml.\n\nThe main use case of this command is to verify private keys in encrypted files after encrypting a custom preset or running a bootstrap command with a provided --password.",
-      "examples": [
-        "\n$ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n$ symbol-bootstrap decrypt --password 1234 --source target/addresses.yml --destination plain-addresses.yml\n$ symbol-bootstrap decrypt --password 1234 --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml\n        ",
-        "\n$ symbol-bootstrap start --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n> password prompt\n$ symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n> password prompt (enter the same password)\n$ symbol-bootstrap decrypt --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n> password prompt (enter the same password)\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml",
-        "\n$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "source": {
-          "description": "The source encrypted yml file to be decrypted.",
-          "name": "source",
-          "required": true,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "destination": {
-          "description": "The destination decrypted file to create. The destination file must not exist.",
-          "name": "destination",
-          "required": true,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "password": {
-          "description": "The password to use to decrypt the source file into the destination file. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
-          "name": "password",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "decrypt",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "decrypt",
-        "index.js"
-      ]
-    },
     "config": {
       "aliases": [],
       "args": {},
-      "description": "Command used to set up the configuration files and the nemesis block for the current network",
+      "description": "commands.config.description",
       "examples": [
         "$ symbol-bootstrap config -p bootstrap",
         "$ symbol-bootstrap config -p testnet -a dual --password 1234",
@@ -212,14 +196,14 @@
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -227,21 +211,21 @@
           "type": "option"
         },
         "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "description": "flags.password.description",
           "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "description": "flags.noPassword.description",
           "name": "noPassword",
           "allowNo": false,
           "type": "boolean"
         },
         "preset": {
           "char": "p",
-          "description": "The network preset. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: bootstrap, testnet, mainnet, my-custom-network.yml (advanced, only for custom networks).",
+          "description": "flags.config.preset.description|||{\"preset\":\"bootstrap, testnet, mainnet\"}",
           "name": "preset",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -249,7 +233,7 @@
         },
         "assembly": {
           "char": "a",
-          "description": "The assembly that defines the node(s) layout. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: dual, peer, api, demo, multinode, services, my-custom-assembly.yml (advanced).",
+          "description": "flags.config.assembly.description|||{\"assembly\":\"dual, peer, api, demo, multinode, services\"}",
           "name": "assembly",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -257,7 +241,7 @@
         },
         "customPreset": {
           "char": "c",
-          "description": "External preset file. Values in this file will override the provided presets.",
+          "description": "flags.config.customPreset.description",
           "name": "customPreset",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -265,32 +249,33 @@
         },
         "reset": {
           "char": "r",
-          "description": "It resets the configuration generating a new one.",
+          "description": "flags.config.reset.description",
           "name": "reset",
           "allowNo": false,
           "type": "boolean"
         },
         "upgrade": {
-          "description": "It regenerates the configuration reusing the previous keys. Use this flag when upgrading the version of bootstrap to keep your node up to date without dropping the local data. Backup the target folder before upgrading.",
+          "char": "u",
+          "description": "flags.config.upgrade.description",
           "name": "upgrade",
           "allowNo": false,
           "type": "boolean"
         },
         "offline": {
-          "description": "If --offline is used, Bootstrap resolves the configuration without querying the running network.",
+          "description": "flags.offline.description",
           "name": "offline",
           "allowNo": false,
           "type": "boolean"
         },
         "report": {
-          "description": "It generates reStructuredText (.rst) reports describing the configuration of each node.",
+          "description": "flags.config.report.description",
           "name": "report",
           "allowNo": false,
           "type": "boolean"
         },
         "user": {
           "char": "u",
-          "description": "User used to run docker images when creating configuration files like certificates or nemesis block. \"current\" means the current user.",
+          "description": "flags.config.user.description|||{\"currentUser\":\"current\"}",
           "name": "user",
           "default": "current",
           "hasDynamicHelp": false,
@@ -298,7 +283,7 @@
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -309,8 +294,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "config",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -322,10 +307,77 @@
         "index.js"
       ]
     },
+    "decrypt": {
+      "aliases": [],
+      "args": {},
+      "description": "commands.decrypt.description",
+      "examples": [
+        "\n$ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n$ symbol-bootstrap decrypt --password 1234 --source target/addresses.yml --destination plain-addresses.yml\n$ symbol-bootstrap decrypt --password 1234 --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml\n        ",
+        "\n$ symbol-bootstrap start --preset testnet --assembly dual --customPreset decrypted-custom-preset.yml --detached\n> password prompt\n$ symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n> password prompt (enter the same password)\n$ symbol-bootstrap decrypt --source encrypted-custom-preset.yml --destination plain-custom-preset.yml\n> password prompt (enter the same password)\n$ cat plain-addresses.yml\n$ cat plain-custom-preset.yml\n$ rm plain-addresses.yml\n$ rm plain-custom-preset.yml",
+        "\n$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap decrypt --source target/addresses.yml --destination plain-addresses.yml\n"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "flags.help.description",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "source": {
+          "char": "s",
+          "description": "flags.decrypt.source.description",
+          "name": "source",
+          "required": true,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "destination": {
+          "char": "d",
+          "description": "flags.decrypt.destination.description",
+          "name": "destination",
+          "required": true,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "password": {
+          "description": "flags.decrypt.password.description",
+          "name": "password",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
+          "name": "logger",
+          "default": "Console",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "decrypt",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "decrypt",
+        "index.js"
+      ]
+    },
     "encrypt": {
       "aliases": [],
       "args": {},
-      "description": "It encrypts a yml file using the provided password. The source files would be a custom preset file, a preset.yml file or an addresses.yml.\n\nThe main use case of this command is encrypting custom presets files. If your custom preset contains private keys, it's highly recommended to encrypt it and use provide --password when starting or configuring the node with Bootstrap.",
+      "description": "commands.encrypt.description",
       "examples": [
         "\n$ symbol-bootstrap encrypt --source plain-custom-preset.yml --destination encrypted-custom-preset.yml\n> password prompt\n$ symbol-bootstrap start --preset testnet --assembly dual --customPreset encrypted-custom-preset.yml\n> password prompt (enter the same password)\n        ",
         "\n$ symbol-bootstrap encrypt --password 1234 --source plain-custom-preset.yml --destination encrypted-custom-preset.yml\n$ symbol-bootstrap start --password 1234 --preset testnet --assembly dual --customPreset encrypted-custom-preset.yml\n",
@@ -334,13 +386,14 @@
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "source": {
-          "description": "The source plain yml file to be encrypted. If this file is encrypted, the command will raise an error.",
+          "char": "s",
+          "description": "flags.encrypt.source.description",
           "name": "source",
           "required": true,
           "hasDynamicHelp": false,
@@ -348,7 +401,8 @@
           "type": "option"
         },
         "destination": {
-          "description": "The destination encrypted file to create. The destination file must not exist.",
+          "char": "d",
+          "description": "flags.encrypt.destination.description",
           "name": "destination",
           "required": true,
           "hasDynamicHelp": false,
@@ -356,14 +410,14 @@
           "type": "option"
         },
         "password": {
-          "description": "The password to use to encrypt the source file into the destination file. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "description": "flags.encrypt.password.description",
           "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console",
           "hasDynamicHelp": false,
@@ -374,8 +428,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "encrypt",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -387,10 +441,59 @@
         "index.js"
       ]
     },
+    "healthCheck": {
+      "aliases": [],
+      "args": {},
+      "description": "commands.healthCheck.description",
+      "examples": [
+        "$ symbol-bootstrap healthCheck\n$ symbol-bootstrap checkHealth"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "flags.help.description",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "flags.target.description",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "healthCheck",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "healthCheck",
+        "index.js"
+      ]
+    },
     "link": {
       "aliases": [],
       "args": {},
-      "description": "It announces VRF and Voting Link transactions to the network for each node with 'Peer' or 'Voting' roles. This command finalizes the node registration to an existing network.",
+      "description": "commands.link.description",
       "examples": [
         "$ symbol-bootstrap link",
         "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap link --unlink --useKnownRestGateways"
@@ -398,14 +501,14 @@
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -413,27 +516,27 @@
           "type": "option"
         },
         "unlink": {
-          "description": "Perform \"Unlink\" transactions unlinking the voting and VRF keys from the node signer account",
+          "description": "flags.link.unlink.description",
           "name": "unlink",
           "allowNo": false,
           "type": "boolean"
         },
         "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "description": "flags.password.description",
           "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "description": "flags.noPassword.description",
           "name": "noPassword",
           "allowNo": false,
           "type": "boolean"
         },
         "url": {
           "char": "u",
-          "description": "the network url",
+          "description": "flags.announce.url.description",
           "name": "url",
           "default": "http://localhost:3000",
           "hasDynamicHelp": false,
@@ -441,19 +544,19 @@
           "type": "option"
         },
         "useKnownRestGateways": {
-          "description": "Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.",
+          "description": "flags.announce.useKnownRestGateways.description",
           "name": "useKnownRestGateways",
           "allowNo": false,
           "type": "boolean"
         },
         "ready": {
-          "description": "If --ready is provided, the command will not ask for confirmation when announcing transactions.",
+          "description": "flags.announce.ready.description",
           "name": "ready",
           "allowNo": false,
           "type": "boolean"
         },
         "maxFee": {
-          "description": "the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.",
+          "description": "flags.announce.maxFee.description",
           "name": "maxFee",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -461,22 +564,21 @@
         },
         "customPreset": {
           "char": "c",
-          "description": "This command uses the encrypted addresses.yml to resolve the main private key. If the main private is only stored in the custom preset, you can provide it using this param. Otherwise, the command may ask for it when required.",
+          "description": "flags.announce.customPreset.description",
           "name": "customPreset",
-          "required": false,
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "serviceProviderPublicKey": {
-          "description": "Public key of the service provider account, used when the transaction announcer(service provider account) is different than the main account private key holder",
+          "description": "flags.announce.serviceProviderPublicKey.description",
           "name": "serviceProviderPublicKey",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console",
           "hasDynamicHelp": false,
@@ -487,8 +589,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "link",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -503,7 +605,7 @@
     "modifyMultisig": {
       "aliases": [],
       "args": {},
-      "description": "Create or modify a multisig account",
+      "description": "commands.modifyMultisig.description",
       "examples": [
         "$ symbol-bootstrap modifyMultisig",
         "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap modifyMultisig --useKnownRestGateways"
@@ -511,14 +613,14 @@
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -527,7 +629,7 @@
         },
         "minRemovalDelta": {
           "char": "r",
-          "description": "Delta of signatures needed to remove a cosignatory. 0 means no change, a positive(+) number means increment and a negative(-) number means decrement to the actual value.",
+          "description": "flags.modifyMultisig.minRemovalDelta.description",
           "name": "minRemovalDelta",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -535,7 +637,7 @@
         },
         "minApprovalDelta": {
           "char": "a",
-          "description": "Delta of signatures needed to approve a transaction. 0 means no change, a positive(+) number means increment and a negative(-) number means decrement to the actual value.",
+          "description": "flags.modifyMultisig.minApprovalDelta.description",
           "name": "minApprovalDelta",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -543,7 +645,7 @@
         },
         "addressAdditions": {
           "char": "A",
-          "description": "Cosignatory accounts addresses to be added (separated by a comma).",
+          "description": "flags.modifyMultisig.addressAdditions.description",
           "name": "addressAdditions",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -551,28 +653,28 @@
         },
         "addressDeletions": {
           "char": "D",
-          "description": "Cosignatory accounts addresses to be removed (separated by a comma).",
+          "description": "flags.modifyMultisig.addressDeletions.description",
           "name": "addressDeletions",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "description": "flags.password.description",
           "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "description": "flags.noPassword.description",
           "name": "noPassword",
           "allowNo": false,
           "type": "boolean"
         },
         "url": {
           "char": "u",
-          "description": "the network url",
+          "description": "flags.announce.url.description",
           "name": "url",
           "default": "http://localhost:3000",
           "hasDynamicHelp": false,
@@ -580,19 +682,19 @@
           "type": "option"
         },
         "useKnownRestGateways": {
-          "description": "Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.",
+          "description": "flags.announce.useKnownRestGateways.description",
           "name": "useKnownRestGateways",
           "allowNo": false,
           "type": "boolean"
         },
         "ready": {
-          "description": "If --ready is provided, the command will not ask for confirmation when announcing transactions.",
+          "description": "flags.announce.ready.description",
           "name": "ready",
           "allowNo": false,
           "type": "boolean"
         },
         "maxFee": {
-          "description": "the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.",
+          "description": "flags.announce.maxFee.description",
           "name": "maxFee",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -600,22 +702,21 @@
         },
         "customPreset": {
           "char": "c",
-          "description": "This command uses the encrypted addresses.yml to resolve the main private key. If the main private is only stored in the custom preset, you can provide it using this param. Otherwise, the command may ask for it when required.",
+          "description": "flags.announce.customPreset.description",
           "name": "customPreset",
-          "required": false,
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "serviceProviderPublicKey": {
-          "description": "Public key of the service provider account, used when the transaction announcer(service provider account) is different than the main account private key holder",
+          "description": "flags.announce.serviceProviderPublicKey.description",
           "name": "serviceProviderPublicKey",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console",
           "hasDynamicHelp": false,
@@ -626,8 +727,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "modifyMultisig",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -639,59 +740,10 @@
         "index.js"
       ]
     },
-    "healthCheck": {
-      "aliases": [],
-      "args": {},
-      "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
-      "examples": [
-        "$ symbol-bootstrap healthCheck"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "healthCheck",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "healthCheck",
-        "index.js"
-      ]
-    },
     "pack": {
       "aliases": [],
       "args": {},
-      "description": "It configures and packages your node into a zip file that can be uploaded to the final node machine.",
+      "description": "commands.pack.description",
       "examples": [
         "$ symbol-bootstrap pack",
         "$ symbol-bootstrap pack -c custom-preset.yml",
@@ -702,14 +754,14 @@
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -717,33 +769,34 @@
           "type": "option"
         },
         "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "description": "flags.password.description",
           "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "description": "flags.noPassword.description",
           "name": "noPassword",
           "allowNo": false,
           "type": "boolean"
         },
         "upgrade": {
-          "description": "It regenerates the configuration reusing the previous keys. Use this flag when upgrading the version of bootstrap to keep your node up to date without dropping the local data. Backup the target folder before upgrading.",
+          "char": "u",
+          "description": "flags.config.upgrade.description",
           "name": "upgrade",
           "allowNo": false,
           "type": "boolean"
         },
         "offline": {
-          "description": "If --offline is used, Bootstrap resolves the configuration without querying the running network.",
+          "description": "flags.offline.description",
           "name": "offline",
           "allowNo": false,
           "type": "boolean"
         },
         "user": {
           "char": "u",
-          "description": "User used to run docker images when creating configuration files like certificates or nemesis block. \"current\" means the current user.",
+          "description": "flags.config.user.description|||{\"currentUser\":\"current\"}",
           "name": "user",
           "default": "current",
           "hasDynamicHelp": false,
@@ -751,7 +804,7 @@
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console",
           "hasDynamicHelp": false,
@@ -760,7 +813,7 @@
         },
         "preset": {
           "char": "p",
-          "description": "The network preset. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: bootstrap, testnet, mainnet, my-custom-network.yml (advanced, only for custom networks).",
+          "description": "flags.config.preset.description|||{\"preset\":\"bootstrap, testnet, mainnet\"}",
           "name": "preset",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -768,7 +821,7 @@
         },
         "assembly": {
           "char": "a",
-          "description": "The assembly that defines the node(s) layout. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: dual, peer, api, demo, multinode, services, my-custom-assembly.yml (advanced).",
+          "description": "flags.config.assembly.description|||{\"assembly\":\"dual, peer, api, demo, multinode, services\"}",
           "name": "assembly",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -776,7 +829,7 @@
         },
         "customPreset": {
           "char": "c",
-          "description": "External preset file. Values in this file will override the provided presets.",
+          "description": "flags.config.customPreset.description",
           "name": "customPreset",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -784,19 +837,19 @@
         },
         "reset": {
           "char": "r",
-          "description": "It resets the configuration generating a new one.",
+          "description": "flags.config.reset.description",
           "name": "reset",
           "allowNo": false,
           "type": "boolean"
         },
         "report": {
-          "description": "It generates reStructuredText (.rst) reports describing the configuration of each node.",
+          "description": "flags.config.report.description",
           "name": "report",
           "allowNo": false,
           "type": "boolean"
         },
         "ready": {
-          "description": "If --ready is provided, the command will not ask offline confirmation.",
+          "description": "flags.pack.ready.description",
           "name": "ready",
           "allowNo": false,
           "type": "boolean"
@@ -805,8 +858,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "pack",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -821,21 +874,21 @@
     "renewCertificates": {
       "aliases": [],
       "args": {},
-      "description": "It renews the SSL certificates of the node regenerating the node.csr.pem files but reusing the current private keys.\n\nThe certificates are only regenerated when they are closed to expiration (30 days). If you want to renew anyway, use the --force param.\n\nThis command does not change the node private key (yet). This change would require a harvesters.dat migration and relinking the node key.\n\nIt's recommended to backup the target folder before running this operation!\n",
+      "description": "commands.renewCertificates.description",
       "examples": [
         "$ symbol-bootstrap renewCertificates"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -843,30 +896,29 @@
           "type": "option"
         },
         "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "description": "flags.password.description",
           "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "description": "flags.noPassword.description",
           "name": "noPassword",
           "allowNo": false,
           "type": "boolean"
         },
         "customPreset": {
           "char": "c",
-          "description": "This command uses the encrypted addresses.yml to resolve the main and transport private key. If the main and transport privates are only stored in the custom preset, you can provide them using this param. Otherwise, the command may ask for them when required.",
+          "description": "flags.renewCertificates.customPreset.description",
           "name": "customPreset",
-          "required": false,
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "user": {
           "char": "u",
-          "description": "User used to run docker images when generating the certificates. \"current\" means the current user.",
+          "description": "flags.renewCertificates.user.description|||{\"currentUser\":\"current\"}",
           "name": "user",
           "default": "current",
           "hasDynamicHelp": false,
@@ -874,13 +926,13 @@
           "type": "option"
         },
         "force": {
-          "description": "Renew the certificates even though they are not close to expire.",
+          "description": "flags.renewCertificates.force.description",
           "name": "force",
           "allowNo": false,
           "type": "boolean"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -891,8 +943,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "renewCertificates",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -907,21 +959,21 @@
     "report": {
       "aliases": [],
       "args": {},
-      "description": "it generates reStructuredText (.rst) reports describing the configuration of each node.",
+      "description": "commands.report.description",
       "examples": [
         "$ symbol-bootstrap report"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -929,7 +981,7 @@
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -940,8 +992,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "report",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -956,21 +1008,21 @@
     "resetData": {
       "aliases": [],
       "args": {},
-      "description": "It removes the data keeping the generated configuration, certificates, keys and block 1.",
+      "description": "commands.resetData.description",
       "examples": [
         "$ symbol-bootstrap resetData"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -978,7 +1030,7 @@
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -989,8 +1041,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "resetData",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -1005,21 +1057,21 @@
     "run": {
       "aliases": [],
       "args": {},
-      "description": "It boots the network via docker using the generated `compose.yml` file and configuration. The config and compose methods/commands need to be called before this method. This is just a wrapper for the `docker compose up` bash call.",
+      "description": "commands.run.description",
       "examples": [
         "$ symbol-bootstrap run"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -1028,31 +1080,31 @@
         },
         "detached": {
           "char": "d",
-          "description": "If provided, docker compose will run with -d (--detached) and this command will wait unit server is running before returning",
+          "description": "flags.run.detached.description",
           "name": "detached",
           "allowNo": false,
           "type": "boolean"
         },
         "healthCheck": {
-          "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
+          "description": "commands.healthCheck.description",
           "name": "healthCheck",
           "allowNo": false,
           "type": "boolean"
         },
         "resetData": {
-          "description": "It reset the database and node data but keeps the generated configuration, keys, voting tree files and block 1",
+          "description": "flags.run.resetData.description",
           "name": "resetData",
           "allowNo": false,
           "type": "boolean"
         },
         "pullImages": {
-          "description": "It pulls the images from DockerHub when running the configuration. It only affects alpha/dev docker images.",
+          "description": "flags.run.pullImages.description",
           "name": "pullImages",
           "allowNo": false,
           "type": "boolean"
         },
         "args": {
-          "description": "Add extra arguments to the docker compose up command. Check out https://docs.docker.com/compose/reference/up.",
+          "description": "flags.run.args.description",
           "name": "args",
           "hasDynamicHelp": false,
           "multiple": true,
@@ -1060,13 +1112,13 @@
         },
         "build": {
           "char": "b",
-          "description": "If provided, docker compose will run with -b (--build)",
+          "description": "flags.run.build.description",
           "name": "build",
           "allowNo": false,
           "type": "boolean"
         },
         "timeout": {
-          "description": "If running in detached mode, how long before timing out (in milliseconds)",
+          "description": "flags.run.timeout.description",
           "name": "timeout",
           "default": 60000,
           "hasDynamicHelp": false,
@@ -1074,7 +1126,7 @@
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -1085,8 +1137,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "run",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -1101,7 +1153,7 @@
     "start": {
       "aliases": [],
       "args": {},
-      "description": "Single command that aggregates config, compose and run in one line!",
+      "description": "commands.start.description",
       "examples": [
         "$ symbol-bootstrap start -p bootstrap",
         "$ symbol-bootstrap start -p testnet -a dual",
@@ -1114,14 +1166,14 @@
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -1129,33 +1181,34 @@
           "type": "option"
         },
         "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "description": "flags.password.description",
           "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "description": "flags.noPassword.description",
           "name": "noPassword",
           "allowNo": false,
           "type": "boolean"
         },
         "upgrade": {
-          "description": "It regenerates the configuration reusing the previous keys. Use this flag when upgrading the version of bootstrap to keep your node up to date without dropping the local data. Backup the target folder before upgrading.",
+          "char": "u",
+          "description": "flags.config.upgrade.description",
           "name": "upgrade",
           "allowNo": false,
           "type": "boolean"
         },
         "offline": {
-          "description": "If --offline is used, Bootstrap resolves the configuration without querying the running network.",
+          "description": "flags.offline.description",
           "name": "offline",
           "allowNo": false,
           "type": "boolean"
         },
         "user": {
           "char": "u",
-          "description": "User used to run docker images when creating configuration files like certificates or nemesis block. \"current\" means the current user.",
+          "description": "flags.config.user.description|||{\"currentUser\":\"current\"}",
           "name": "user",
           "default": "current",
           "hasDynamicHelp": false,
@@ -1163,7 +1216,7 @@
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -1172,31 +1225,31 @@
         },
         "detached": {
           "char": "d",
-          "description": "If provided, docker compose will run with -d (--detached) and this command will wait unit server is running before returning",
+          "description": "flags.run.detached.description",
           "name": "detached",
           "allowNo": false,
           "type": "boolean"
         },
         "healthCheck": {
-          "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
+          "description": "commands.healthCheck.description",
           "name": "healthCheck",
           "allowNo": false,
           "type": "boolean"
         },
         "resetData": {
-          "description": "It reset the database and node data but keeps the generated configuration, keys, voting tree files and block 1",
+          "description": "flags.run.resetData.description",
           "name": "resetData",
           "allowNo": false,
           "type": "boolean"
         },
         "pullImages": {
-          "description": "It pulls the images from DockerHub when running the configuration. It only affects alpha/dev docker images.",
+          "description": "flags.run.pullImages.description",
           "name": "pullImages",
           "allowNo": false,
           "type": "boolean"
         },
         "args": {
-          "description": "Add extra arguments to the docker compose up command. Check out https://docs.docker.com/compose/reference/up.",
+          "description": "flags.run.args.description",
           "name": "args",
           "hasDynamicHelp": false,
           "multiple": true,
@@ -1204,13 +1257,13 @@
         },
         "build": {
           "char": "b",
-          "description": "If provided, docker compose will run with -b (--build)",
+          "description": "flags.run.build.description",
           "name": "build",
           "allowNo": false,
           "type": "boolean"
         },
         "timeout": {
-          "description": "If running in detached mode, how long before timing out (in milliseconds)",
+          "description": "flags.run.timeout.description",
           "name": "timeout",
           "default": 60000,
           "hasDynamicHelp": false,
@@ -1219,7 +1272,7 @@
         },
         "preset": {
           "char": "p",
-          "description": "The network preset. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: bootstrap, testnet, mainnet, my-custom-network.yml (advanced, only for custom networks).",
+          "description": "flags.config.preset.description|||{\"preset\":\"bootstrap, testnet, mainnet\"}",
           "name": "preset",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -1227,7 +1280,7 @@
         },
         "assembly": {
           "char": "a",
-          "description": "The assembly that defines the node(s) layout. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: dual, peer, api, demo, multinode, services, my-custom-assembly.yml (advanced).",
+          "description": "flags.config.assembly.description|||{\"assembly\":\"dual, peer, api, demo, multinode, services\"}",
           "name": "assembly",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -1235,7 +1288,7 @@
         },
         "customPreset": {
           "char": "c",
-          "description": "External preset file. Values in this file will override the provided presets.",
+          "description": "flags.config.customPreset.description",
           "name": "customPreset",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -1243,13 +1296,13 @@
         },
         "reset": {
           "char": "r",
-          "description": "It resets the configuration generating a new one.",
+          "description": "flags.config.reset.description",
           "name": "reset",
           "allowNo": false,
           "type": "boolean"
         },
         "report": {
-          "description": "It generates reStructuredText (.rst) reports describing the configuration of each node.",
+          "description": "flags.config.report.description",
           "name": "report",
           "allowNo": false,
           "type": "boolean"
@@ -1258,8 +1311,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "start",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -1274,21 +1327,21 @@
     "stop": {
       "aliases": [],
       "args": {},
-      "description": "It stops the docker compose network if running (symbol-bootstrap started with --detached). This is just a wrapper for the `docker compose down` bash call.",
+      "description": "commands.stop.description",
       "examples": [
         "$ symbol-bootstrap stop"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -1296,7 +1349,7 @@
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -1307,8 +1360,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "stop",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -1323,21 +1376,21 @@
     "updateVotingKeys": {
       "aliases": [],
       "args": {},
-      "description": "It updates the voting files containing the voting keys when required.\n\nIf the node's current voting file has an end epoch close to the current network epoch, this command will create a new 'private_key_treeX.dat' that continues the current file.\n\nBy default, bootstrap creates a new voting file once the current file reaches its last month. The current network epoch is resolved from the network or you can provide it with the `finalizationEpoch` param.\n\nWhen a new voting file is created, Bootstrap will advise running the `link` command again.\n\n",
+      "description": "commands.updateVotingKeys.description",
       "examples": [
         "$ symbol-bootstrap updateVotingKeys"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -1346,7 +1399,7 @@
         },
         "user": {
           "char": "u",
-          "description": "User used to run docker images when creating the the voting key files. \"current\" means the current user.",
+          "description": "flags.updateVotingKeys.user.description|||{\"currentUser\":\"current\"}",
           "name": "user",
           "default": "current",
           "hasDynamicHelp": false,
@@ -1354,14 +1407,14 @@
           "type": "option"
         },
         "finalizationEpoch": {
-          "description": "The network's finalization epoch. It can be retrieved from the /chain/info rest endpoint. If not provided, the bootstrap known epoch is used.",
+          "description": "flags.updateVotingKeys.finalizationEpoch.description",
           "name": "finalizationEpoch",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -1372,8 +1425,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "updateVotingKeys",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -1388,20 +1441,20 @@
     "verify": {
       "aliases": [],
       "args": {},
-      "description": "It tests the installed software in the current computer reporting if there is any missing dependency, invalid version, or software related issue.",
+      "description": "commands.verify.description",
       "examples": [
         "$ symbol-bootstrap verify"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console,File",
           "hasDynamicHelp": false,
@@ -1412,8 +1465,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "verify",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -1428,21 +1481,21 @@
     "wizard": {
       "aliases": [],
       "args": {},
-      "description": "An utility command that will help you configuring node!",
+      "description": "commands.wizard.description",
       "examples": [
         "$ symbol-bootstrap wizard"
       ],
       "flags": {
         "help": {
           "char": "h",
-          "description": "It shows the help of this command.",
+          "description": "flags.help.description",
           "name": "help",
           "allowNo": false,
           "type": "boolean"
         },
         "target": {
           "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
+          "description": "flags.target.description",
           "name": "target",
           "default": "target",
           "hasDynamicHelp": false,
@@ -1450,14 +1503,14 @@
           "type": "option"
         },
         "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "description": "flags.password.description",
           "name": "password",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
         },
         "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "description": "flags.noPassword.description",
           "name": "noPassword",
           "allowNo": false,
           "type": "boolean"
@@ -1491,7 +1544,7 @@
           "type": "boolean"
         },
         "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
           "name": "logger",
           "default": "Console",
           "hasDynamicHelp": false,
@@ -1502,8 +1555,8 @@
       "hasDynamicHelp": false,
       "hiddenAliases": [],
       "id": "wizard",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
       "pluginType": "core",
       "strict": true,
       "enableJsonFlag": false,
@@ -1516,5 +1569,5 @@
       ]
     }
   },
-  "version": "2.0.5"
+  "version": "2.0.6"
 }

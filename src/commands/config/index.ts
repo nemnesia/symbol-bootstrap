@@ -23,11 +23,12 @@ import {
   CommandUtils,
   ConfigService,
   Constants,
+  keyWithOptions,
   Preset,
 } from '../../service/index.js';
 
 export default class Config extends Command {
-  static description = 'Command used to set up the configuration files and the nemesis block for the current network';
+  static description = 'commands.config.description';
 
   static examples = [
     `$ symbol-bootstrap config -p bootstrap`,
@@ -38,55 +39,63 @@ export default class Config extends Command {
     `$ echo "$MY_ENV_VAR_PASSWORD" | symbol-bootstrap config -p testnet -a dual`,
   ];
 
+  static getPresetFlag() {
+    const param = { preset: Object.keys(Preset).join(', ') };
+    return Flags.string({
+      char: 'p',
+      description: keyWithOptions('flags.config.preset.description', param),
+    });
+  }
+  static getAssemblyFlag() {
+    const param = { assembly: Object.keys(Assembly).join(', ') };
+    return Flags.string({
+      char: 'a',
+      description: keyWithOptions('flags.config.assembly.description', param),
+    });
+  }
+  static getUserFlag() {
+    const param = { currentUser: Constants.CURRENT_USER };
+    return Flags.string({
+      char: 'u',
+      description: keyWithOptions('flags.config.user.description', param),
+      default: Constants.CURRENT_USER,
+    });
+  }
+
   static flags = {
     help: CommandUtils.helpFlag,
     target: CommandUtils.targetFlag,
     password: CommandUtils.passwordFlag,
     noPassword: CommandUtils.noPasswordFlag,
-    preset: Flags.string({
-      char: 'p',
-      description: `The network preset. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: ${Object.keys(
-        Preset,
-      ).join(', ')}, my-custom-network.yml (advanced, only for custom networks).`,
-    }),
-    assembly: Flags.string({
-      char: 'a',
-      description: `The assembly that defines the node(s) layout. It can be provided via custom preset or cli parameter. If not provided, the value is resolved from the target/preset.yml file. Options are: ${Object.keys(
-        Assembly,
-      ).join(', ')}, my-custom-assembly.yml (advanced).`,
-    }),
+    preset: this.getPresetFlag(),
+    assembly: this.getAssemblyFlag(),
     customPreset: Flags.string({
       char: 'c',
-      description: `External preset file. Values in this file will override the provided presets.`,
+      description: 'flags.config.customPreset.description',
     }),
     reset: Flags.boolean({
       char: 'r',
-      description: 'It resets the configuration generating a new one.',
+      description: 'flags.config.reset.description',
       default: ConfigService.defaultParams.reset,
     }),
-
     upgrade: Flags.boolean({
-      description: `It regenerates the configuration reusing the previous keys. Use this flag when upgrading the version of bootstrap to keep your node up to date without dropping the local data. Backup the target folder before upgrading.`,
-      default: ConfigService.defaultParams.reset,
+      char: 'u',
+      description: 'flags.config.upgrade.description',
+      default: ConfigService.defaultParams.upgrade,
     }),
     offline: CommandUtils.offlineFlag,
     report: Flags.boolean({
-      description: 'It generates reStructuredText (.rst) reports describing the configuration of each node.',
+      description: 'flags.config.report.description',
       default: ConfigService.defaultParams.report,
     }),
-
-    user: Flags.string({
-      char: 'u',
-      description: `User used to run docker images when creating configuration files like certificates or nemesis block. "${Constants.CURRENT_USER}" means the current user.`,
-      default: Constants.CURRENT_USER,
-    }),
+    user: this.getUserFlag(),
     logger: CommandUtils.getLoggerFlag(...System),
   };
 
   public async run(): Promise<void> {
+    CommandUtils.showBanner();
     const { flags } = await this.parse(Config);
     const logger = LoggerFactory.getLogger(flags.logger);
-    CommandUtils.showBanner();
     flags.password = await CommandUtils.resolvePassword(
       logger,
       flags.password,

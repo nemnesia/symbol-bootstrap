@@ -19,7 +19,7 @@ import { LoggerFactory, System } from '../../logger/index.js';
 import { CommandUtils, FileSystemService } from '../../service/index.js';
 
 export default class Clean extends Command {
-  static description = 'It removes the target folder deleting the generated configuration and data';
+  static description = 'commands.clean.description';
 
   static examples = [`$ symbol-bootstrap clean`];
 
@@ -30,8 +30,8 @@ export default class Clean extends Command {
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Clean);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(Clean);
     const logger = LoggerFactory.getLogger(flags.logger);
     new FileSystemService(logger).deleteFolder(flags.target);
   }

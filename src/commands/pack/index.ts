@@ -17,6 +17,7 @@
 import { confirm } from '@inquirer/prompts';
 import { Command, Flags } from '@oclif/core';
 import { existsSync } from 'fs';
+import { t } from 'i18next';
 import { dirname, join } from 'path';
 import { LoggerFactory, LogType } from '../../logger/index.js';
 import {
@@ -35,7 +36,7 @@ import Compose from '../compose/index.js';
 import Config from '../config/index.js';
 
 export default class Pack extends Command {
-  static description = 'It configures and packages your node into a zip file that can be uploaded to the final node machine.';
+  static description = 'commands.pack.description';
 
   static examples = [
     `$ symbol-bootstrap pack`,
@@ -50,30 +51,30 @@ export default class Pack extends Command {
     ...Clean.flags,
     ...Config.flags,
     ready: Flags.boolean({
-      description: 'If --ready is provided, the command will not ask offline confirmation.',
+      description: 'flags.pack.ready.description',
     }),
     logger: CommandUtils.getLoggerFlag(LogType.Console),
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Pack);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(Pack);
     const logger = LoggerFactory.getLogger(flags.logger);
     const targetZip = join(dirname(flags.target), `symbol-node.zip`);
 
     if (existsSync(targetZip)) {
-      throw new Error(`The target zip file ${targetZip} already exist. Do you want to delete it before repackaging your target folder?`);
+      throw new Error(t('messages.pack.error.targetZipExists', { file: targetZip }));
     }
     logger.info('');
     logger.info('');
     if (
       (!flags.ready || flags.offline) &&
       !(await confirm({
-        message: `Symbol Bootstrap is about to start working with sensitive information (certificates and voting file generation) so it is highly recommended that you disconnect from the network before continuing. Say YES if you are offline or if you don't care.`,
+        message: t('messages.pack.warning.offlineRecommended'),
         default: true,
       }))
     ) {
-      logger.info('Come back when you are offline...');
+      logger.info(t('messages.pack.info.comeBackOffline'));
       return;
     }
 
@@ -116,9 +117,9 @@ export default class Pack extends Command {
     ];
 
     await new ZipUtils(logger).zip(targetZip, zipItems);
-    await new FileSystemService(logger).deleteFile(noPrivateKeyTempFile);
+    new FileSystemService(logger).deleteFile(noPrivateKeyTempFile);
     logger.info('');
-    logger.info(`Zip file ${targetZip} has been created. You can unzip it in your node's machine and run:`);
+    logger.info(t('messages.pack.info.zipCreated', { file: targetZip }));
     logger.info(`$ symbol-bootstrap start`);
   }
 }

@@ -19,8 +19,8 @@ import { LoggerFactory, System } from '../../logger/index.js';
 import { CommandUtils, VerifyService } from '../../service/index.js';
 
 export default class Verify extends Command {
-  static description =
-    'It tests the installed software in the current computer reporting if there is any missing dependency, invalid version, or software related issue.';
+  static description = 'commands.verify.description';
+
   static examples = [`$ symbol-bootstrap verify`];
 
   static flags = {

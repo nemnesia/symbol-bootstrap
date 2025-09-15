@@ -16,18 +16,26 @@
 
 import { Command, Flags } from '@oclif/core';
 import { LoggerFactory, LogType } from '../../logger/index.js';
-import { AnnounceService, BootstrapService, CommandUtils, LinkService } from '../../service/index.js';
+import {
+  AnnounceService,
+  BootstrapService,
+  CommandUtils,
+  LinkService,
+} from '../../service/index.js';
 
 export default class Link extends Command {
-  static description = `It announces VRF and Voting Link transactions to the network for each node with 'Peer' or 'Voting' roles. This command finalizes the node registration to an existing network.`;
+  static description = 'commands.link.description';
 
-  static examples = [`$ symbol-bootstrap link`, `$ echo "$MY_ENV_VAR_PASSWORD" | symbol-bootstrap link --unlink --useKnownRestGateways`];
+  static examples = [
+    `$ symbol-bootstrap link`,
+    `$ echo "$MY_ENV_VAR_PASSWORD" | symbol-bootstrap link --unlink --useKnownRestGateways`,
+  ];
 
   static flags = {
     help: CommandUtils.helpFlag,
     target: CommandUtils.targetFlag,
     unlink: Flags.boolean({
-      description: 'Perform "Unlink" transactions unlinking the voting and VRF keys from the node signer account',
+      description: 'flags.link.unlink.description',
       default: LinkService.defaultParams.unlink,
     }),
     ...AnnounceService.flags,
@@ -35,9 +43,9 @@ export default class Link extends Command {
   };
 
   public async run(): Promise<void> {
+    CommandUtils.showBanner();
     const { flags } = await this.parse(Link);
     const logger = LoggerFactory.getLogger(flags.logger);
-    CommandUtils.showBanner();
     flags.password = await CommandUtils.resolvePassword(
       logger,
       flags.password,

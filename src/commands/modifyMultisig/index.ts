@@ -19,7 +19,7 @@ import { LoggerFactory, LogType } from '../../logger/index.js';
 import { AnnounceService, BootstrapService, CommandUtils } from '../../service/index.js';
 
 export default class ModifyMultisig extends Command {
-  static description = `Create or modify a multisig account`;
+  static description = 'commands.modifyMultisig.description';
 
   static examples = [
     `$ symbol-bootstrap modifyMultisig`,
@@ -30,23 +30,19 @@ export default class ModifyMultisig extends Command {
     help: CommandUtils.helpFlag,
     target: CommandUtils.targetFlag,
     minRemovalDelta: Flags.integer({
-      description:
-        'Delta of signatures needed to remove a cosignatory. ' +
-        '0 means no change, a positive(+) number means increment and a negative(-) number means decrement to the actual value.',
+      description: 'flags.modifyMultisig.minRemovalDelta.description',
       char: 'r',
     }),
     minApprovalDelta: Flags.integer({
-      description:
-        'Delta of signatures needed to approve a transaction. ' +
-        '0 means no change, a positive(+) number means increment and a negative(-) number means decrement to the actual value.',
+      description: 'flags.modifyMultisig.minApprovalDelta.description',
       char: 'a',
     }),
     addressAdditions: Flags.string({
-      description: 'Cosignatory accounts addresses to be added (separated by a comma).',
+      description: 'flags.modifyMultisig.addressAdditions.description',
       char: 'A',
     }),
     addressDeletions: Flags.string({
-      description: 'Cosignatory accounts addresses to be removed (separated by a comma).',
+      description: 'flags.modifyMultisig.addressDeletions.description',
       char: 'D',
     }),
     ...AnnounceService.flags,
@@ -54,9 +50,9 @@ export default class ModifyMultisig extends Command {
   };
 
   public async run(): Promise<void> {
+    CommandUtils.showBanner();
     const { flags } = await this.parse(ModifyMultisig);
     const logger = LoggerFactory.getLogger(flags.logger);
-    CommandUtils.showBanner();
     flags.password = await CommandUtils.resolvePassword(
       logger,
       flags.password,

@@ -20,33 +20,37 @@ import { Convert, PublicAccount } from 'symbol-sdk';
 import { Logger, LoggerFactory, LogType } from '../logger/index.js';
 import { Constants } from './Constants.js';
 import { Password } from './YamlUtils.js';
+import { keyWithOptions } from './index.js';
 
 export class CommandUtils {
   public static passwordPromptDefaultMessage = `Enter the password used to encrypt and decrypt custom presets, addresses.yml, and preset.yml files. When providing a password, private keys will be encrypted. Keep this password in a secure place!`;
-  public static helpFlag = Flags.help({ char: 'h', description: 'It shows the help of this command.' });
+  public static helpFlag = Flags.help({ char: 'h', description: 'flags.help.description' });
 
   public static targetFlag = Flags.string({
     char: 't',
-    description: 'The target folder where the symbol-bootstrap network is generated',
+    description: 'flags.target.description',
     default: Constants.defaultTargetFolder,
   });
 
-  public static passwordFlag = CommandUtils.getPasswordFlag(
-    `A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).`,
-  );
+  public static passwordFlag = CommandUtils.getPasswordFlag('flags.password.description');
 
   public static noPasswordFlag = Flags.boolean({
-    description: 'When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.',
+    description: 'flags.noPassword.description',
     default: false,
   });
 
   public static offlineFlag = Flags.boolean({
-    description: 'If --offline is used, Bootstrap resolves the configuration without querying the running network.',
+    description: 'flags.offline.description',
     default: false,
   });
 
   public static showBanner(): void {
-    console.log(figlet.textSync('symbol-bootstrap', { horizontalLayout: 'controlled smushing', font: 'Slant' }));
+    console.log(
+      figlet.textSync('symbol-bootstrap', {
+        horizontalLayout: 'controlled smushing',
+        font: 'Slant',
+      }),
+    );
   }
 
   public static getPasswordFlag(description: string) {
@@ -69,7 +73,9 @@ export class CommandUtils {
   }
 
   public static isValidPrivateKey(input: string): boolean | string {
-    return Convert.isHexString(input, 64) ? true : 'Invalid private key. It must have 64 hex characters.';
+    return Convert.isHexString(input, 64)
+      ? true
+      : 'Invalid private key. It must have 64 hex characters.';
   }
 
   public static async resolvePassword(
@@ -81,7 +87,10 @@ export class CommandUtils {
   ): Promise<string | undefined> {
     if (!providedPassword) {
       if (noPassword) {
-        if (log) logger.warn(`Password has not been provided (--noPassword)! It's recommended to use one for security!`);
+        if (log)
+          logger.warn(
+            `Password has not been provided (--noPassword)! It's recommended to use one for security!`,
+          );
         return undefined;
       }
       const responses = await password({
@@ -90,7 +99,10 @@ export class CommandUtils {
         validate: CommandUtils.isValidPassword,
       });
       if (responses === '' || !responses) {
-        if (log) logger.warn(`Password has not been provided (empty text)! It's recommended to use one for security!`);
+        if (log)
+          logger.warn(
+            `Password has not been provided (empty text)! It's recommended to use one for security!`,
+          );
         return undefined;
       }
       if (log) logger.info(`Password has been provided`);
@@ -114,10 +126,12 @@ export class CommandUtils {
    */
   public static getLoggerFlag(...defaultLogTypes: LogType[]) {
     const options = Object.keys(LogType).map((v) => v as LogType);
+    const param = {
+      options: options.join(LoggerFactory.separator),
+      separator: LoggerFactory.separator,
+    };
     return Flags.string({
-      description: `The loggers the command will use. Options are: ${options.join(LoggerFactory.separator)}. Use '${
-        LoggerFactory.separator
-      }' to select multiple loggers.`,
+      description: keyWithOptions('flags.logger.description', param),
       default: defaultLogTypes.join(LoggerFactory.separator),
     });
   }

@@ -15,6 +15,7 @@
  */
 
 import { Command, Flags } from '@oclif/core';
+import { t } from 'i18next';
 import { LoggerFactory, System } from '../../logger/index.js';
 import { ConfigPreset } from '../../model/index.js';
 import {
@@ -22,6 +23,7 @@ import {
   ConfigLoader,
   Constants,
   CryptoUtils,
+  keyWithOptions,
   RemoteNodeService,
   Utils,
   VotingService,
@@ -29,35 +31,32 @@ import {
 } from '../../service/index.js';
 
 export default class UpdateVotingKeys extends Command {
-  static description = `It updates the voting files containing the voting keys when required.
-
-If the node's current voting file has an end epoch close to the current network epoch, this command will create a new 'private_key_treeX.dat' that continues the current file.
-
-By default, bootstrap creates a new voting file once the current file reaches its last month. The current network epoch is resolved from the network or you can provide it with the \`finalizationEpoch\` param.
-
-When a new voting file is created, Bootstrap will advise running the \`link\` command again.
-
-`;
+  static description = 'commands.updateVotingKeys.description';
 
   static examples = [`$ symbol-bootstrap updateVotingKeys`];
+
+  static userFlag() {
+    const param = { currentUser: Constants.CURRENT_USER };
+    return Flags.string({
+      char: 'u',
+      description: keyWithOptions('flags.updateVotingKeys.user.description', param),
+      default: Constants.CURRENT_USER,
+    });
+  }
 
   static flags = {
     help: CommandUtils.helpFlag,
     target: CommandUtils.targetFlag,
-    user: Flags.string({
-      char: 'u',
-      description: `User used to run docker images when creating the the voting key files. "${Constants.CURRENT_USER}" means the current user.`,
-      default: Constants.CURRENT_USER,
-    }),
+    user: this.userFlag(),
     finalizationEpoch: Flags.integer({
-      description: `The network's finalization epoch. It can be retrieved from the /chain/info rest endpoint. If not provided, the bootstrap known epoch is used.`,
+      description: 'flags.updateVotingKeys.finalizationEpoch.description',
     }),
     logger: CommandUtils.getLoggerFlag(...System),
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(UpdateVotingKeys);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(UpdateVotingKeys);
     const password = false;
     const target = flags.target;
     const logger = LoggerFactory.getLogger(flags.logger);
@@ -73,23 +72,24 @@ When a new voting file is created, Bootstrap will advise running the \`link\` co
       });
     } catch (e) {
       throw new Error(
-        `Node's preset cannot be loaded. Have you provided the right --target? If you have, please rerun the 'config' command with --upgrade. Error: ${Utils.getMessage(
-          e,
-        )}`,
+        t('messages.updateVotingKeys.error.presetCannotBeLoaded', Utils.getMessage(e)),
       );
     }
     const addresses = configLoader.loadExistingAddresses(target, password);
-    const privateKeySecurityMode = CryptoUtils.getPrivateKeySecurityMode(presetData.privateKeySecurityMode);
+    const privateKeySecurityMode = CryptoUtils.getPrivateKeySecurityMode(
+      presetData.privateKeySecurityMode,
+    );
 
     const finalizationEpoch =
-      flags.finalizationEpoch || (await new RemoteNodeService(logger, presetData, false).resolveCurrentFinalizationEpoch());
+      flags.finalizationEpoch ||
+      (await new RemoteNodeService(logger, presetData, false).resolveCurrentFinalizationEpoch());
 
     const votingKeyUpgrade = (
       await Promise.all(
         (presetData.nodes || []).map((nodePreset, index) => {
           const nodeAccount = addresses.nodes?.[index];
           if (!nodeAccount) {
-            throw new Error(`There is not node in addresses at index ${index}`);
+            throw new Error(t('messages.updateVotingKeys.error.nodeNotFound', { index }));
           }
           return new VotingService(logger, {
             target,
@@ -104,11 +104,11 @@ When a new voting file is created, Bootstrap will advise running the \`link\` co
         CryptoUtils.removePrivateKeysAccordingToSecurityMode(addresses, privateKeySecurityMode),
         undefined,
       );
-      logger.warn('Bootstrap has created new voting file(s). Review the logs!');
+      logger.warn(t('messages.updateVotingKeys.info.created'));
       logger.warn('');
     } else {
       logger.info('');
-      logger.info('Voting files are up-to-date. There is nothing to upgrade');
+      logger.info(t('messages.updateVotingKeys.info.upToDate'));
       logger.info('');
     }
   }

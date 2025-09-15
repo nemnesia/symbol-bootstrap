@@ -16,14 +16,19 @@
 
 import { Command } from '@oclif/core';
 import { LoggerFactory } from '../../logger/index.js';
-import { BootstrapAccountResolver, BootstrapService, CommandUtils, Constants } from '../../service/index.js';
+import {
+  BootstrapAccountResolver,
+  BootstrapService,
+  CommandUtils,
+  Constants,
+} from '../../service/index.js';
 import Clean from '../clean/index.js';
 import Compose from '../compose/index.js';
 import Config from '../config/index.js';
 import Run from '../run/index.js';
 
 export default class Start extends Command {
-  static description = 'Single command that aggregates config, compose and run in one line!';
+  static description = 'commands.start.description';
 
   static examples = [
     `$ symbol-bootstrap start -p bootstrap`,
@@ -38,8 +43,8 @@ export default class Start extends Command {
   static flags = { ...Compose.flags, ...Run.flags, ...Clean.flags, ...Config.flags };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Start);
     CommandUtils.showBanner();
+    const { flags } = await this.parse(Start);
     const logger = LoggerFactory.getLogger(flags.logger);
     flags.password = await CommandUtils.resolvePassword(
       logger,

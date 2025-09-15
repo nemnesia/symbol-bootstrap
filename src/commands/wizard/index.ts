@@ -41,7 +41,8 @@ export const assembliesDescriptions: Record<Assembly, string> = {
   [Assembly.peer]: 'Peer Node',
   [Assembly.api]: 'Api Node',
   [Assembly.demo]: 'Demo Node. A dual node that includes a Faucet and Explorer.',
-  [Assembly.multinode]: 'Multinode Node. A docker compose that includes one api, one rest and two peers.',
+  [Assembly.multinode]:
+    'Multinode Node. A docker compose that includes one api, one rest and two peers.',
   [Assembly.services]: 'Services. A docker compose with just Faucet and Explorer.',
 };
 
@@ -59,7 +60,13 @@ export type Network = Preset | CustomNetwork;
 export const assemblies: Record<Network, Assembly[]> = {
   [Preset.mainnet]: [Assembly.dual, Assembly.peer, Assembly.api],
   [Preset.testnet]: [Assembly.dual, Assembly.peer, Assembly.api, Assembly.demo],
-  [Preset.bootstrap]: [Assembly.multinode, Assembly.dual, Assembly.peer, Assembly.api, Assembly.demo],
+  [Preset.bootstrap]: [
+    Assembly.multinode,
+    Assembly.dual,
+    Assembly.peer,
+    Assembly.api,
+    Assembly.demo,
+  ],
   [CustomNetwork.custom]: [Assembly.dual, Assembly.peer, Assembly.api],
 };
 
@@ -72,7 +79,7 @@ export interface ProvidedAccounts {
 }
 
 export default class WizardCommand extends Command {
-  static description = 'An utility command that will help you configuring node!';
+  static description = 'commands.wizard.description';
 
   static examples = [`$ symbol-bootstrap wizard`];
 
@@ -97,7 +104,11 @@ export default class WizardCommand extends Command {
   }
 
   public static getCustomPresetFile() {
-    return Flags.string({ char: 'c', description: 'The custom preset to be created.', default: 'custom-preset.yml' });
+    return Flags.string({
+      char: 'c',
+      description: 'The custom preset to be created.',
+      default: 'custom-preset.yml',
+    });
   }
 
   public async run(): Promise<void> {
@@ -129,7 +140,9 @@ export class Wizard {
 
     const customPresetFile = flags.customPreset;
     if (existsSync(customPresetFile)) {
-      throw new Error(`${customPresetFile} already exist!!! You should move the file somewhere else before overwriting it!`);
+      throw new Error(
+        `${customPresetFile} already exist!!! You should move the file somewhere else before overwriting it!`,
+      );
     }
     if (existsSync(target)) {
       throw new Error(
@@ -178,7 +191,9 @@ export class Wizard {
     this.logger.info(
       'Symbol bootstrap needs to provide the node with a number of key pairs (Read more at https://docs.symbolplatform.com/concepts/cryptography.html#symbol-keys).',
     );
-    this.logger.info(`If you don't know what a key is used for, let Symbol Bootstrap generate a new one for you.`);
+    this.logger.info(
+      `If you don't know what a key is used for, let Symbol Bootstrap generate a new one for you.`,
+    );
 
     const password = await CommandUtils.resolvePassword(
       this.logger,
@@ -234,13 +249,17 @@ export class Wizard {
         };
       } else {
         // HttpsOption.None
-        this.logger.info(`Warning! You've chosen to proceed with http, which is less secure in comparison to https.`);
+        this.logger.info(
+          `Warning! You've chosen to proceed with http, which is less secure in comparison to https.`,
+        );
         return {};
       }
     };
 
     const httpsCustomPreset = await resolveHttpsCustomPreset();
-    const friendlyName = await this.resolveFriendlyName(host || accounts.main.publicKey.substr(0, 7));
+    const friendlyName = await this.resolveFriendlyName(
+      host || accounts.main.publicKey.substr(0, 7),
+    );
     const privateKeySecurityMode = await this.resolvePrivateKeySecurityMode();
     const voting = await this.isVoting();
     const presetContent: CustomPreset = {
@@ -265,11 +284,15 @@ export class Wizard {
     await YamlUtils.writeYaml(customPresetFile, presetContent, password);
     this.logger.info('');
     this.logger.info('');
-    this.logger.info(`The Symbol Bootstrap preset file '${customPresetFile}' has been created!!!. Keep this safe!`);
+    this.logger.info(
+      `The Symbol Bootstrap preset file '${customPresetFile}' has been created!!!. Keep this safe!`,
+    );
     this.logger.info('');
     this.logger.info(`To decrypt the node's private key, run: `);
     this.logger.info('');
-    this.logger.info(`$ symbol-bootstrap decrypt --source ${customPresetFile} --destination plain-custom-preset.yml`);
+    this.logger.info(
+      `$ symbol-bootstrap decrypt --source ${customPresetFile} --destination plain-custom-preset.yml`,
+    );
     this.logger.info('');
     this.logger.info('Remember to delete the plain-custom-preset.yml file after used!!!');
 
@@ -277,13 +300,17 @@ export class Wizard {
       `You can edit this file to further customize it. Read more https://github.com/symbol/symbol-bootstrap/blob/main/docs/presetGuides.md`,
     );
     this.logger.info('');
-    this.logger.info(`Once you have finished the custom preset customization, You can use the 'start' to run the node in this machine:`);
+    this.logger.info(
+      `Once you have finished the custom preset customization, You can use the 'start' to run the node in this machine:`,
+    );
     this.logger.info('');
     const targetParam = target !== defaultParams.target ? `-t ${target}` : '';
     this.logger.info(`$ symbol-bootstrap start -c ${customPresetFile} ${targetParam}`);
 
     this.logger.info('');
-    this.logger.info(`Alternatively, to create a zip file that can be deployed in your node machine you can use the 'pack' command:`);
+    this.logger.info(
+      `Alternatively, to create a zip file that can be deployed in your node machine you can use the 'pack' command:`,
+    );
     this.logger.info('');
     this.logger.info(`$ symbol-bootstrap pack -c ${customPresetFile} ${targetParam}`);
     this.logger.info('');
@@ -302,12 +329,19 @@ export class Wizard {
     this.logger.info(`$ symbol-bootstrap link --useKnownRestGateways -c ${customPresetFile}`);
     this.logger.info('');
   }
-  public logAccount<T extends Account | PublicAccount | undefined>(account: T, keyName: KeyName, showPrivateKeys: boolean): T {
+  public logAccount<T extends Account | PublicAccount | undefined>(
+    account: T,
+    keyName: KeyName,
+    showPrivateKeys: boolean,
+  ): T {
     if (account === undefined) {
       return account;
     }
-    const privateKeyText = showPrivateKeys && account instanceof Account ? `\n\tPrivate Key: ${account.privateKey}` : '';
-    this.logger.info(` - ${keyName}:\n\tAddress:     ${account.address.plain()}\n\tPublic Key:  ${account.publicKey}${privateKeyText}`);
+    const privateKeyText =
+      showPrivateKeys && account instanceof Account ? `\n\tPrivate Key: ${account.privateKey}` : '';
+    this.logger.info(
+      ` - ${keyName}:\n\tAddress:     ${account.address.plain()}\n\tPublic Key:  ${account.publicKey}${privateKeyText}`,
+    );
     return account as T;
   }
 
@@ -325,7 +359,11 @@ export class Wizard {
         KeyName.Transport,
         'It is used by nodes for secure transport over TLS.',
       ),
-      vrf: await this.resolveAccountFromSelection(networkType, KeyName.VRF, 'It is required for harvesting.'),
+      vrf: await this.resolveAccountFromSelection(
+        networkType,
+        KeyName.VRF,
+        'It is required for harvesting.',
+      ),
       remote: await this.resolveAccountFromSelection(
         networkType,
         KeyName.Remote,
@@ -334,7 +372,11 @@ export class Wizard {
     };
   }
 
-  public async resolveAccountFromSelection(networkType: NetworkType, keyName: KeyName, keyDescription: string): Promise<Account> {
+  public async resolveAccountFromSelection(
+    networkType: NetworkType,
+    keyName: KeyName,
+    keyDescription: string,
+  ): Promise<Account> {
     this.logger.info(`${keyName} Key Pair: ${keyDescription}`);
     while (true) {
       const keyCreationChoices = [];
@@ -352,12 +394,18 @@ export class Wizard {
         return account;
       };
       if (keyCreationMode == 'generate') {
-        return log(this.generateAccount(networkType), 'It will be stored in your custom preset. Keep file safe!');
+        return log(
+          this.generateAccount(networkType),
+          'It will be stored in your custom preset. Keep file safe!',
+        );
       }
       // manual
       const account = await this.resolveAccount(networkType, keyName);
       if (account) {
-        return log(account, 'It will be stored in your custom preset. You can recreate the account by providing the private key again!');
+        return log(
+          account,
+          'It will be stored in your custom preset. You can recreate the account by providing the private key again!',
+        );
       }
     }
   }
@@ -366,7 +414,10 @@ export class Wizard {
     return Account.generateNewAccount(networkType);
   }
 
-  public async resolveAccount(networkType: NetworkType, keyName: KeyName): Promise<Account | undefined> {
+  public async resolveAccount(
+    networkType: NetworkType,
+    keyName: KeyName,
+  ): Promise<Account | undefined> {
     while (true) {
       const privateKey = await password({
         message: `Enter the 64 HEX private key of the ${keyName} account (or press enter to select the option again).`,
@@ -451,7 +502,10 @@ export class Wizard {
           name: 'PROMPT_MAIN_TRANSPORT: Bootstrap may ask for the Main and Transport private keys when regenerating certificates. Other keys are encrypted. Recommended for most nodes',
           value: PrivateKeySecurityMode.PROMPT_MAIN_TRANSPORT,
         },
-        { name: 'ENCRYPT: All keys are encrypted, only password would be asked', value: PrivateKeySecurityMode.ENCRYPT },
+        {
+          name: 'ENCRYPT: All keys are encrypted, only password would be asked',
+          value: PrivateKeySecurityMode.ENCRYPT,
+        },
       ],
     });
     return mode;
@@ -496,14 +550,26 @@ export class Wizard {
   }
 
   public async resolveRestSSLKeyAsBase64(): Promise<string> {
-    return this.resolveFileContent('base64', 'Enter your SSL key file path:', 'Invalid path, cannot find SSL key file!');
+    return this.resolveFileContent(
+      'base64',
+      'Enter your SSL key file path:',
+      'Invalid path, cannot find SSL key file!',
+    );
   }
 
   public async resolveRestSSLCertAsBase64(): Promise<string> {
-    return this.resolveFileContent('base64', 'Enter your SSL Certificate file path:', 'Invalid path, cannot find SSL certificate file!');
+    return this.resolveFileContent(
+      'base64',
+      'Enter your SSL Certificate file path:',
+      'Invalid path, cannot find SSL certificate file!',
+    );
   }
 
-  public async resolveFileContent(encoding: 'base64', message: string, notFoundMessage: string): Promise<string> {
+  public async resolveFileContent(
+    encoding: 'base64',
+    message: string,
+    notFoundMessage: string,
+  ): Promise<string> {
     const value = await input({
       message: message,
       validate: (value) => {

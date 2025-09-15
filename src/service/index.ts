@@ -16,6 +16,7 @@ export * from './Constants.js';
 export * from './CryptoUtils.js';
 export * from './FileSystemService.js';
 export * from './HandlebarsUtils.js';
+export * from './I18nService.js';
 export * from './KnownError.js';
 export * from './LinkService.js';
 export * from './MigrationService.js';
