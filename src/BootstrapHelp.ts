@@ -17,7 +17,7 @@ export default class BootstrapHelp extends Help {
         originalRoot = lines.join('\n');
       }
       CommandUtils.showBanner();
-      return '\n' + appDesc + '\n' + originalRoot;
+      return appDesc + '\n' + originalRoot;
     }
     return originalRoot;
   }
@@ -70,7 +70,7 @@ export default class BootstrapHelp extends Help {
     if (c.description) {
       const translatedDesc = t(c.description);
       if (translatedDesc !== c.description) {
-        return '\n' + translatedDesc.replace(/\\n.*$/s, '').trim();
+        return translatedDesc.replace(/\\n.*$/s, '').trim();
       }
     }
     return super.summary(c) || c.description || '';

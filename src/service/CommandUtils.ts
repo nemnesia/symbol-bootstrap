@@ -51,6 +51,7 @@ export class CommandUtils {
         font: 'Slant',
       }),
     );
+    console.log('');
   }
 
   public static getPasswordFlag(description: string) {
