@@ -67,7 +67,10 @@
     "run.build.description": "指定すると、docker composeは-b (--build)で実行されます。",
     "run.timeout.description": "detachedモード時、タイムアウトまでの時間（ミリ秒）",
     "updateVotingKeys.user.description": "投票キー ファイルを作成する際に docker イメージを実行するユーザー。「{{currentUser}}」は現在のユーザーを意味します。",
-    "updateVotingKeys.finalizationEpoch.description": "ネットワークのファイナライゼーションエポック。/chain/info の REST エンドポイントから取得できます。指定しない場合は bootstrap で既知のエポックが使用されます。"
+    "updateVotingKeys.finalizationEpoch.description": "ネットワークのファイナライゼーションエポック。/chain/info の REST エンドポイントから取得できます。指定しない場合は bootstrap で既知のエポックが使用されます。",
+    "wizard.customPreset.description": "作成するカスタムプリセット。",
+    "wizard.network.description": "作成したいノードまたはネットワーク。",
+    "wizard.ready.description": "--readyを指定すると、コマンドはオフライン確認を求めません。"
   },
   "messages": {
     "decrypt.error.sourceNotExist": "入力ファイル {{file}} が存在しません！",

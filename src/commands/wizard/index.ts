@@ -78,10 +78,27 @@ export interface ProvidedAccounts {
   transport: Account;
 }
 
+/**
+ * Oclif ウィザードコマンド
+ */
 export default class WizardCommand extends Command {
   static description = 'commands.wizard.description';
 
   static examples = [`$ symbol-bootstrap wizard`];
+
+  public static getCustomPresetFile() {
+    return Flags.string({
+      char: 'c',
+      description: 'flags.wizard.customPreset.description',
+      default: 'custom-preset.yml',
+    });
+  }
+  public static getNetworkIdFlag(): OptionFlag<Preset> {
+    return Flags.string({
+      description: 'flags.wizard.network.description',
+      options: [...Object.values(Preset), ...Object.values(CustomNetwork)],
+    }) as OptionFlag<Preset>;
+  }
 
   static flags = {
     help: CommandUtils.helpFlag,
@@ -91,27 +108,13 @@ export default class WizardCommand extends Command {
     network: WizardCommand.getNetworkIdFlag(),
     customPreset: WizardCommand.getCustomPresetFile(),
     ready: Flags.boolean({
-      description: 'If --ready is provided, the command will not ask offline confirmation.',
+      description: 'flags.wizard.ready.description',
     }),
     logger: CommandUtils.getLoggerFlag(LogType.Console),
   };
 
-  public static getNetworkIdFlag(): OptionFlag<Preset> {
-    return Flags.string({
-      description: 'The node or network you want to create.',
-      options: [...Object.values(Preset), ...Object.values(CustomNetwork)],
-    }) as OptionFlag<Preset>;
-  }
-
-  public static getCustomPresetFile() {
-    return Flags.string({
-      char: 'c',
-      description: 'The custom preset to be created.',
-      default: 'custom-preset.yml',
-    });
-  }
-
   public async run(): Promise<void> {
+    CommandUtils.showBanner();
     const { flags } = await this.parse(WizardCommand);
     const logger = LoggerFactory.getLogger(flags.logger);
     return new Wizard(logger).execute({ ...flags, workingDir: Constants.defaultWorkingDir });
@@ -120,6 +123,7 @@ export default class WizardCommand extends Command {
 
 export class Wizard {
   constructor(private readonly logger: Logger) {}
+
   public async execute(flags: {
     workingDir: string;
     noPassword: boolean;
@@ -130,7 +134,6 @@ export class Wizard {
     customPreset: string;
     ready?: boolean;
   }): Promise<void> {
-    CommandUtils.showBanner();
     this.logger.info('Welcome to the Symbol Bootstrap wizard! This command will:');
     this.logger.info(' - Guide you through the configuration process.');
     this.logger.info(' - Import or generate private keys.');
@@ -592,7 +595,7 @@ export class Wizard {
       return `Input (${input.length}) is larger than 50`;
     }
     const valid =
-      /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+(?:[A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/.test(
+      /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\]*[a-zA-Z0-9])\.)+(?:[A-Za-z]|[A-Za-z][A-Za-z0-9-]*[A-Za-z0-9])$|^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/.test(
         input,
       );
     return valid ? true : `It's not a valid IP or hostname`;

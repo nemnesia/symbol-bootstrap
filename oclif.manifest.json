@@ -98,89 +98,6 @@
         "index.js"
       ]
     },
-    "compose": {
-      "aliases": [],
-      "args": {},
-      "description": "commands.compose.description",
-      "examples": [
-        "$ symbol-bootstrap compose"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "flags.help.description",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "flags.target.description",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "password": {
-          "description": "flags.password.description",
-          "name": "password",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "noPassword": {
-          "description": "flags.noPassword.description",
-          "name": "noPassword",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "upgrade": {
-          "description": "flags.compose.upgrade.description",
-          "name": "upgrade",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "offline": {
-          "description": "flags.offline.description",
-          "name": "offline",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "user": {
-          "char": "u",
-          "description": "flags.compose.user.description|||{\"currentUser\":\"current\"}",
-          "name": "user",
-          "default": "current",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
-          "name": "logger",
-          "default": "Console,File",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "compose",
-      "pluginAlias": "@nemnesia/symbol-bootstrap",
-      "pluginName": "@nemnesia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "compose",
-        "index.js"
-      ]
-    },
     "config": {
       "aliases": [],
       "args": {},
@@ -304,6 +221,89 @@
         "lib",
         "commands",
         "config",
+        "index.js"
+      ]
+    },
+    "compose": {
+      "aliases": [],
+      "args": {},
+      "description": "commands.compose.description",
+      "examples": [
+        "$ symbol-bootstrap compose"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "flags.help.description",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "flags.target.description",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "password": {
+          "description": "flags.password.description",
+          "name": "password",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "noPassword": {
+          "description": "flags.noPassword.description",
+          "name": "noPassword",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "upgrade": {
+          "description": "flags.compose.upgrade.description",
+          "name": "upgrade",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "offline": {
+          "description": "flags.offline.description",
+          "name": "offline",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "user": {
+          "char": "u",
+          "description": "flags.compose.user.description|||{\"currentUser\":\"current\"}",
+          "name": "user",
+          "default": "current",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "flags.logger.description|||{\"options\":\"Console,File,Silent\",\"separator\":\",\"}",
+          "name": "logger",
+          "default": "Console,File",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "compose",
+      "pluginAlias": "@nemnesia/symbol-bootstrap",
+      "pluginName": "@nemnesia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "compose",
         "index.js"
       ]
     },
@@ -1516,7 +1516,7 @@
           "type": "boolean"
         },
         "network": {
-          "description": "The node or network you want to create.",
+          "description": "flags.wizard.network.description",
           "name": "network",
           "hasDynamicHelp": false,
           "multiple": false,
@@ -1530,7 +1530,7 @@
         },
         "customPreset": {
           "char": "c",
-          "description": "The custom preset to be created.",
+          "description": "flags.wizard.customPreset.description",
           "name": "customPreset",
           "default": "custom-preset.yml",
           "hasDynamicHelp": false,
@@ -1538,7 +1538,7 @@
           "type": "option"
         },
         "ready": {
-          "description": "If --ready is provided, the command will not ask offline confirmation.",
+          "description": "flags.wizard.ready.description",
           "name": "ready",
           "allowNo": false,
           "type": "boolean"

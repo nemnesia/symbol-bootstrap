@@ -67,7 +67,10 @@
     "run.build.description": "If provided, docker compose will run with -b (--build)",
     "run.timeout.description": "If running in detached mode, how long before timing out (in milliseconds)",
     "updateVotingKeys.user.description": "User used to run docker images when creating the the voting key files. \"{{currentUser}}\" means the current user.",
-    "updateVotingKeys.finalizationEpoch.description": "The network's finalization epoch. It can be retrieved from the /chain/info rest endpoint. If not provided, the bootstrap known epoch is used."
+    "updateVotingKeys.finalizationEpoch.description": "The network's finalization epoch. It can be retrieved from the /chain/info rest endpoint. If not provided, the bootstrap known epoch is used.",
+    "wizard.customPreset.description": "The custom preset to be created.",
+    "wizard.network.description": "The node or network you want to create.",
+    "wizard.ready.description": "If --ready is provided, the command will not ask offline confirmation."
   },
   "messages": {
     "decrypt.error.sourceNotExist": "Source file {{file}} does not exist!",
