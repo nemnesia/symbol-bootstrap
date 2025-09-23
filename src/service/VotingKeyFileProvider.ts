@@ -94,6 +94,7 @@ export class CatapultVotingKeyFileProvider implements VotingKeyFileProvider {
       userId: userId,
       cmds: cmd,
       binds: binds,
+      workdir: presetData.catapultAppFolder,
     });
 
     if (stdout.indexOf('<error> ') > -1) {

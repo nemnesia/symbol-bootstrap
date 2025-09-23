@@ -745,6 +745,7 @@ strictAggregateTransactionHash; 1'690'500; ;
 skipSecretLockUniquenessChecks; 3'191'538; ;
 skipSecretLockExpirations; 3'197'860, 3'197'866; ;
 forceSecretLockExpirations; 3'197'458, 3'197'781; ;
+uniqueAggregateTransactionHash; 4'759'100; ;
 
 treasury_reissuance_transaction_signatures
 0BBEADD37539444D75C09A245102D2B883267925398504623835DCD625290DEE4FA2371341050C49C001DEDD1C9FE241EA4A7DB335B2069FD4DAFF77AF734C03; true

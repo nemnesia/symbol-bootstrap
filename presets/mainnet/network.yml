@@ -27,7 +27,7 @@ minVotingKeyLifetime: 112
 maxVotingKeyLifetime: 360
 votingKeyDesiredLifetime: 360
 votingKeyDesiredFutureLifetime: 60
-lastKnownNetworkEpoch: 2984
+lastKnownNetworkEpoch: 3301
 stepDuration: 5m
 maxBlockFutureTime: 300ms
 maxAccountRestrictionValues: 100
@@ -43,6 +43,7 @@ totalVotingBalanceCalculationFix: 528000
 skipSecretLockUniquenessChecks: 3'191'538
 skipSecretLockExpirations: 3'197'860, 3'197'866
 forceSecretLockExpirations: 3'197'458, 3'197'781
+uniqueAggregateTransactionHash: 4'759'100
 treasuryReissuance: 689761
 strictAggregateTransactionHash: 1'690'500
 mosaicRentalFee: 500000

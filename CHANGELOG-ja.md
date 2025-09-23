@@ -4,13 +4,18 @@
 
 変更履歴の形式は[Keep a Changelog](https://keepachangelog.com/en/1.0.0/)に基づいています。
 
-## [2.0.6] - 2025-09-10
+## [2.0.6] - 2025-09-23
 
-**マイルストーン**: Crypto-js互換性の改善
+**マイルストーン**: メインネット(1.0.3.9)
 
 | パッケージ       | バージョン | リンク                                                            |
 | ---------------- | ---------- | ----------------------------------------------------------------- |
 | Symbol Bootstrap | v2.0.6     | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
+
+以下のパッケージを更新する：
+- [Catapult Client v1.0.3.9](https://github.com/symbol/symbol/releases/tag/client%2Fcatapult%2Fv1.0.3.9)
+- [Rest 2.5.1](https://github.com/symbol/symbol/releases/tag/rest%2Fv2.5.1)
+- MongoDB 7.0.23
 
 ### 追加
 - legacy crypto-js 4.1.1互換性サポートと強化された暗号化への自動アップグレード
