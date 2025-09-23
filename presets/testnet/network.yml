@@ -22,7 +22,7 @@ importanceGrouping: 180
 votingSetGrouping: 720
 votingKeyDesiredLifetime: 720
 votingKeyDesiredFutureLifetime: 120
-lastKnownNetworkEpoch: 2984
+lastKnownNetworkEpoch: 3301
 minVotingKeyLifetime: 28
 maxVotingKeyLifetime: 720
 stepDuration: 4m
@@ -38,6 +38,7 @@ rootNamespaceRentalFeePerBlock: 2
 childNamespaceRentalFee: 100000
 totalVotingBalanceCalculationFix: 0
 mosaicRentalFee: 500000
+uniqueAggregateTransactionHash: 2'742'000
 throttlingBurst: 80
 throttlingRate: 60
 fileDatabaseBatchSize: 100

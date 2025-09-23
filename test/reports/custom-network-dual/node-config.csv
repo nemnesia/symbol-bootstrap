@@ -683,6 +683,7 @@ strictAggregateTransactionHash; 0; ;
 skipSecretLockUniquenessChecks; ; ;
 skipSecretLockExpirations; ; ;
 forceSecretLockExpirations; ; ;
+uniqueAggregateTransactionHash; ; ;
 
 
 config-node.properties

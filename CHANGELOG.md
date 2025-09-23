@@ -4,13 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [2.0.6] - 2025-09-10
+## [2.0.6] - 2025-09-23
 
-**Milestone**: Crypto-js compatibility improvements
+**Milestone**: Mainnet(1.0.3.9)
 
 | Package          | Version | Link                                                              |
 | ---------------- | ------- | ----------------------------------------------------------------- |
 | Symbol Bootstrap | v2.0.6  | [symbol-bootstrap](https://github.com/nemneshia/symbol-bootstrap) |
+
+Update the following packages:
+- [Catapult Client v1.0.3.9](https://github.com/symbol/symbol/releases/tag/client%2Fcatapult%2Fv1.0.3.9)
+- [Rest 2.5.1](https://github.com/symbol/symbol/releases/tag/rest%2Fv2.5.1)
+- MongoDB 7.0.23
 
 ### Added
 - Legacy crypto-js 4.1.1 compatibility support with automatic upgrade to stronger encryption

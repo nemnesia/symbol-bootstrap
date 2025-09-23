@@ -708,6 +708,7 @@ config-network.properties
     skipSecretLockUniquenessChecks; ; ;
     skipSecretLockExpirations; ; ;
     forceSecretLockExpirations; ; ;
+    uniqueAggregateTransactionHash; 2'742'000; ;
 
 config-node.properties
 ======================
