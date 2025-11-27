@@ -18,7 +18,6 @@ import { expect } from 'chai';
 import { it } from 'mocha';
 import { Account, NetworkType } from 'symbol-sdk';
 import { BootstrapAccountResolver, KeyName, LoggerFactory, LogType, Utils } from '../../src';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { StdUtils } from '../utils/StdUtils';
 

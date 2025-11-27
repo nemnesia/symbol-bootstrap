@@ -434,7 +434,7 @@ describe('RemoteNodeService', () => {
   it('getRestUrls online', async () => {
     stub(RemoteNodeService.prototype, 'createNodeApiRestClient').callsFake(() => {
       return {
-        getNodes(filter: NodeFilter, limit: number) {
+        getNodes(filter: any, limit: number) {
           expect(filter).eq(presetData.statisticsServiceRestFilter);
           expect(limit).eq(presetData.statisticsServiceRestLimit);
           return list;
@@ -458,7 +458,7 @@ describe('RemoteNodeService', () => {
   it('getRestUrls offline', async () => {
     stub(RemoteNodeService.prototype, 'createNodeApiRestClient').callsFake(() => {
       return {
-        getNodes(filter: NodeFilter, limit: number) {
+        getNodes(filter: any, limit: number) {
           expect(filter).eq(presetData.statisticsServiceRestFilter);
           expect(limit).eq(presetData.statisticsServiceRestLimit);
           return list;
@@ -473,7 +473,7 @@ describe('RemoteNodeService', () => {
   it('getPeerInfos online', async () => {
     stub(RemoteNodeService.prototype, 'createNodeApiRestClient').callsFake(() => {
       return {
-        getNodes(filter: NodeFilter, limit: number) {
+        getNodes(filter: any, limit: number) {
           expect(presetData.statisticsServicePeerFilter).eq('');
           expect(filter).eq(undefined);
           expect(limit).eq(presetData.statisticsServicePeerLimit);
@@ -535,7 +535,7 @@ describe('RemoteNodeService', () => {
   it('getPeerInfos offline', async () => {
     stub(RemoteNodeService.prototype, 'createNodeApiRestClient').callsFake(() => {
       return {
-        getNodes(filter: NodeFilter, limit: number) {
+        getNodes(filter: any, limit: number) {
           expect(filter).eq(presetData.statisticsServicePeerFilter);
           expect(limit).eq(presetData.statisticsServicePeerLimit);
           return list;

@@ -43,7 +43,7 @@ describe('ReportService', () => {
     const promises = paths.map(async (reportPath) => {
       expect(reportPath.indexOf(join(params.target, 'report'))).to.be.greaterThan(-1);
       const generatedReport = await YamlUtils.readTextFile(reportPath);
-      const expectedReportPath = join(expectedReportFolder, reportPath.replace(/^.*[\\\/]/, ''));
+      const expectedReportPath = join(expectedReportFolder, reportPath.replace(/^.*[\\/]/, ''));
       if (!existsSync(expectedReportPath)) {
         await YamlUtils.writeTextFile(expectedReportPath, generatedReport.trim() + '\n');
       }

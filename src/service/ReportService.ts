@@ -56,7 +56,10 @@ export class ReportService {
   };
   private readonly configLoader: ConfigLoader;
   private readonly fileSystemService: FileSystemService;
-  constructor(private readonly logger: Logger, protected readonly params: ReportParams) {
+  constructor(
+    private readonly logger: Logger,
+    protected readonly params: ReportParams,
+  ) {
     this.configLoader = new ConfigLoader(logger);
     this.fileSystemService = new FileSystemService(logger);
   }
@@ -71,7 +74,7 @@ export class ReportService {
       .filter((l) => l && l.indexOf('#') != 0);
 
     lines.forEach((l) => {
-      const isHeader = /\[([\w\s\.:]+)]/.exec(l);
+      const isHeader = /\[([\w\s.:]+)]/.exec(l);
       if (isHeader && isHeader.length && isHeader[1]) {
         sections.push({
           header: isHeader[1],

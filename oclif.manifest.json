@@ -436,6 +436,119 @@
         "index.js"
       ]
     },
+    "link": {
+      "aliases": [],
+      "args": {},
+      "description": "It announces VRF and Voting Link transactions to the network for each node with 'Peer' or 'Voting' roles. This command finalizes the node registration to an existing network.",
+      "examples": [
+        "$ symbol-bootstrap link",
+        "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap link --unlink --useKnownRestGateways"
+      ],
+      "flags": {
+        "help": {
+          "char": "h",
+          "description": "It shows the help of this command.",
+          "name": "help",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "target": {
+          "char": "t",
+          "description": "The target folder where the symbol-bootstrap network is generated",
+          "name": "target",
+          "default": "target",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "unlink": {
+          "description": "Perform \"Unlink\" transactions unlinking the voting and VRF keys from the node signer account",
+          "name": "unlink",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "password": {
+          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "name": "password",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "noPassword": {
+          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "name": "noPassword",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "url": {
+          "char": "u",
+          "description": "the network url",
+          "name": "url",
+          "default": "http://localhost:3000",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "useKnownRestGateways": {
+          "description": "Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.",
+          "name": "useKnownRestGateways",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "ready": {
+          "description": "If --ready is provided, the command will not ask for confirmation when announcing transactions.",
+          "name": "ready",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "maxFee": {
+          "description": "the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.",
+          "name": "maxFee",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "customPreset": {
+          "char": "c",
+          "description": "This command uses the encrypted addresses.yml to resolve the main private key. If the main private is only stored in the custom preset, you can provide it using this param. Otherwise, the command may ask for it when required.",
+          "name": "customPreset",
+          "required": false,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "serviceProviderPublicKey": {
+          "description": "Public key of the service provider account, used when the transaction announcer(service provider account) is different than the main account private key holder",
+          "name": "serviceProviderPublicKey",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "logger": {
+          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
+          "name": "logger",
+          "default": "Console",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "link",
+      "pluginAlias": "@nemneshia/symbol-bootstrap",
+      "pluginName": "@nemneshia/symbol-bootstrap",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "isESM": true,
+      "relativePath": [
+        "lib",
+        "commands",
+        "link",
+        "index.js"
+      ]
+    },
     "modifyMultisig": {
       "aliases": [],
       "args": {},
@@ -572,119 +685,6 @@
         "lib",
         "commands",
         "modifyMultisig",
-        "index.js"
-      ]
-    },
-    "link": {
-      "aliases": [],
-      "args": {},
-      "description": "It announces VRF and Voting Link transactions to the network for each node with 'Peer' or 'Voting' roles. This command finalizes the node registration to an existing network.",
-      "examples": [
-        "$ symbol-bootstrap link",
-        "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap link --unlink --useKnownRestGateways"
-      ],
-      "flags": {
-        "help": {
-          "char": "h",
-          "description": "It shows the help of this command.",
-          "name": "help",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "target": {
-          "char": "t",
-          "description": "The target folder where the symbol-bootstrap network is generated",
-          "name": "target",
-          "default": "target",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "unlink": {
-          "description": "Perform \"Unlink\" transactions unlinking the voting and VRF keys from the node signer account",
-          "name": "unlink",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
-          "name": "password",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
-          "name": "noPassword",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "url": {
-          "char": "u",
-          "description": "the network url",
-          "name": "url",
-          "default": "http://localhost:3000",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "useKnownRestGateways": {
-          "description": "Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.",
-          "name": "useKnownRestGateways",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "ready": {
-          "description": "If --ready is provided, the command will not ask for confirmation when announcing transactions.",
-          "name": "ready",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "maxFee": {
-          "description": "the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.",
-          "name": "maxFee",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "customPreset": {
-          "char": "c",
-          "description": "This command uses the encrypted addresses.yml to resolve the main private key. If the main private is only stored in the custom preset, you can provide it using this param. Otherwise, the command may ask for it when required.",
-          "name": "customPreset",
-          "required": false,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "serviceProviderPublicKey": {
-          "description": "Public key of the service provider account, used when the transaction announcer(service provider account) is different than the main account private key holder",
-          "name": "serviceProviderPublicKey",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "logger": {
-          "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
-          "name": "logger",
-          "default": "Console",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "link",
-      "pluginAlias": "@nemneshia/symbol-bootstrap",
-      "pluginName": "@nemneshia/symbol-bootstrap",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "isESM": true,
-      "relativePath": [
-        "lib",
-        "commands",
-        "link",
         "index.js"
       ]
     },
@@ -1516,5 +1516,5 @@
       ]
     }
   },
-  "version": "2.0.6"
+  "version": "2.0.7"
 }

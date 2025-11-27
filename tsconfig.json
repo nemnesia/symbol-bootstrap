@@ -2,16 +2,14 @@
   "compilerOptions": {
     "composite": true,
     "declaration": true,
-    "module": "Node16",
+    "module": "esnext",
     "outDir": "lib",
-    "rootDir": "src",
+    "rootDir": ".",
     "strict": true,
     "target": "es2022",
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler"
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*", "test/**/*"],
   "ts-node": {
     "esm": true
   }

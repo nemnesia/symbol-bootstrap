@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 import * as noble from '@noble/ed25519';
+import { sha512 } from '@noble/hashes/sha2.js';
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Convert, Crypto } from 'symbol-sdk';
 import nacl from 'tweetnacl';
+
+(noble as any).hashes.sha512 = sha512;
 
 export interface KeyPair {
   privateKey: Uint8Array;

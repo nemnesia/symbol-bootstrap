@@ -23,7 +23,6 @@ export class CryptoUtils {
   private static readonly ENCRYPT_PREFIX = 'ENCRYPTED:';
   private static readonly ENCRYPTABLE_KEYS = ['privateKey', 'restSSLKeyBase64', 'privateFileContent'];
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static encrypt(value: any, password: string, fieldName?: string): any {
     if (!value) {
       return value;
@@ -54,7 +53,6 @@ export class CryptoUtils {
     throw new KnownError(`${value} is not a valid Security Mode. Please use one of ${securityModes.join(', ')}`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static removePrivateKeysAccordingToSecurityMode(value: any, securityMode: PrivateKeySecurityMode): any {
     if (securityMode === PrivateKeySecurityMode.PROMPT_MAIN) {
       return this.removePrivateKeys(value, ['main', 'voting']);
@@ -68,7 +66,6 @@ export class CryptoUtils {
     return this.removePrivateKeys(value, ['voting']);
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static removePrivateKeys(value: any, blacklistNames: string[] = []): any {
     if (!value) {
       return value;
@@ -94,7 +91,6 @@ export class CryptoUtils {
     return value;
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static decrypt(value: any, password: string, fieldName?: string): any {
     if (!value) {
       return value;
@@ -112,7 +108,7 @@ export class CryptoUtils {
       let decryptedValue: string | undefined;
       try {
         decryptedValue = Crypto.decrypt(encryptedValue, password);
-      } catch (e) {
+      } catch {
         decryptedValue = undefined;
       }
       // 2) Fallback to legacy decryption (crypto-js 4.1.1 equivalent: PBKDF2-SHA1 + AES-256-CBC)
@@ -120,7 +116,7 @@ export class CryptoUtils {
         try {
           decryptedValue = CryptoUtils.decryptLegacy(encryptedValue, password);
           CryptoUtils._legacyUpgradeDetected = true;
-        } catch (e) {
+        } catch {
           throw Error('Value could not be decrypted!');
         }
       }
@@ -136,7 +132,6 @@ export class CryptoUtils {
    * Decrypts data and returns both the decrypted result and information about whether legacy encryption was upgraded.
    * This method provides visibility into whether the data should be re-saved with stronger encryption.
    */
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static decryptWithUpgradeInfo(value: any, password: string, fieldName?: string): { data: any; hasLegacyUpgrade: boolean } {
     CryptoUtils._legacyUpgradeDetected = false;
     const data = this.decrypt(value, password, fieldName);
@@ -145,7 +140,6 @@ export class CryptoUtils {
 
   private static _legacyUpgradeDetected = false;
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static encryptedCount(value: any, fieldName?: string): number {
     if (!value) {
       return 0;
