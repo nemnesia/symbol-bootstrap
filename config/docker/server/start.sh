@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-ulimit -Sn 1048576
-
 function try()
 {
     [[ $- = *e* ]]; SAVED_OPT_E=$?
