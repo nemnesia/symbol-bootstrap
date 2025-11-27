@@ -22,6 +22,10 @@ services:
     restart: 'on-failure:2'
     ports:
       - '7900:7900'
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
     volumes:
       - '../nodes/node:/symbol-workdir:rw'
       - './server:/symbol-commands:ro'

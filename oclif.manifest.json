@@ -387,13 +387,12 @@
         "index.js"
       ]
     },
-    "link": {
+    "healthCheck": {
       "aliases": [],
       "args": {},
-      "description": "It announces VRF and Voting Link transactions to the network for each node with 'Peer' or 'Voting' roles. This command finalizes the node registration to an existing network.",
+      "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
       "examples": [
-        "$ symbol-bootstrap link",
-        "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap link --unlink --useKnownRestGateways"
+        "$ symbol-bootstrap healthCheck"
       ],
       "flags": {
         "help": {
@@ -412,73 +411,10 @@
           "multiple": false,
           "type": "option"
         },
-        "unlink": {
-          "description": "Perform \"Unlink\" transactions unlinking the voting and VRF keys from the node signer account",
-          "name": "unlink",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "password": {
-          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
-          "name": "password",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "noPassword": {
-          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
-          "name": "noPassword",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "url": {
-          "char": "u",
-          "description": "the network url",
-          "name": "url",
-          "default": "http://localhost:3000",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "useKnownRestGateways": {
-          "description": "Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.",
-          "name": "useKnownRestGateways",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "ready": {
-          "description": "If --ready is provided, the command will not ask for confirmation when announcing transactions.",
-          "name": "ready",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "maxFee": {
-          "description": "the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.",
-          "name": "maxFee",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "customPreset": {
-          "char": "c",
-          "description": "This command uses the encrypted addresses.yml to resolve the main private key. If the main private is only stored in the custom preset, you can provide it using this param. Otherwise, the command may ask for it when required.",
-          "name": "customPreset",
-          "required": false,
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
-        "serviceProviderPublicKey": {
-          "description": "Public key of the service provider account, used when the transaction announcer(service provider account) is different than the main account private key holder",
-          "name": "serviceProviderPublicKey",
-          "hasDynamicHelp": false,
-          "multiple": false,
-          "type": "option"
-        },
         "logger": {
           "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
           "name": "logger",
-          "default": "Console",
+          "default": "Console,File",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
@@ -486,7 +422,7 @@
       },
       "hasDynamicHelp": false,
       "hiddenAliases": [],
-      "id": "link",
+      "id": "healthCheck",
       "pluginAlias": "@nemneshia/symbol-bootstrap",
       "pluginName": "@nemneshia/symbol-bootstrap",
       "pluginType": "core",
@@ -496,7 +432,7 @@
       "relativePath": [
         "lib",
         "commands",
-        "link",
+        "healthCheck",
         "index.js"
       ]
     },
@@ -639,12 +575,13 @@
         "index.js"
       ]
     },
-    "healthCheck": {
+    "link": {
       "aliases": [],
       "args": {},
-      "description": "It checks if the services created with docker compose are up and running.\n\nThis command checks:\n- Whether the docker containers are running.\n- Whether the services' exposed ports are listening.\n- Whether the rest gateways' /node/health are OK.\n\nThe health check process handles 'repeat' and custom 'openPort' services.\n    ",
+      "description": "It announces VRF and Voting Link transactions to the network for each node with 'Peer' or 'Voting' roles. This command finalizes the node registration to an existing network.",
       "examples": [
-        "$ symbol-bootstrap healthCheck"
+        "$ symbol-bootstrap link",
+        "$ echo \"$MY_ENV_VAR_PASSWORD\" | symbol-bootstrap link --unlink --useKnownRestGateways"
       ],
       "flags": {
         "help": {
@@ -663,10 +600,73 @@
           "multiple": false,
           "type": "option"
         },
+        "unlink": {
+          "description": "Perform \"Unlink\" transactions unlinking the voting and VRF keys from the node signer account",
+          "name": "unlink",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "password": {
+          "description": "A password used to encrypt and decrypt private keys in preset files like addresses.yml and preset.yml. Bootstrap prompts for a password by default, can be provided in the command line (--password=XXXX) or disabled in the command line (--noPassword).",
+          "name": "password",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "noPassword": {
+          "description": "When provided, Bootstrap will not use a password, so private keys will be stored in plain text. Use with caution.",
+          "name": "noPassword",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "url": {
+          "char": "u",
+          "description": "the network url",
+          "name": "url",
+          "default": "http://localhost:3000",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "useKnownRestGateways": {
+          "description": "Use the best NEM node available when announcing. Otherwise the command will use the node provided by the --url parameter.",
+          "name": "useKnownRestGateways",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "ready": {
+          "description": "If --ready is provided, the command will not ask for confirmation when announcing transactions.",
+          "name": "ready",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "maxFee": {
+          "description": "the max fee used when announcing (absolute). The node min multiplier will be used if it is not provided.",
+          "name": "maxFee",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "customPreset": {
+          "char": "c",
+          "description": "This command uses the encrypted addresses.yml to resolve the main private key. If the main private is only stored in the custom preset, you can provide it using this param. Otherwise, the command may ask for it when required.",
+          "name": "customPreset",
+          "required": false,
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
+        "serviceProviderPublicKey": {
+          "description": "Public key of the service provider account, used when the transaction announcer(service provider account) is different than the main account private key holder",
+          "name": "serviceProviderPublicKey",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "type": "option"
+        },
         "logger": {
           "description": "The loggers the command will use. Options are: Console,File,Silent. Use ',' to select multiple loggers.",
           "name": "logger",
-          "default": "Console,File",
+          "default": "Console",
           "hasDynamicHelp": false,
           "multiple": false,
           "type": "option"
@@ -674,7 +674,7 @@
       },
       "hasDynamicHelp": false,
       "hiddenAliases": [],
-      "id": "healthCheck",
+      "id": "link",
       "pluginAlias": "@nemneshia/symbol-bootstrap",
       "pluginName": "@nemneshia/symbol-bootstrap",
       "pluginType": "core",
@@ -684,7 +684,7 @@
       "relativePath": [
         "lib",
         "commands",
-        "healthCheck",
+        "link",
         "index.js"
       ]
     },

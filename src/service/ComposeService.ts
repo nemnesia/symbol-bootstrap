@@ -58,7 +58,10 @@ export class ComposeService {
   private readonly configLoader: ConfigLoader;
   private readonly fileSystemService: FileSystemService;
 
-  constructor(private readonly logger: Logger, protected readonly params: ComposeParams) {
+  constructor(
+    private readonly logger: Logger,
+    protected readonly params: ComposeParams,
+  ) {
     this.configLoader = new ConfigLoader(logger);
     this.fileSystemService = new FileSystemService(logger);
   }
@@ -215,6 +218,7 @@ export class ComposeService {
               working_dir: nodeWorkingDirectory,
               restart: restart,
               ports: resolvePorts(portConfigurations),
+              ulimits: { nofile: { soft: 1048576, hard: 1048576 } },
               volumes: volumes,
               depends_on: serverDependsOn,
               ...this.resolveDebugOptions(presetData.dockerComposeDebugMode, n.dockerComposeDebugMode),
