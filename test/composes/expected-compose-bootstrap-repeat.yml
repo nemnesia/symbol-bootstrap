@@ -65,6 +65,10 @@ services:
     restart: on-failure:2
     ports:
       - '7900:7900'
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
     volumes:
       - ../nodes/peer-node-0:/symbol-workdir:rw
       - ./server:/symbol-commands:ro
@@ -84,6 +88,10 @@ services:
     restart: on-failure:2
     ports:
       - '7901:7900'
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
     volumes:
       - ../nodes/peer-node-1:/symbol-workdir:rw
       - ./server:/symbol-commands:ro
@@ -103,6 +111,10 @@ services:
     restart: on-failure:2
     ports:
       - '7902:7900'
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
     volumes:
       - ../nodes/peer-node-2:/symbol-workdir:rw
       - ./server:/symbol-commands:ro
@@ -120,6 +132,10 @@ services:
     stop_signal: SIGINT
     working_dir: /symbol-workdir
     restart: on-failure:2
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
     volumes:
       - ../nodes/api-node-0:/symbol-workdir:rw
       - ./server:/symbol-commands:ro
@@ -140,6 +156,10 @@ services:
     stop_signal: SIGINT
     working_dir: /symbol-workdir
     restart: on-failure:2
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
     volumes:
       - ../nodes/api-node-1:/symbol-workdir:rw
       - ./server:/symbol-commands:ro
@@ -160,6 +180,10 @@ services:
     stop_signal: SIGINT
     working_dir: /symbol-workdir
     restart: on-failure:2
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
     volumes:
       - ../nodes/api-node-2:/symbol-workdir:rw
       - ./server:/symbol-commands:ro
@@ -180,6 +204,10 @@ services:
     stop_signal: SIGINT
     working_dir: /symbol-workdir
     restart: on-failure:2
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
     volumes:
       - ../nodes/api-node-3:/symbol-workdir:rw
       - ./server:/symbol-commands:ro

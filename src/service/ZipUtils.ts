@@ -35,6 +35,7 @@ export class ZipUtils {
       zlib: { level: 9 }, // Sets the compression level.
     });
     archive.pipe(output);
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise<void>(async (resolve, reject) => {
       output.on('close', () => {
         this.logger.info('');

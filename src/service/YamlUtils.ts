@@ -92,7 +92,7 @@ export class YamlUtils {
           hasLegacyUpgrade: result.hasLegacyUpgrade,
           filePath: fileLocation,
         };
-      } catch (e) {
+      } catch {
         throw new KnownError(`Cannot decrypt file ${fileLocation}. Have you used the right password?`);
       }
     } else {

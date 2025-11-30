@@ -29,7 +29,6 @@ import {
 } from '../../src';
 import { Wizard } from '../../src/commands/wizard';
 // Including a test util class that it's not compiled.
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { StdUtils } from '../utils/StdUtils';
 

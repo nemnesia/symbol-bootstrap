@@ -21,7 +21,6 @@ import { join } from 'path';
 import { Assembly, CustomPreset, LoggerFactory, LogType, Utils } from '../../src';
 import { ConfigService, CryptoUtils, Preset } from '../../src/service';
 // Local test utils
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { FileSystemTestUtils } from '../utils/FileSystemTestUtils';
 
